@@ -1,25 +1,25 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "site-dev",
-	"main": ".open-next/worker.js",
-	"compatibility_date": "2026-03-17",
-	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-	"workers_dev": true,
-	"preview_urls": false,
-	"assets": {
-		"binding": "ASSETS",
-		"directory": ".open-next/assets"
-	},
-	"images": {
-		"binding": "IMAGES"
-	},
-	"services": [
-		{
-			"binding": "WORKER_SELF_REFERENCE",
-			"service": "site-dev"
-		}
-	],
-	"observability": {
-		"enabled": false
-	}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "site-dev",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-03-17",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets"
+  },
+  "images": {
+    "binding": "IMAGES"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "site-dev"
+    }
+  ],
+  "observability": {
+    "enabled": false
+  }
 }
