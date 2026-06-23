@@ -192,140 +192,182 @@ function QuoteBlock({ text, author, accentColor }: { text: string; author?: stri
   );
 }
 
-function EraSection({ era }: { era: Era }) {
-  const { year, title, accentColor, paragraphs, quote, quoteAuthor, image, imageAlt, imageRight } = era;
-
-  const content = (
-    <div className="flex flex-col gap-6 flex-1">
-      {/* Year + title */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-end gap-5 flex-wrap">
-          <span
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: "clamp(72px, 8vw, 120px)",
-              lineHeight: 1,
-              color: "#090908",
-              letterSpacing: "1px",
-            }}
-          >
-            {year}
-          </span>
-          <HighlightedTitle text={title} accentColor={accentColor} />
-        </div>
-        {/* Colored rule */}
-        <div className="h-[3px] w-16" style={{ backgroundColor: accentColor }} />
-      </div>
-
-      {/* Paragraphs */}
-      <div className="flex flex-col gap-4">
-        {paragraphs.map((p, i) => (
-          <p
-            key={i}
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 500,
-              fontSize: 16,
-              lineHeight: "26px",
-              color: "#3a342f",
-            }}
-          >
-            {p}
-          </p>
-        ))}
-      </div>
-
-      {/* Quote */}
-      <QuoteBlock text={quote} author={quoteAuthor} accentColor={accentColor} />
-    </div>
-  );
-
-  const photo = (
-    <div
-      className="relative shrink-0 overflow-hidden rounded-[2px]"
-      style={{
-        width: "clamp(220px, 35%, 380px)",
-        aspectRatio: "3/4",
-        border: "3px solid #121212",
-        boxShadow: "6px 6px 0px #121212",
-      }}
-    >
-      {/* Colored band on top */}
-      <div className="absolute top-0 left-0 right-0 h-[6px] z-10" style={{ backgroundColor: accentColor }} />
-      <img src={image} alt={imageAlt} className="absolute inset-0 w-full h-full object-cover" />
-    </div>
-  );
-
+// Componente auxiliar para os pontilhados nos cantos do card
+function DecorativeDots({ className }: { className?: string }) {
   return (
-    <section id={year} className="relative scroll-mt-32">
-      {/* Left accent border */}
-      <div
-        className="absolute left-0 top-0 bottom-0 w-1"
-        style={{ backgroundColor: accentColor }}
-      />
-
-      <div
-        className="ml-4 p-8 lg:p-12 rounded-r-[4px]"
-        style={{ background: "rgba(255,255,255,0.75)", backdropFilter: "blur(4px)", border: "1px solid rgba(0,0,0,0.08)" }}
-      >
-        <div className={`flex flex-col lg:flex-row gap-10 items-start ${imageRight ? "" : "lg:flex-row-reverse"}`}>
-          {content}
-          {photo}
-        </div>
-      </div>
-    </section>
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className={className}>
+      <pattern id="dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1.5" fill="currentColor" />
+      </pattern>
+      <rect width="40" height="40" fill="url(#dots)" />
+    </svg>
   );
 }
 
+function EraSection({ era }: { era: Era }) {
+  const { year, title, accentColor, paragraphs, quote, image, imageAlt, imageRight } = era;
+
+  // Lógica para contraste: se a cor for o amarelo da paleta, o texto da tarja fica preto. Senão, branco.
+  const isYellow = accentColor.toLowerCase() === "#f1b412";
+  const titleTextColor = isYellow ? "#121212" : "#ffffff";
+
+  return (
+    <section id={year} className="relative w-full max-w-[1100px] mx-auto flex items-stretch gap-4 md:gap-8 scroll-mt-10 mb-8 md:mb-4">
+      
+      {/* LINHA DO TEMPO LATERAL (ESQUERDA) */}
+      {/* Só aparece se a imagem estiver na direita (imageRight = true) */}
+      {imageRight && (
+        <div className="hidden md:flex flex-col items-center justify-center w-8 shrink-0 relative">
+          <div className="absolute top-10 bottom-10 w-[2px]" style={{ backgroundColor: accentColor }} />
+          <div 
+            className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" 
+            style={{ backgroundColor: accentColor }} 
+          />
+        </div>
+      )}
+
+      {/* CARD PRINCIPAL */}
+      <div className="relative flex-1 bg-[#f4ebd9] p-6 md:p-10 shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc]">
+        
+        {/* Detalhes pontilhados nos cantos */}
+        <DecorativeDots className="absolute top-3 right-3 text-[#5a534e] opacity-30" />
+        <DecorativeDots className="absolute bottom-3 left-3 text-[#5a534e] opacity-30" />
+
+        <div className={`relative z-10 flex flex-col md:flex-row gap-8 items-center ${imageRight ? "" : "md:flex-row-reverse"}`}>
+          
+          {/* BLOCO DE TEXTO */}
+          <div className="flex-1 flex flex-col items-start">
+            
+            {/* Cabeçalho do Card (Ano + Título na Tarja) */}
+            <div className="flex flex-wrap items-center gap-4 mb-4">
+              <span className="font-['Anton'] text-[56px] md:text-[64px] text-[#121212] leading-none">
+                {year}
+              </span>
+              
+              <div 
+                className="relative px-3 py-1.5 mt-2 transform -rotate-1 shadow-sm" 
+                style={{ backgroundColor: accentColor }}
+              >
+                <span 
+                  className="relative z-10 font-['Anton'] text-[20px] md:text-[22px] tracking-wide" 
+                  style={{ color: titleTextColor }}
+                >
+                  {title}
+                </span>
+              </div>
+            </div>
+
+            {/* Parágrafos */}
+            <div className="flex flex-col gap-3 font-['Inter'] text-[14px] md:text-[15px] font-semibold text-[#3a342f] leading-relaxed mb-6">
+              {paragraphs.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+
+            {/* Bloco de Citação */}
+            <div className="relative bg-[#e6dbce] p-4 pr-6 rounded-sm flex gap-4 w-full border border-[#d8cdb8]">
+              <span 
+                className="font-['Anton'] text-[48px] leading-[0.7] mt-2" 
+                style={{ color: accentColor }}
+              >
+                “
+              </span>
+              <p className="font-['Inter'] font-bold text-[13px] md:text-[14px] text-[#3a342f] leading-snug">
+                {quote}
+              </p>
+            </div>
+            
+          </div>
+
+          {/* BLOCO DA IMAGEM */}
+          <div className="w-full md:w-[45%] shrink-0 relative mt-4 md:mt-0">
+            {/* Fita Adesiva */}
+            <div 
+              className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 w-20 h-6 md:w-24 md:h-8 z-20 shadow-sm transition-transform" 
+              style={{ 
+                backgroundColor: accentColor, 
+                transform: imageRight ? "rotate(-2deg) translateX(-50%)" : "rotate(3deg) translateX(-50%)",
+                transformOrigin: "left"
+              }} 
+            />
+
+            {/* Foto Polaroid */}
+            <div 
+              className="relative bg-white p-2 md:p-3 shadow-md"
+              style={{ 
+                transform: imageRight ? "rotate(2deg)" : "rotate(-2deg)" 
+              }}
+            >
+              <img 
+                src={image} 
+                alt={imageAlt} 
+                className="w-full h-auto aspect-[4/3] object-cover" 
+              />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* LINHA DO TEMPO LATERAL (DIREITA) */}
+      {/* Só aparece se a imagem estiver na esquerda (imageRight = false) */}
+      {!imageRight && (
+        <div className="hidden md:flex flex-col items-center justify-center w-8 shrink-0 relative">
+          <div className="absolute top-10 bottom-10 w-[2px]" style={{ backgroundColor: accentColor }} />
+          <div 
+            className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" 
+            style={{ backgroundColor: accentColor }} 
+          />
+        </div>
+      )}
+
+    </section>
+  );
+}
+// Responsável pela linha do tempo da Zambô
 function TimelineNav({ activeYear }: { activeYear: string }) {
   return (
-    <div className="sticky top-0 z-10 py-4 px-6 lg:px-[80px]" style={{ background: "#1d1b18" }}>
-      <div className="max-w-[1200px] mx-auto">
-        <div className="flex items-center gap-0 overflow-x-auto">
-          {timelineYears.map((year, i) => (
-            <div key={year} className="flex items-center shrink-0">
-              {i > 0 && (
-                <div className="h-[2px] w-8 lg:w-16" style={{ background: activeYear === year ? "#f8ba01" : "#3a342f" }} />
-              )}
-              <a
-                href={`#${year}`}
-                className="flex flex-col items-center gap-1 px-3 group"
-              >
-                <div
-                  className="size-4 rounded-full border-2 transition-colors"
-                  style={{
-                    backgroundColor: activeYear === year ? "#f8ba01" : "#3a342f",
-                    borderColor: activeYear === year ? "#f8ba01" : "#5a534e",
-                  }}
-                />
-                <span
-                  className="transition-colors"
-                  style={{
-                    fontFamily: "'Anton', sans-serif",
-                    fontSize: 14,
-                    lineHeight: "20px",
-                    color: activeYear === year ? "#f8ba01" : "#9a8f86",
-                    letterSpacing: "0.5px",
-                  }}
-                >
-                  {year}
+    <div className="w-full pt-8 pb-7 px-6 lg:px-[80px] z-20 relative">
+      <div className="max-w-[1000px] mx-auto">
+        
+        {/* Container Principal da Linha do Tempo */}
+        <div className="relative w-full flex justify-between items-end mb-2">
+          
+          {/* Linha horizontal preta conectando os pontos */}
+          <div className="absolute bottom-[10px] md:bottom-[11px] left-[5%] right-[5%] h-[2px] bg-[#121212] z-0" />
+          
+          {eras.map((era) => (
+            <div key={era.id} className="relative z-10 flex flex-col items-center w-[80px] md:w-[140px] shrink-0 gap-2 group">
+              
+              {/* Textos acima da linha */}
+              <div className="flex flex-col items-center text-center w-full">
+                
+                {/* Ano */}
+                <span className="font-['Anton'] text-[24px] md:text-[32px] text-[#121212] leading-none mb-2">
+                  {era.year}
                 </span>
-              </a>
+                
+                {/* Caixinha do subtítulo */}
+                <div className="h-8 md:h-10 flex items-start justify-center">
+                  <span className="font-['Inter'] text-[10px] md:text-[13px] font-bold text-[#121212] leading-tight capitalize">
+                    {era.title.toLowerCase()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Bolinha com cor dinâmica */}
+              <a 
+                href={`#${era.year}`} 
+                className="w-5 h-5 md:w-6 md:h-6 rounded-full border-[2.5px] md:border-[3px] border-[#121212] transition-transform duration-300 hover:scale-110 mt-1 md:mt-2"
+                style={{ 
+                  backgroundColor: era.dotColor,
+                  transform: activeYear === era.year ? "scale(1.2)" : "scale(1)"
+                }}
+              />
             </div>
           ))}
         </div>
-        <p
-          className="mt-1 hidden lg:block"
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 500,
-            fontSize: 12,
-            color: "#9a8f86",
-            letterSpacing: "0.3px",
-          }}
-        >
-          Clique em um ano para navegar até cada capítulo da nossa história.
-        </p>
+        
       </div>
     </div>
   );
@@ -367,15 +409,24 @@ export function Historia() {
     return () => observer.disconnect();
   }, []);
 
+  //inicio do controle de BACKGROUND
   return (
-    <div className="w-full" style={{ background: "#f5eedd" }}>
+    <div 
+      className="relative w-full min-h-screen overflow-hidden"
+      style={{
+        backgroundColor: "#EEDEC9", 
+        backgroundImage: `
+          radial-gradient(circle at 15% 20%, rgba(0, 0, 0, 0.06) 0%, transparent 40%),
+          radial-gradient(circle at 85% 75%, rgba(0, 0, 0, 0.04) 0%, transparent 50%),
+          radial-gradient(circle at 50% 5%, rgba(139, 69, 19, 0.02) 0%, transparent 50%),
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.10'/%3E%3C/svg%3E")
+        `,
+      }}
+    >
       {/* Hero header */}
-      <div
-        className="relative w-full overflow-hidden py-20 px-6 lg:px-[80px]"
-        style={{ background: "#f5eedd" }}
-      >
-        <img src={imgBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none mix-blend-multiply" />
+      <div className="relative w-full pt-16 pb-2 px-6 lg:px-[80px]">
         <div className="relative max-w-[1200px] mx-auto flex flex-col items-center text-center gap-6">
+          
           {/* Label */}
           <div className="flex items-center gap-3">
             <div className="h-px w-12 bg-black" />
@@ -412,7 +463,7 @@ export function Historia() {
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 500,
-              fontSize: 20,
+              fontSize: 15,
               lineHeight: "28px",
               color: "#3a342f",
               maxWidth: 520,
