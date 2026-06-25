@@ -1,6 +1,6 @@
 const imgFrame68 = "/zambo/Frame68/bfe8fac91719951ba5d39ec6b633b2da36c68f6b.png";
 const imgFrame69 = "/zambo/Frame68/d000f06fd725bf650cddcb2180c76409d124b7b3.png";
-const imgRectangle2 = "/zambo/Frame68/1e4f18855119022a2920c12139fd25721134e022.png";
+const imgRectangle2 = "/zambo/Group36/8f80c506423b36bcc34c34081265fbd8aacf6e50.png";
 const imgRectangle3 = "/zambo/Frame68/544d9e7abfc47b0a36e95247d4a5befa83888d16.png";
 const imgPhoto1 = "/zambo/Frame68/987b1f4e79a4d84b8b83b08c67629ffffb7464cc.png";
 const imgVector = "/zambo/Frame68/b6fdaff9f3ce7f8a1a69c99e6e3044215f857c4f.png";
@@ -203,7 +203,7 @@ export function ZamboHistoria() {
               <span className="block">RESISTÊNCIA E</span>
               <span className="relative block w-fit">
                 <span
-                  className="absolute -left-9 -right-7 top-[0.12em] bottom-[-0.04em] overflow-hidden"
+                  className="absolute -left-6 -right-6 top-[0.12em] bottom-[-0.04em] overflow-hidden"
                   style={{ zIndex: 0 }}
                   aria-hidden
                 >

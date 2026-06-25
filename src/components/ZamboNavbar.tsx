@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import svgPaths from "../imports/Group36/svg-hkzbekptio";
+import { ZamboLogoMark } from "./logo/ZamboLogoMark";
 
 function LogoMark() {
   return (
@@ -60,7 +61,7 @@ export function ZamboNavbar({ overlaid = false }: ZamboNavbarProps) {
       <div className="max-w-[1280px] mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
-          <LogoMark />
+          <ZamboLogoMark />
           <span
             className="text-black uppercase pt-2"
             style={{ fontFamily: "'Anton', sans-serif", fontSize: 40, lineHeight: "normal" }}
