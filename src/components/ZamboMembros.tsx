@@ -4,9 +4,9 @@ import svgPaths from "../imports/Group36/svg-hkzbekptio";
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const president = {
-  name: "MARIA APARECIDA SANTOS",
+  name: "TERESINHA DE OLIVEIRA MARCIANO COSTA",
   role: "PRESIDENTE DA ONG",
-  photo: "https://images.unsplash.com/photo-1632765854612-9b02b6ec2b15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800",
+  photo: "/teresinha-marciano.jpg",
   bio: "Fundadora da Zambô e referência na luta pela valorização da cultura afro-brasileira em Caraguatatuba. Educadora popular, produtora cultural e guardiã de saberes que inspiram gerações.",
   quote: "A cultura negra é memória, resistência e futuro.",
 };
@@ -15,25 +15,29 @@ const boardMembers = [
   {
     name: "JOÃO PAULO SILVA",
     role: "VICE-PRESIDENTE",
-    photo: "https://images.unsplash.com/photo-1613768924699-e71d952b8cc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    photo:
+      "https://images.unsplash.com/photo-1613768924699-e71d952b8cc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     bio: "Articulador cultural e produtor; atua na gestão de projetos e fortalecimento de parcerias.",
   },
   {
     name: "ANA LÚCIA MORAES",
     role: "SECRETÁRIA",
-    photo: "https://images.unsplash.com/photo-1632765866070-3fadf25d3d5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    photo:
+      "https://images.unsplash.com/photo-1632765866070-3fadf25d3d5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     bio: "Educadora e pesquisadora; responsável pela organização e documentação das ações.",
   },
   {
     name: "CARLOS EDUARDO",
     role: "TESOUREIRO",
-    photo: "https://images.unsplash.com/photo-1773235893573-9253a4b4ea36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    photo:
+      "https://images.unsplash.com/photo-1773235893573-9253a4b4ea36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     bio: "Gestor financeiro e administrativo; garante a transparência e sustentabilidade da organização.",
   },
   {
     name: "PATRÍCIA OLIVEIRA",
     role: "COORD. GERAL",
-    photo: "https://images.unsplash.com/photo-1615453261246-4b32e335a4a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    photo:
+      "https://images.unsplash.com/photo-1615453261246-4b32e335a4a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     bio: "Atua na fiscalização e no acompanhamento das atividades e recursos da ONG.",
   },
 ];
@@ -43,21 +47,24 @@ const featuredMembers = [
     name: "MESTRE NALDO",
     role: "EDUCADOR E CAPOEIRISTA",
     accentColor: "#dd341f",
-    photo: "https://images.unsplash.com/photo-1773650783301-d808ca0279a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    photo:
+      "https://images.unsplash.com/photo-1773650783301-d808ca0279a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     bio: "Mestre de capoeira e referência na formação de crianças e jovens pela cultura.",
   },
   {
     name: "DJ CÁSSIA PRETA",
     role: "PRODUTORA CULTURAL",
     accentColor: "#f1b412",
-    photo: "https://images.unsplash.com/photo-1770396528756-d463cc7f0a8a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    photo:
+      "https://images.unsplash.com/photo-1770396528756-d463cc7f0a8a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     bio: "DJ, produtora e curadora de eventos que conectam arte, cultura e comunidade.",
   },
   {
     name: "LUAN SANTOS",
     role: "ARTISTA VISUAL",
     accentColor: "#1a7d3c",
-    photo: "https://images.unsplash.com/photo-1548527121-52781ea7929f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+    photo:
+      "https://images.unsplash.com/photo-1548527121-52781ea7929f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
     bio: "Artista plástico e ilustrador; suas obras traduzem identidade, resistência e pertencimento.",
   },
 ];
@@ -107,7 +114,9 @@ function PresidentCard() {
         {/* Gradient overlay bottom */}
         <div
           className="absolute bottom-0 left-0 right-0 h-24"
-          style={{ background: "linear-gradient(to top, #1d1b18 0%, transparent 100%)" }}
+          style={{
+            background: "linear-gradient(to top, #1d1b18 0%, transparent 100%)",
+          }}
         />
         {/* ZAMBÔ stamp */}
         <div className="absolute bottom-3 left-4">
@@ -176,7 +185,7 @@ function PresidentCard() {
 }
 
 /** Card de membro da presidência com foto e faixa ZAMBÔ */
-function BoardMemberCard({ member }: { member: typeof boardMembers[0] }) {
+function BoardMemberCard({ member }: { member: (typeof boardMembers)[0] }) {
   return (
     <div
       className="flex flex-col overflow-hidden rounded-[3px]"
@@ -248,14 +257,19 @@ function BoardMemberCard({ member }: { member: typeof boardMembers[0] }) {
 }
 
 /** Card de pessoa de destaque — estilo mais compacto com acento colorido */
-function FeaturedMemberCard({ member }: { member: typeof featuredMembers[0] }) {
+function FeaturedMemberCard({
+  member,
+}: { member: (typeof featuredMembers)[0] }) {
   return (
     <div
       className="flex flex-col overflow-hidden rounded-[3px]"
       style={{ border: "2px solid #121212", background: "#fff" }}
     >
       {/* Colored top band */}
-      <div className="h-[5px] w-full" style={{ background: member.accentColor }} />
+      <div
+        className="h-[5px] w-full"
+        style={{ background: member.accentColor }}
+      />
 
       {/* Photo */}
       <div className="relative overflow-hidden" style={{ height: 160 }}>
@@ -311,14 +325,15 @@ export function ZamboMembros() {
   return (
     <section className="w-full" style={{ background: "#f5eedd" }}>
       <div className="max-w-[1200px] mx-auto px-6 lg:px-[80px] py-20 flex flex-col gap-16">
-
         {/* ── Header + President ── */}
         <div className="flex flex-col lg:flex-row gap-12 items-start">
-
           {/* Left: headline */}
           <div className="flex flex-col gap-6 flex-1">
             <div className="flex items-center gap-3">
-              <div className="w-1 h-5 shrink-0" style={{ background: "#f8ba01" }} />
+              <div
+                className="w-1 h-5 shrink-0"
+                style={{ background: "#f8ba01" }}
+              />
               <span
                 style={{
                   fontFamily: "'Inter', sans-serif",
@@ -341,7 +356,9 @@ export function ZamboMembros() {
                 letterSpacing: "1px",
               }}
             >
-              MEMBROS<br />DA ZAMBÔ
+              MEMBROS
+              <br />
+              DA ZAMBÔ
             </h2>
             <p
               style={{
@@ -353,7 +370,9 @@ export function ZamboMembros() {
                 maxWidth: 380,
               }}
             >
-              Nossa equipe é formada por pessoas comprometidas com a cultura, a educação e a transformação social. Juntos, seguimos construindo caminhos de resistência, criatividade e ancestralidade.
+              Nossa equipe é formada por pessoas comprometidas com a cultura, a
+              educação e a transformação social. Juntos, seguimos construindo
+              caminhos de resistência, criatividade e ancestralidade.
             </p>
           </div>
 
@@ -436,7 +455,8 @@ export function ZamboMembros() {
               color: "#9a8f86",
             }}
           >
-            Cada pessoa aqui carrega a missão da Zambô e transforma ideias em ações todos os dias.
+            Cada pessoa aqui carrega a missão da Zambô e transforma ideias em
+            ações todos os dias.
           </p>
         </div>
         <button

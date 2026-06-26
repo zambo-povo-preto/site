@@ -51,3 +51,7 @@ a {
 .ticker-track:hover {
   animation-play-state: paused;
 }
+
+.background {
+  background: linear-gradient(117deg, rgba(243, 234, 217, 0.20) 0%, rgba(235, 219, 195, 0.20) 25%, rgba(225, 193, 141, 0.20) 100%), url("/background.png") lightgray 50% / cover no-repeat, #F1E3CD;
+}

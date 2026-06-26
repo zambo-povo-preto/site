@@ -1,67 +1,14 @@
 import svgPaths from "../imports/Group36/svg-hkzbekptio";
 import { ZamboLogoMarkHero } from "./logo/ZamboLogoMarkHero";
 import { ZamboNavbar } from "./ZamboNavbar";
-const imgFrame59 = "/zambo/Group36/5a73c4eafeeba52ba5c573c39ca63ccfe3ce3ae4.png";
-const imgGrafitebase1 = "/zambo/Group36/8d468e10e6e80b89a19522ecf60100f51507b119.png";
-const imgRectangle2 = "/zambo/Group36/8f80c506423b36bcc34c34081265fbd8aacf6e50.png";
-const imgRectangle3 = "/zambo/Group36/544d9e7abfc47b0a36e95247d4a5befa83888d16.png";
-
-function HeroFigure() {
-  return (
-    <div className="relative" style={{ width: 356, height: 750 }}>
-      <div className="absolute inset-0">
-        <svg className="absolute block" fill="none" preserveAspectRatio="none" viewBox="0 0 356.151 432.477" style={{ width: 356, height: 432 }}>
-          <path d={svgPaths.p14d8c1c0} fill="black" />
-          <path d={svgPaths.p3672fe00} fill="black" />
-          <path d={svgPaths.p20a05f00} fill="black" />
-          <path d={svgPaths.p15da2800} fill="black" />
-        </svg>
-      </div>
-      <div className="absolute" style={{ left: 94, top: 148, width: 174, height: 605 }}>
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 173.366 604.586">
-          <path d={svgPaths.p604c100} fill="black" />
-          <path d={svgPaths.p397baf00} fill="#308442" stroke="black" strokeWidth="4" />
-          <path d={svgPaths.p30729700} fill="#318443" stroke="black" strokeWidth="4" />
-          <path d={svgPaths.p8e9b400} fill="black" stroke="black" strokeWidth="1.88976" />
-          <path d={svgPaths.p1ba82d00} fill="black" stroke="black" strokeWidth="1.88976" />
-          <path d={svgPaths.p30f20d80} fill="#E62127" stroke="black" strokeWidth="4" />
-          <path d={svgPaths.p306fb080} fill="#FDCF31" stroke="black" strokeWidth="4" />
-        </svg>
-      </div>
-      <div className="absolute" style={{ left: 154, top: 116, width: 49, height: 29 }}>
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48.5498 29.3051">
-          <path d={svgPaths.p29019900} fill="black" />
-          <path d={svgPaths.p154e3200} fill="black" />
-        </svg>
-      </div>
-      <div className="absolute" style={{ left: 160, top: 464, width: 73, height: 144 }}>
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 73.1605 144.425">
-          <path d={svgPaths.p11b38900} fill="#EDB128" />
-        </svg>
-      </div>
-      <div className="absolute" style={{ left: 99, top: 215, width: 62, height: 287 }}>
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 61.7436 286.675">
-          <path d={svgPaths.p23429c80} fill="#EDB128" />
-        </svg>
-      </div>
-      <div className="absolute" style={{ left: 187, top: 299, width: 69, height: 81 }}>
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 68.8162 81.1046">
-          <path d={svgPaths.p2fefe380} fill="#54A351" />
-        </svg>
-      </div>
-      <div className="absolute" style={{ left: 175, top: 577, width: 57, height: 120 }}>
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 56.5609 119.66">
-          <path d={svgPaths.p25370500} fill="#C91A1E" />
-        </svg>
-      </div>
-      <div className="absolute" style={{ left: 117, top: 478, width: 96, height: 229 }}>
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 95.7532 228.872">
-          <path d={svgPaths.p1a7dd00} fill="#C91A1E" />
-        </svg>
-      </div>
-    </div>
-  );
-}
+const imgFrame59 =
+  "/zambo/Group36/5a73c4eafeeba52ba5c573c39ca63ccfe3ce3ae4.png";
+const imgGrafitebase1 =
+  "/zambo/Group36/8d468e10e6e80b89a19522ecf60100f51507b119.png";
+const imgRectangle2 =
+  "/zambo/Group36/8f80c506423b36bcc34c34081265fbd8aacf6e50.png";
+const imgRectangle3 =
+  "/zambo/Group36/544d9e7abfc47b0a36e95247d4a5befa83888d16.png";
 
 function DonateArrow() {
   return (
@@ -81,28 +28,36 @@ function ArrowRight() {
 
 export function ZamboHero() {
   return (
-    <section className="relative w-full overflow-hidden" style={{ minHeight: "100vh" }}>
-      {/* Background image */}
-      <img
-        src={imgFrame59}
-        alt=""
-        aria-hidden
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-      />
-
+    <section
+      className="background relative w-full overflow-hidden"
+      style={{ minHeight: "100vh" }}
+    >
       {/* Navbar overlaid on hero */}
       <ZamboNavbar overlaid />
 
       {/* Hero Content */}
-      <div className="relative z-10 max-w-[1280px] mx-auto px-6 lg:px-[80px] pt-[140px] pb-[80px] flex items-center min-h-screen gap-8 lg:gap-16">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 lg:px-[80px] pt-[140px] pb-[80px] flex items-center min-h-screen">
         {/* Left side */}
-        <div className="flex-1 flex flex-col gap-12">
+        <div className="flex-1 flex flex-col gap-12 lg:min-w-[600px]">
           {/* Tagline */}
           <div className="flex gap-3 items-start">
-            <div className="w-1 h-full bg-black shrink-0 mt-0.5" style={{ minHeight: 40 }} />
-            <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 18, lineHeight: "20px", color: "black" }}>
-              PONTO DE CULTURA ZAMBÔ DO MOVIMENTO NEGRO{" "}<br/>
-              <span style={{ fontWeight: 500, fontSize: 14 }}>CARAGUATATUBA-SP</span>
+            <div
+              className="w-1 h-full bg-black shrink-0 mt-0.5"
+              style={{ minHeight: 40 }}
+            />
+            <p
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 800,
+                fontSize: 18,
+                lineHeight: "20px",
+                color: "black",
+              }}
+            >
+              PONTO DE CULTURA ZAMBÔ DO MOVIMENTO NEGRO <br />
+              <span style={{ fontWeight: 500, fontSize: 14 }}>
+                CARAGUATATUBA-SP
+              </span>
             </p>
           </div>
 
@@ -125,10 +80,20 @@ export function ZamboHero() {
                 style={{ zIndex: 0 }}
                 aria-hidden
               >
-                <img alt="" className="absolute inset-0 size-full object-fill" src={imgRectangle2} />
-                <img alt="" className="absolute inset-0 size-full object-cover opacity-35 mix-blend-multiply" src={imgRectangle3} />
+                <img
+                  alt=""
+                  className="absolute inset-0 size-full object-fill"
+                  src={imgRectangle2}
+                />
+                <img
+                  alt=""
+                  className="absolute inset-0 size-full object-cover opacity-35 mix-blend-multiply"
+                  src={imgRectangle3}
+                />
               </span>
-              <span className="relative" style={{ zIndex: 1 }}>CULTURA NEGRA.</span>
+              <span className="relative" style={{ zIndex: 1 }}>
+                CULTURA NEGRA.
+              </span>
             </span>
           </h1>
 
@@ -145,11 +110,14 @@ export function ZamboHero() {
                 letterSpacing: "0.2px",
               }}
             >
-              A Zambô é uma organização que fortalece laços comunitários por meio de encontros, oficinas e movimentos que celebram e preservam a cultura afro-brasileira.
+              A Zambô é uma organização que fortalece laços comunitários por
+              meio de encontros, oficinas e movimentos que celebram e preservam
+              a cultura afro-brasileira.
             </p>
 
             <div className="flex flex-wrap gap-7 items-center">
               <button
+                type="button"
                 className="flex items-center gap-3 bg-[#f8ba01] uppercase rounded-[4px] px-5 py-4"
                 style={{
                   fontFamily: "'Anton', sans-serif",
@@ -163,6 +131,7 @@ export function ZamboHero() {
                 <ArrowRight />
               </button>
               <button
+                type="button"
                 className="flex items-center gap-3 bg-[#ebdbc3] uppercase rounded-[4px] px-5 py-4 h-14 border-3 border-black relative"
                 style={{
                   fontFamily: "'Anton', sans-serif",
@@ -181,17 +150,9 @@ export function ZamboHero() {
 
         {/* Right side — figure */}
         <div className="hidden lg:flex items-end justify-center shrink-0">
-          <ZamboLogoMarkHero />
+          <img src="/logo-mark-hero.png" alt="" width={635} height={738} />
         </div>
       </div>
-
-      {/* Graffiti overlay */}
-      <img
-        src={imgGrafitebase1}
-        alt=""
-        aria-hidden
-        className="absolute bottom-[58px] right-0 w-[600px] max-w-[50%] pointer-events-none object-cover opacity-60"
-      />
 
       {/* Ticker bar */}
       <div className="absolute bottom-0 left-0 right-0 h-[58px] bg-[#1d1b18] overflow-hidden z-10">
@@ -200,9 +161,23 @@ export function ZamboHero() {
             <span
               key={i}
               className="flex items-center gap-0 shrink-0"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 18, letterSpacing: "1.8px", color: "#f2e3b9" }}
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: 18,
+                letterSpacing: "1.8px",
+                color: "#f2e3b9",
+              }}
             >
-              {["CULTURA", "RESISTÊNCIA", "UNIÃO", "COMUNIDADE", "ARTE", "HISTÓRIA", "ANCESTRALIDADE"].map((word, j) => (
+              {[
+                "CULTURA",
+                "RESISTÊNCIA",
+                "UNIÃO",
+                "COMUNIDADE",
+                "ARTE",
+                "HISTÓRIA",
+                "ANCESTRALIDADE",
+              ].map((word, j) => (
                 <span key={j} className="flex items-center">
                   <span className="mx-2">{word}</span>
                   <span style={{ color: "#f8ba01" }}>•</span>

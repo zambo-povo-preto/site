@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Zambo",
-  description: "Ponto de Cultura Zambo do Movimento Negro em Caraguatatuba-SP.",
+  title: "Zambô - Ponto de Cultura",
+  description: "Ponto de Cultura Zambô do Movimento Negro em Caraguatatuba-SP.",
 };
 
 export default function RootLayout({
