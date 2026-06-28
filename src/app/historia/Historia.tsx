@@ -40,7 +40,7 @@ const eras: Era[] = [
     ],
     quote:
       "A Zambô nasceu de uma necessidade: a de ver nossa cultura valorizada, nossa história contada e nossa identidade celebrada.",
-    image: imgPhoto,
+    image: "/img/teste5.jpg",
     imageAlt: "Fundação da Zambô — 1990",
     imageRight: true,
   },
@@ -57,7 +57,7 @@ const eras: Era[] = [
     ],
     quote:
       "Com apoio crescente da comunidade, a Zambô se tornou um espaço de acolhimento, educação e resistência cultural para gerações de jovens.",
-    image: imgPhoto,
+    image: "/img/terezinha.jpg",
     imageAlt: "Programas educacionais — 1995",
     imageRight: false,
   },
@@ -74,7 +74,7 @@ const eras: Era[] = [
     ],
     quote:
       "O festival nasceu para mostrar que a cultura negra não é margem — é centro. É de onde vem a força criativa deste país.",
-    image: imgPhoto,
+    image: "/img/teste3.jpg",
     imageAlt: "Festival Afro-Brasileiro — 2000",
     imageRight: true,
   },
@@ -91,7 +91,7 @@ const eras: Era[] = [
     ],
     quote:
       "A cada nova comunidade alcançada, a Zambô reafirma que a cultura é ferramenta de transformação social.",
-    image: imgIllustration,
+    image: "/img/teste4.jpg",
     imageAlt: "Expansão e impacto — 2010",
     imageRight: false,
   },
@@ -108,7 +108,7 @@ const eras: Era[] = [
     ],
     quote:
       "Seguimos construindo com o povo, para o povo. Nossa história é feita de cada pessoa que acredita numa cultura negra viva e transformadora.",
-    image: imgPhoto,
+    image: "/img/teste2.jpg",
     imageAlt: "Referência nacional — 2024",
     imageRight: true,
   },
@@ -207,7 +207,6 @@ function DecorativeDots({ className }: { className?: string }) {
 function EraSection({ era }: { era: Era }) {
   const { year, title, accentColor, paragraphs, quote, image, imageAlt, imageRight } = era;
 
-  // Lógica para contraste: se a cor for o amarelo da paleta, o texto da tarja fica preto. Senão, branco.
   const isYellow = accentColor.toLowerCase() === "#f1b412";
   const titleTextColor = isYellow ? "#121212" : "#ffffff";
 
@@ -215,109 +214,83 @@ function EraSection({ era }: { era: Era }) {
     <section id={year} className="relative w-full max-w-[1100px] mx-auto flex items-stretch gap-4 md:gap-8 scroll-mt-10 mb-8 md:mb-4">
       
       {/* LINHA DO TEMPO LATERAL (ESQUERDA) */}
-      {/* Só aparece se a imagem estiver na direita (imageRight = true) */}
       {imageRight && (
         <div className="hidden md:flex flex-col items-center justify-center w-8 shrink-0 relative">
           <div className="absolute top-10 bottom-10 w-[2px]" style={{ backgroundColor: accentColor }} />
-          <div 
-            className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" 
-            style={{ backgroundColor: accentColor }} 
-          />
+          <div className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" style={{ backgroundColor: accentColor }} />
         </div>
       )}
 
-      {/* CARD PRINCIPAL */}
-      <div className="relative flex-1 bg-[#f4ebd9] p-6 md:p-10 shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc]">
+      {/* CARD PRINCIPAL: Novo layout sem padding global e com overflow-hidden */}
+      <div className={`relative flex-1 bg-[#f4ebd9] shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc] flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"}`}>
         
-        {/* Detalhes pontilhados nos cantos */}
-        <DecorativeDots className="absolute top-3 right-3 text-[#5a534e] opacity-30" />
-        <DecorativeDots className="absolute bottom-3 left-3 text-[#5a534e] opacity-30" />
+        {/* Detalhes pontilhados nos cantos do texto */}
+        <DecorativeDots className={`absolute top-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`} />
+        <DecorativeDots className={`absolute bottom-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`} />
 
-        <div className={`relative z-10 flex flex-col md:flex-row gap-8 items-center ${imageRight ? "" : "md:flex-row-reverse"}`}>
+        {/* BLOCO DE TEXTO: O padding (p-6 md:p-10) agora fica EXCLUSIVAMENTE aqui */}
+        <div className="flex-1 flex flex-col items-start p-6 md:p-10 z-10 relative">
           
-          {/* BLOCO DE TEXTO */}
-          <div className="flex-1 flex flex-col items-start">
-            
-            {/* Cabeçalho do Card (Ano + Título na Tarja) */}
-            <div className="flex flex-wrap items-center gap-4 mb-4">
-              <span className="font-['Anton'] text-[56px] md:text-[64px] text-[#121212] leading-none">
-                {year}
+          {/* Cabeçalho do Card */}
+          <div className="flex flex-wrap items-center gap-4 mb-4">
+            <span className="font-['Anton'] text-[56px] md:text-[64px] text-[#121212] leading-none">
+              {year}
+            </span>
+            <div className="relative px-3 py-1.5 mt-2 transform -rotate-1 shadow-sm" style={{ backgroundColor: accentColor }}>
+              <span className="relative z-10 font-['Anton'] text-[20px] md:text-[22px] tracking-wide" style={{ color: titleTextColor }}>
+                {title}
               </span>
-              
-              <div 
-                className="relative px-3 py-1.5 mt-2 transform -rotate-1 shadow-sm" 
-                style={{ backgroundColor: accentColor }}
-              >
-                <span 
-                  className="relative z-10 font-['Anton'] text-[20px] md:text-[22px] tracking-wide" 
-                  style={{ color: titleTextColor }}
-                >
-                  {title}
-                </span>
-              </div>
-            </div>
-
-            {/* Parágrafos */}
-            <div className="flex flex-col gap-3 font-['Inter'] text-[14px] md:text-[15px] font-semibold text-[#3a342f] leading-relaxed mb-6">
-              {paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-
-            {/* Bloco de Citação */}
-            <div className="relative bg-[#e6dbce] p-4 pr-6 rounded-sm flex gap-4 w-full border border-[#d8cdb8]">
-              <span 
-                className="font-['Anton'] text-[48px] leading-[0.7] mt-2" 
-                style={{ color: accentColor }}
-              >
-                “
-              </span>
-              <p className="font-['Inter'] font-bold text-[13px] md:text-[14px] text-[#3a342f] leading-snug">
-                {quote}
-              </p>
-            </div>
-            
-          </div>
-
-          {/* BLOCO DA IMAGEM */}
-          <div className="w-full md:w-[45%] shrink-0 relative mt-4 md:mt-0">
-            {/* Fita Adesiva */}
-            <div 
-              className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 w-20 h-6 md:w-24 md:h-8 z-20 shadow-sm transition-transform" 
-              style={{ 
-                backgroundColor: accentColor, 
-                transform: imageRight ? "rotate(-2deg) translateX(-50%)" : "rotate(3deg) translateX(-50%)",
-                transformOrigin: "left"
-              }} 
-            />
-
-            {/* Foto Polaroid */}
-            <div 
-              className="relative bg-white p-2 md:p-3 shadow-md"
-              style={{ 
-                transform: imageRight ? "rotate(2deg)" : "rotate(-2deg)" 
-              }}
-            >
-              <img 
-                src={image} 
-                alt={imageAlt} 
-                className="w-full h-auto aspect-[4/3] object-cover" 
-              />
             </div>
           </div>
 
+          {/* Parágrafos */}
+          <div className="flex flex-col gap-3 font-['Inter'] text-[14px] md:text-[15px] font-semibold text-[#3a342f] leading-relaxed mb-6">
+            {paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+
+          {/* Bloco de Citação */}
+          <div className="relative bg-[#e6dbce] p-4 pr-6 rounded-sm flex gap-4 w-full border border-[#d8cdb8] mt-auto">
+            <span className="font-['Anton'] text-[48px] leading-[0.7] mt-2" style={{ color: accentColor }}>
+              “
+            </span>
+            <p className="font-['Inter'] font-bold text-[13px] md:text-[14px] text-[#3a342f] leading-snug">
+              {quote}
+            </p>
+          </div>
         </div>
+
+        {/* BLOCO DA IMAGEM: Ocupa todo o bloco da direita, tocando as bordas */}
+        {/* REMOVIDO o overflow-hidden desta div abaixo também */}
+        <div className="w-full md:w-[45%] shrink-0 relative min-h-[250px] md:min-h-0 bg-white">
+          
+          {/* A foto com 'absolute inset-0' */}
+          <img 
+            src={image} 
+            alt={imageAlt} 
+            className="absolute inset-0 w-full h-full object-cover" 
+          />
+          
+          {/* AJUSTADO: Trocado 'top-4' por '-top-3' para subir, adicionado 'z-30' e deixado reto (rotate(0deg)) como no exemplo */}
+          <div 
+            className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 md:w-24 md:h-8 z-30 shadow-sm" 
+            style={{ 
+              backgroundColor: accentColor, 
+              transform: "rotate(0deg) translateX(-50%)",
+              transformOrigin: "left"
+            }} 
+          />
+          
+        </div>
+
       </div>
 
       {/* LINHA DO TEMPO LATERAL (DIREITA) */}
-      {/* Só aparece se a imagem estiver na esquerda (imageRight = false) */}
       {!imageRight && (
         <div className="hidden md:flex flex-col items-center justify-center w-8 shrink-0 relative">
           <div className="absolute top-10 bottom-10 w-[2px]" style={{ backgroundColor: accentColor }} />
-          <div 
-            className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" 
-            style={{ backgroundColor: accentColor }} 
-          />
+          <div className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" style={{ backgroundColor: accentColor }} />
         </div>
       )}
 
@@ -381,7 +354,51 @@ function DonateArrow() {
   );
 }
 
+export function ZamboStats() {
+  const stats = [
+    { value: "30+", label: "Anos de História", color: "#e22a1d" },
+    { value: "15k+", label: "Vidas Impactadas", color: "#fdc700" },
+    { value: "50+", label: "Projetos Realizados", color: "#008236" },
+  ];
+
+  return (
+    <section
+      className="w-full py-20 px-6 lg:px-[80px]"
+      style={{ background: "#1d1b18" }}
+    >
+      <div className="max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex flex-col items-center gap-8">
+              {/* Colored bar */}
+              <div
+                className="w-4 shrink-0"
+                style={{ height: 96, backgroundColor: stat.color }}
+              />
+              {/* Text */}
+              <div
+                className="flex flex-col items-center gap-4 text-center"
+                style={{ fontFamily: "'Anton', sans-serif", color: "#f1e5d1" }}
+              >
+                <span style={{ fontSize: "clamp(72px, 9vw, 120px)", lineHeight: 1 }}>
+                  {stat.value}
+                </span>
+                <span className="uppercase" style={{ fontSize: 24, lineHeight: "32px", letterSpacing: "1px" }}>
+                  {stat.label}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
+
+
 
 export function Historia() {
   const activeYearRef = useRef(timelineYears[0]);
@@ -445,18 +462,30 @@ export function Historia() {
           </div>
 
           {/* Title */}
-          <h1
-            className="uppercase"
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: "clamp(48px, 8vw, 96px)",
-              lineHeight: 1,
-              color: "#121212",
-              letterSpacing: "1px",
-            }}
-          >
-            NOSSA JORNADA
-          </h1>
+          {/* Title com Faixa ao fundo */}
+          <div className="relative inline-block mt-4 mb-2">
+            <img
+              src="/img/faixa1.png"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover z-0"
+              style={{ transform: "translateX(-3px) translateY(44%) scaleX(1.18) scaleY(0.74) scaleX(0.95)" }} //Alterar as dimensões da faixa de nossa jornada
+              aria-hidden
+            />
+            <h1
+              className="relative uppercase"
+              style={{
+                zIndex: 1,
+                fontFamily: "'Anton', sans-serif",
+                fontSize: "clamp(48px, 8vw, 96px)",
+                lineHeight: 1,
+                color: "#121212",
+                letterSpacing: "1px",
+                padding: "0 10px",
+              }}
+            >
+              NOSSA JORNADA
+            </h1>
+          </div>
 
           {/* Subtitle */}
           <p
@@ -464,7 +493,7 @@ export function Historia() {
               fontFamily: "'Inter', sans-serif",
               fontWeight: 500,
               fontSize: 15,
-              lineHeight: "28px",
+              lineHeight: "15px",
               color: "#3a342f",
               maxWidth: 520,
             }}
@@ -483,6 +512,8 @@ export function Historia() {
           <EraSection key={era.id} era={era} />
         ))}
       </div>
+
+      <ZamboStats />
 
       {/* Footer CTA */}
       <div
