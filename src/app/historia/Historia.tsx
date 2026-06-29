@@ -355,35 +355,50 @@ function DonateArrow() {
 }
 
 export function ZamboStats() {
+  // Adicionamos a propriedade "rotate" para rotacionar levemente cada fita
   const stats = [
-    { value: "30+", label: "Anos de História", color: "#e22a1d" },
-    { value: "15k+", label: "Vidas Impactadas", color: "#fdc700" },
-    { value: "50+", label: "Projetos Realizados", color: "#008236" },
+    { value: "30+", label: "Anos de História", color: "#e22a1d", rotate: -2 },
+    { value: "15k+", label: "Vidas Impactadas", color: "#fdc700", rotate: 1 },
+    { value: "50+", label: "Projetos Realizados", color: "#008236", rotate: -3 },
   ];
 
   return (
     <section
-      className="w-full py-20 px-6 lg:px-[80px]"
+      className="relative w-full pt-20 pb-12 px-6 lg:px-[80px]"
       style={{ background: "#1d1b18" }}
     >
-      <div className="max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Grid com espaçamento amplo */}
+      <div className="max-w-[1000px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center gap-8">
-              {/* Colored bar */}
+            // Card Individual Escuro
+            <div 
+              key={stat.label} 
+              className="relative flex flex-col items-center bg-[#292724] px-6 py-12 md:py-16 rounded-[16px] shadow-2xl mt-6"
+            >
+              {/* Fita Adesiva Tátil */}
               <div
-                className="w-4 shrink-0"
-                style={{ height: 96, backgroundColor: stat.color }}
+                className="absolute -top-3 left-1/2 w-24 h-7 shadow-[0px_2px_4px_rgba(0,0,0,0.5)] opacity-95"
+                style={{
+                  backgroundColor: stat.color,
+                  transform: `translateX(-50%) rotate(${stat.rotate}deg)`,
+                  borderRadius: '2px', // Borda sutilmente suave
+                }}
               />
-              {/* Text */}
-              <div
-                className="flex flex-col items-center gap-4 text-center"
+              
+              {/* Textos */}
+              <div 
+                className="flex flex-col items-center gap-2 text-center" 
                 style={{ fontFamily: "'Anton', sans-serif", color: "#f1e5d1" }}
               >
-                <span style={{ fontSize: "clamp(72px, 9vw, 120px)", lineHeight: 1 }}>
+                <span style={{ fontSize: "clamp(56px, 7vw, 72px)", lineHeight: 1 }}>
                   {stat.value}
                 </span>
-                <span className="uppercase" style={{ fontSize: 24, lineHeight: "32px", letterSpacing: "1px" }}>
+                {/* Legenda com cor levemente mais opaca (bege escuro) */}
+                <span 
+                  className="uppercase" 
+                  style={{ fontSize: 16, lineHeight: "24px", letterSpacing: "1px", color: "#c8bfae" }}
+                >
                   {stat.label}
                 </span>
               </div>
@@ -394,7 +409,6 @@ export function ZamboStats() {
     </section>
   );
 }
-
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -517,14 +531,16 @@ export function Historia() {
 
       {/* Footer CTA */}
       <div
-        className="w-full py-16 px-6 lg:px-[80px] flex flex-col items-center justify-center gap-8"
+        // MUDANÇA: Reduzido de 'py-16' para 'pt-4 pb-12' para colar no bloco de cima
+        className="w-full pt-4 pb-12 px-6 lg:px-[80px] flex flex-col items-center justify-center gap-6"
         style={{ background: "#1d1b18" }}
       >
         <p
           className="text-center"
           style={{
             fontFamily: "'Anton', sans-serif",
-            fontSize: "clamp(24px, 4vw, 48px)",
+            // MUDANÇA: Letras menores. Máximo foi de 48px para 36px.
+            fontSize: "clamp(24px, 4vw, 36px)",
             lineHeight: 1.1,
             color: "#f1e5d1",
             letterSpacing: "1px",
@@ -535,7 +551,7 @@ export function Historia() {
           <span style={{ color: "#f8ba01" }}>CONTINUE.</span>
         </p>
         <button
-          className="flex items-center gap-3 bg-[#f8ba01] uppercase rounded-[4px] px-8 py-4"
+          className="flex items-center gap-3 bg-[#f8ba01] uppercase rounded-[4px] px-8 py-4 mt-2"
           style={{
             fontFamily: "'Anton', sans-serif",
             fontSize: 18,
