@@ -9,27 +9,32 @@ const heroPhoto =
 const categoryCards = [
   {
     label: "ARTISTAS INDEPENDENTES",
-    photo: "https://images.unsplash.com/photo-1588172322752-e13df881e89e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    photo:
+      "https://images.unsplash.com/photo-1588172322752-e13df881e89e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     accentColor: "#dd341f",
   },
   {
     label: "COLETIVOS CULTURAIS",
-    photo: "https://images.unsplash.com/photo-1523689119443-df96632084a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    photo:
+      "https://images.unsplash.com/photo-1523689119443-df96632084a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     accentColor: "#f8ba01",
   },
   {
     label: "EDUCADORES POPULARES",
-    photo: "https://images.unsplash.com/photo-1509062522246-3755977927d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    photo:
+      "https://images.unsplash.com/photo-1509062522246-3755977927d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     accentColor: "#1a7d3c",
   },
   {
     label: "VOLUNTÁRIOS",
-    photo: "https://images.unsplash.com/photo-1778236313375-c80768b13495?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    photo:
+      "https://images.unsplash.com/photo-1778236313375-c80768b13495?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     accentColor: "#dd341f",
   },
   {
     label: "COMUNIDADE LOCAL",
-    photo: "https://images.unsplash.com/photo-1505147634308-9b83c4cb46b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    photo:
+      "https://images.unsplash.com/photo-1505147634308-9b83c4cb46b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     accentColor: "#f8ba01",
   },
 ];
@@ -74,7 +79,10 @@ function CategoryCard({
       }}
     >
       {/* Photo */}
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "3/4" }}>
+      <div
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: "3/4" }}
+      >
         <ImageWithFallback
           src={photo}
           alt={label}
@@ -85,7 +93,8 @@ function CategoryCard({
           className="absolute bottom-0 left-0 right-0"
           style={{
             height: "55%",
-            background: "linear-gradient(to top, rgba(18,18,18,0.92) 0%, transparent 100%)",
+            background:
+              "linear-gradient(to top, rgba(18,18,18,0.92) 0%, transparent 100%)",
           }}
         />
         {/* Accent top strip */}
@@ -118,14 +127,14 @@ function PartnerLogo({ name, sub }: { name: string; sub: string }) {
   return (
     <div
       className="flex flex-col items-center justify-center text-center px-4 py-6 flex-1 min-w-0"
-      style={{ borderRight: "1px solid rgba(0,0,0,0.1)" }}
+      style={{ borderRight: "1px solid rgba(107,94,85,0.2)" }}
     >
       <span
         style={{
           fontFamily: "'Anton', sans-serif",
           fontSize: "clamp(11px, 1.2vw, 15px)",
           lineHeight: 1.2,
-          color: "#121212",
+          color: "#f1e5d1",
           letterSpacing: "0.3px",
           whiteSpace: "pre-line",
         }}
@@ -140,7 +149,7 @@ function PartnerLogo({ name, sub }: { name: string; sub: string }) {
             fontWeight: 500,
             fontSize: "clamp(9px, 0.9vw, 11px)",
             lineHeight: 1.3,
-            color: "#6b5e55",
+            color: "#9a8f86",
             whiteSpace: "pre-line",
           }}
         >
@@ -155,17 +164,18 @@ function PartnerLogo({ name, sub }: { name: string; sub: string }) {
 
 export function ZamboApoiadores() {
   return (
-    <section className="w-full" style={{ background: "#f5eedd" }}>
-
+    <section className="background w-full">
       {/* ── Top block: header + photo ── */}
       <div className="max-w-[1200px] mx-auto px-6 lg:px-[80px] pt-20 pb-12">
         <div className="flex flex-col lg:flex-row gap-10 items-start">
-
           {/* Left: headline */}
           <div className="flex flex-col gap-6 flex-1">
             {/* Label */}
             <div className="flex items-center gap-3">
-              <div className="w-1 h-5 shrink-0" style={{ background: "#f8ba01" }} />
+              <div
+                className="w-1 h-5 shrink-0"
+                style={{ background: "#f8ba01" }}
+              />
               <span
                 style={{
                   fontFamily: "'Inter', sans-serif",
@@ -190,16 +200,16 @@ export function ZamboApoiadores() {
                 letterSpacing: "1px",
               }}
             >
-              QUEM CAMINHA<br />COM A ZAMBÔ,<br />
+              QUEM CAMINHA
+              <br />
+              COM A ZAMBÔ,
+              <br />
               <span style={{ color: "#dd341f" }}>FORTALECE.</span>
             </h2>
           </div>
 
           {/* Center: description */}
-          <div
-            className="flex flex-col gap-5 flex-1"
-            style={{ paddingTop: 8 }}
-          >
+          <div className="flex flex-col gap-5 flex-1" style={{ paddingTop: 8 }}>
             <p
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -209,7 +219,8 @@ export function ZamboApoiadores() {
                 color: "#3a342f",
               }}
             >
-              A Zambô existe graças às parcerias que acreditam na cultura como ferramenta de transformação e na força dos territórios.
+              A Zambô existe graças às parcerias que acreditam na cultura como
+              ferramenta de transformação e na força dos territórios.
             </p>
             <p
               style={{
@@ -220,7 +231,8 @@ export function ZamboApoiadores() {
                 color: "#3a342f",
               }}
             >
-              Juntos, seguimos promovendo arte, educação, identidade e justiça social.
+              Juntos, seguimos promovendo arte, educação, identidade e justiça
+              social.
             </p>
           </div>
 
@@ -272,8 +284,10 @@ export function ZamboApoiadores() {
 
       {/* ── Institutional partners band ── */}
       <div
-        className="w-full py-6 px-6 lg:px-[80px]"
-        style={{ background: "#fff", borderTop: "2px solid #121212", borderBottom: "2px solid #121212" }}
+        className="bg-[#1d1b18] w-full py-6 px-6 lg:px-[80px]"
+        style={{
+          borderTop: "2px solid #121212",
+        }}
       >
         <div className="max-w-[1200px] mx-auto flex flex-col gap-4">
           <span
@@ -282,14 +296,17 @@ export function ZamboApoiadores() {
               fontWeight: 800,
               fontSize: 11,
               letterSpacing: "2px",
-              color: "#6b5e55",
+              color: "#9a8f86",
             }}
           >
             PARCEIROS INSTITUCIONAIS E PATROCINADORES
           </span>
           <div
             className="flex flex-wrap items-stretch divide-x divide-black/10"
-            style={{ borderTop: "1px solid rgba(0,0,0,0.1)", borderBottom: "1px solid rgba(0,0,0,0.1)" }}
+            style={{
+              borderTop: "1px solid rgba(0,0,0,0.1)",
+              borderBottom: "1px solid rgba(0,0,0,0.1)",
+            }}
           >
             {institutionalPartners.map((p) => (
               <PartnerLogo key={p.name} name={p.name} sub={p.sub} />
@@ -299,10 +316,7 @@ export function ZamboApoiadores() {
       </div>
 
       {/* ── Category cards ── */}
-      <div
-        className="w-full px-6 lg:px-[80px] py-14"
-        style={{ background: "#f5eedd" }}
-      >
+      <div className="background w-full px-6 lg:px-[80px] py-14">
         <div className="max-w-[1200px] mx-auto flex flex-col gap-6">
           <span
             style={{

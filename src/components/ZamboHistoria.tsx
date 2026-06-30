@@ -161,7 +161,7 @@ function TimelineItem({
 export function ZamboHistoria() {
   return (
     <section className="background relative w-full overflow-hidden py-[120px] px-6 lg:px-[120px]">
-      <div className="max-w-[1040px] w-full mx-auto">
+      <div className="max-w-[1100px] w-full mx-auto">
         {/* Decorative sketch lines */}
         <div
           aria-hidden

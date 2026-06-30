@@ -323,7 +323,7 @@ function FeaturedMemberCard({
 
 export function ZamboMembros() {
   return (
-    <section className="w-full" style={{ background: "#f5eedd" }}>
+    <section className="background w-full">
       <div className="max-w-[1200px] mx-auto px-6 lg:px-[80px] py-20 flex flex-col gap-16">
         {/* ── Header + President ── */}
         <div className="flex flex-col lg:flex-row gap-12 items-start">

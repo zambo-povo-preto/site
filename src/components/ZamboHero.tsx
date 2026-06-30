@@ -155,7 +155,7 @@ export function ZamboHero() {
       </div>
 
       {/* Ticker bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-[58px] bg-[#1d1b18] overflow-hidden z-10">
+      <div className="absolute bottom-0 left-0 right-0 h-[58px] bg-[#0C0C0C] overflow-hidden z-10">
         <div className="ticker-track flex items-center h-full whitespace-nowrap">
           {[...Array(4)].map((_, i) => (
             <span
