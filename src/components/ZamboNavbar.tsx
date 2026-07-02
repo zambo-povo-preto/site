@@ -50,6 +50,7 @@ export function ZamboNavbar({ overlaid = false }: ZamboNavbarProps) {
     { label: "INÍCIO", to: "/" },
     { label: "HISTÓRIA", to: "/historia" },
     { label: "TRANSPARÊNCIA", to: "/transparencia" },
+    { label: "CONTATO", to: "/contato" },
   ];
 
   return (
