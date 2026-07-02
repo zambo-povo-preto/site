@@ -87,7 +87,8 @@ export function ZamboNavbar({ overlaid = false }: ZamboNavbarProps) {
   const navLinks = [
     { label: "INÍCIO", to: "/" },
     { label: "HISTÓRIA", to: "/historia" },
-    // { label: "TRANSPARÊNCIA", to: "/transparencia" },
+    { label: "TRANSPARÊNCIA", to: "/transparencia" },
+    { label: "CONTATO", to: "/contato" },
   ];
 
   return (
