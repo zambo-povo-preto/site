@@ -1,3 +1,4 @@
+import Link from "next/link";
 import svgPaths from "../imports/Group36/svg-hkzbekptio";
 import { ZamboLogoMarkHero } from "./logo/ZamboLogoMarkHero";
 import { ZamboNavbar } from "./ZamboNavbar";
@@ -30,10 +31,10 @@ export function ZamboHero() {
   return (
     <section
       className="relative w-full overflow-hidden"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "calc(100vh - 120px)" }}
     >
       {/* Hero Content */}
-      <div className="relative z-10 max-w-[1280px] mx-auto px-6 lg:px-[80px] pt-[140px] pb-[80px] flex items-center min-h-screen">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 lg:px-[80px] pt-[60px] pb-[80px] flex items-center min-h-screen">
         {/* Left side */}
         <div className="flex-1 flex flex-col gap-12 lg:min-w-[600px]">
           {/* Tagline */}
@@ -113,8 +114,8 @@ export function ZamboHero() {
             </p>
 
             <div className="flex flex-wrap gap-7 items-center">
-              <button
-                type="button"
+              <Link
+                href="/historia"
                 className="flex items-center gap-3 bg-[#f8ba01] uppercase rounded-[4px] px-5 py-4"
                 style={{
                   fontFamily: "'Anton', sans-serif",
@@ -126,9 +127,11 @@ export function ZamboHero() {
               >
                 CONHEÇA NOSSO TRABALHO
                 <ArrowRight />
-              </button>
-              <button
-                type="button"
+              </Link>
+              <a
+                href="https://www.instagram.com/zambomnc/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-[#ebdbc3] uppercase rounded-[4px] px-5 py-4 h-14 border-3 border-black relative"
                 style={{
                   fontFamily: "'Anton', sans-serif",
@@ -138,16 +141,16 @@ export function ZamboHero() {
                   boxShadow: "6px 6px 0px black",
                 }}
               >
-                DOE AGORA
+                FALE CONOSCO
                 <DonateArrow />
-              </button>
+              </a>
             </div>
           </div>
         </div>
 
         {/* Right side — figure */}
         <div className="hidden lg:flex items-end justify-center shrink-0">
-          <img src="/logo-mark-hero.png" alt="" width={635} height={738} />
+          <img src="/logo-mark-hero.png" alt="" width={603} height={701} />
         </div>
       </div>
 

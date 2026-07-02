@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import svgPaths from "../imports/Group36/svg-hkzbekptio";
 import { ZamboLogoMark } from "./logo/ZamboLogoMark";
+import { useEffect, useState } from "react";
 
 function LogoMark() {
   return (
@@ -69,6 +70,19 @@ interface ZamboNavbarProps {
 
 export function ZamboNavbar({ overlaid = false }: ZamboNavbarProps) {
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { label: "INÍCIO", to: "/" },
@@ -78,8 +92,20 @@ export function ZamboNavbar({ overlaid = false }: ZamboNavbarProps) {
 
   return (
     <nav
-      className={`${overlaid ? "fixed top-0 left-0 right-0 z-20" : "relative z-20 border-b border-black/10"} py-5 px-6 lg:px-[80px] bg-[#f1e1cc] backdrop-blur-xl border-b border-white/10 shadow-sm`}
-      style={overlaid ? undefined : { background: "#f5eedd" }}
+      className={`
+    ${overlaid ? "fixed inset-x-0 top-0 z-50" : "relative z-20"}
+
+    px-6 py-5 lg:px-[80px]
+    transition-all duration-300 ease-out
+
+    ${
+      overlaid
+        ? scrolled
+          ? "bg-[#f0e3cd] shadow-lg"
+          : "bg-transparent"
+        : "bg-[#f0e3cd]"
+    }
+  `}
     >
       <div className="max-w-[1280px] mx-auto flex items-center justify-between">
         {/* Logo */}

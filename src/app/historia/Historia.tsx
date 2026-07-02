@@ -2,9 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 const imgPhoto = "/zambo/Frame68/987b1f4e79a4d84b8b83b08c67629ffffb7464cc.png";
-const imgIllustration = "/zambo/Frame68/e0cb6662dcbe1edc0d3c18a68d3844e699e6390a.png";
-const imgRectangle2 = "/zambo/Frame68/1e4f18855119022a2920c12139fd25721134e022.png";
-const imgRectangle3 = "/zambo/Frame68/544d9e7abfc47b0a36e95247d4a5befa83888d16.png";
+const imgIllustration =
+  "/zambo/Frame68/e0cb6662dcbe1edc0d3c18a68d3844e699e6390a.png";
+const imgRectangle2 =
+  "/zambo/Frame68/1e4f18855119022a2920c12139fd25721134e022.png";
+const imgRectangle3 =
+  "/zambo/Frame68/544d9e7abfc47b0a36e95247d4a5befa83888d16.png";
 const imgBg = "/zambo/Frame68/bfe8fac91719951ba5d39ec6b633b2da36c68f6b.png";
 import svgPaths from "../../imports/Group36/svg-hkzbekptio";
 
@@ -103,7 +106,7 @@ const eras: Era[] = [
     imageAlt: "Referência nacional — 2024",
     imageRight: true,
   },
-  
+
   // AQUI COMEÇAM AS NOVAS DATAS (Insira ANTES da função Historia):
   {
     id: "2026",
@@ -156,7 +159,10 @@ const timelineYears = eras.map((e) => e.year);
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function HighlightedTitle({ text, accentColor }: { text: string; accentColor: string }) {
+function HighlightedTitle({
+  text,
+  accentColor,
+}: { text: string; accentColor: string }) {
   return (
     <div className="relative inline-block">
       {/* Yellow band behind text */}
@@ -173,8 +179,15 @@ function HighlightedTitle({ text, accentColor }: { text: string; accentColor: st
             maskRepeat: "no-repeat",
           }}
         >
-          <span className="absolute inset-0" style={{ backgroundColor: accentColor }} />
-          <img alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" src={imgRectangle3} />
+          <span
+            className="absolute inset-0"
+            style={{ backgroundColor: accentColor }}
+          />
+          <img
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-40"
+            src={imgRectangle3}
+          />
         </span>
       </span>
       <span
@@ -194,7 +207,11 @@ function HighlightedTitle({ text, accentColor }: { text: string; accentColor: st
   );
 }
 
-function QuoteBlock({ text, author, accentColor }: { text: string; author?: string; accentColor: string }) {
+function QuoteBlock({
+  text,
+  author,
+  accentColor,
+}: { text: string; author?: string; accentColor: string }) {
   return (
     <blockquote
       className="relative pl-5 py-1"
@@ -233,8 +250,21 @@ function QuoteBlock({ text, author, accentColor }: { text: string; author?: stri
 // Componente auxiliar para os pontilhados nos cantos do card
 function DecorativeDots({ className }: { className?: string }) {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className={className}>
-      <pattern id="dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 40 40"
+      fill="none"
+      className={className}
+    >
+      <pattern
+        id="dots"
+        x="0"
+        y="0"
+        width="8"
+        height="8"
+        patternUnits="userSpaceOnUse"
+      >
         <circle cx="2" cy="2" r="1.5" fill="currentColor" />
       </pattern>
       <rect width="40" height="40" fill="url(#dots)" />
@@ -243,41 +273,68 @@ function DecorativeDots({ className }: { className?: string }) {
 }
 
 function EraSection({ era }: { era: Era }) {
-  const { year, title, accentColor, paragraphs, quote, image, imageAlt, imageRight } = era;
+  const {
+    year,
+    title,
+    accentColor,
+    paragraphs,
+    quote,
+    image,
+    imageAlt,
+    imageRight,
+  } = era;
 
   const isYellow = accentColor.toLowerCase() === "#f1b412";
   const titleTextColor = isYellow ? "#121212" : "#ffffff";
 
   return (
     // Adicionei md:mb-12 para dar mais espaço entre os cards
-    <section id={year} className="relative w-full max-w-[1100px] mx-auto flex items-stretch gap-4 md:gap-8 scroll-mt-10 mb-8 md:mb-12">
-      
+    <section
+      id={year}
+      className="relative w-full max-w-[1100px] mx-auto flex items-stretch gap-4 md:gap-8 scroll-mt-10 mb-8 md:mb-12"
+    >
       {/* LINHA DO TEMPO LATERAL (ESQUERDA) */}
       {imageRight && (
         <div className="hidden md:flex flex-col items-center justify-center w-8 shrink-0 relative">
-          <div className="absolute top-10 bottom-10 w-[2px]" style={{ backgroundColor: accentColor }} />
-          <div className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" style={{ backgroundColor: accentColor }} />
+          <div
+            className="absolute top-10 bottom-10 w-[2px]"
+            style={{ backgroundColor: accentColor }}
+          />
+          <div
+            className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white"
+            style={{ backgroundColor: accentColor }}
+          />
         </div>
       )}
 
       {/* CARD PRINCIPAL */}
       {/* MUDANÇA: Adicionei md:min-h-[420px] para padronizar a altura mínima do card em telas maiores */}
-      <div className={`relative flex-1 bg-[#f4ebd9] md:min-h-[420px] shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc] flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} overflow-hidden`}>
-        
+      <div
+        className={`relative flex-1 bg-[#f4ebd9] md:min-h-[420px] shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc] flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} overflow-hidden`}
+      >
         {/* Detalhes pontilhados nos cantos do texto */}
-        <DecorativeDots className={`absolute top-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`} />
-        <DecorativeDots className={`absolute bottom-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`} />
+        <DecorativeDots
+          className={`absolute top-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`}
+        />
+        <DecorativeDots
+          className={`absolute bottom-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`}
+        />
 
         {/* BLOCO DE TEXTO */}
         <div className="flex-1 flex flex-col items-start p-6 md:p-10 z-10 relative">
-          
           {/* Cabeçalho do Card */}
           <div className="flex flex-wrap items-center gap-4 mb-4">
             <span className="font-['Anton'] text-[56px] md:text-[64px] text-[#121212] leading-none">
               {year}
             </span>
-            <div className="relative px-3 py-1.5 mt-2 transform -rotate-1 shadow-sm" style={{ backgroundColor: accentColor }}>
-              <span className="relative z-10 font-['Anton'] text-[20px] md:text-[22px] tracking-wide" style={{ color: titleTextColor }}>
+            <div
+              className="relative px-3 py-1.5 mt-2 transform -rotate-1 shadow-sm"
+              style={{ backgroundColor: accentColor }}
+            >
+              <span
+                className="relative z-10 font-['Anton'] text-[20px] md:text-[22px] tracking-wide"
+                style={{ color: titleTextColor }}
+              >
                 {title}
               </span>
             </div>
@@ -292,7 +349,10 @@ function EraSection({ era }: { era: Era }) {
 
           {/* Bloco de Citação */}
           <div className="relative bg-[#e6dbce] p-4 pr-6 rounded-sm flex gap-4 w-full border border-[#d8cdb8] mt-auto">
-            <span className="font-['Anton'] text-[48px] leading-[0.7] mt-2" style={{ color: accentColor }}>
+            <span
+              className="font-['Anton'] text-[48px] leading-[0.7] mt-2"
+              style={{ color: accentColor }}
+            >
               “
             </span>
             <p className="font-['Inter'] font-bold text-[13px] md:text-[14px] text-[#3a342f] leading-snug">
@@ -304,36 +364,38 @@ function EraSection({ era }: { era: Era }) {
         {/* BLOCO DA IMAGEM: Ocupa todo o bloco da direita, tocando as bordas */}
         {/* REMOVIDO o overflow-hidden desta div abaixo também */}
         <div className="w-full md:w-[45%] shrink-0 relative min-h-[250px] md:min-h-0 bg-white">
-          
           {/* A foto com 'absolute inset-0' */}
-          <img 
-            src={image} 
-            alt={imageAlt} 
-            className="absolute inset-0 w-full h-full object-cover" 
+          <img
+            src={image}
+            alt={imageAlt}
+            className="absolute inset-0 w-full h-full object-cover"
           />
-          
-          {/* AJUSTADO: Trocado 'top-4' por '-top-3' para subir, adicionado 'z-30' e deixado reto (rotate(0deg)) como no exemplo */}
-          <div 
-            className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 md:w-24 md:h-8 z-30 shadow-sm" 
-            style={{ 
-              backgroundColor: accentColor, 
-              transform: "rotate(0deg) translateX(-50%)",
-              transformOrigin: "left"
-            }} 
-          />
-          
-        </div>
 
+          {/* AJUSTADO: Trocado 'top-4' por '-top-3' para subir, adicionado 'z-30' e deixado reto (rotate(0deg)) como no exemplo */}
+          <div
+            className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 md:w-24 md:h-8 z-30 shadow-sm"
+            style={{
+              backgroundColor: accentColor,
+              transform: "rotate(0deg) translateX(-50%)",
+              transformOrigin: "left",
+            }}
+          />
+        </div>
       </div>
 
       {/* LINHA DO TEMPO LATERAL (DIREITA) */}
       {!imageRight && (
         <div className="hidden md:flex flex-col items-center justify-center w-8 shrink-0 relative">
-          <div className="absolute top-10 bottom-10 w-[2px]" style={{ backgroundColor: accentColor }} />
-          <div className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white" style={{ backgroundColor: accentColor }} />
+          <div
+            className="absolute top-10 bottom-10 w-[2px]"
+            style={{ backgroundColor: accentColor }}
+          />
+          <div
+            className="w-5 h-5 rounded-full border-[2.5px] border-[#121212] z-10 bg-white"
+            style={{ backgroundColor: accentColor }}
+          />
         </div>
       )}
-
     </section>
   );
 }
@@ -342,28 +404,25 @@ function EraSection({ era }: { era: Era }) {
 function TimelineNav({ activeYear }: { activeYear: string }) {
   return (
     <div className="w-full pt-8 pb-7 px-4 lg:px-[80px] z-20 relative overflow-x-auto no-scrollbar">
-      
       <div className="max-w-[1200px] min-w-[850px] mx-auto">
-        
         {/* Container Principal da Linha do Tempo */}
         <div className="relative w-full flex justify-between items-end mb-2">
-          
           {/* Linha horizontal preta conectando os pontos */}
           <div className="absolute bottom-[10px] md:bottom-[11px] left-[5%] right-[5%] h-[2px] bg-[#121212] z-0" />
-          
+
           {eras.map((era) => (
-      
-            <div key={era.id} className="relative z-10 flex flex-col items-center w-[90px] md:w-[130px] shrink-0 gap-5 group">
-              
+            <div
+              key={era.id}
+              className="relative z-10 flex flex-col items-center w-[90px] md:w-[130px] shrink-0 gap-5 group"
+            >
               {/* Textos acima da linha */}
               <div className="flex flex-col items-center justify-end text-center w-full px-1">
-                
                 {/* Ano */}
-              
+
                 <span className="font-['Anton'] text-[20px] md:text-[26px] text-[#121212] leading-none mb-3 whitespace-nowrap">
                   {era.year}
                 </span>
-                
+
                 {/* Caixinha do subtítulo */}
                 <div className="flex items-center justify-center w-full min-h-[32px] md:min-h-[40px]">
                   <span className="font-['Inter'] text-[12px] md:text-[14px] font-bold text-[#121212] leading-tight text-center capitalize">
@@ -373,18 +432,18 @@ function TimelineNav({ activeYear }: { activeYear: string }) {
               </div>
 
               {/* Bolinha com cor dinâmica */}
-              <a 
-                href={`#${era.year}`} 
+              <a
+                href={`#${era.year}`}
                 className="w-5 h-5 md:w-6 md:h-6 rounded-full border-[2.5px] md:border-[3px] border-[#121212] transition-transform duration-300 hover:scale-110"
-                style={{ 
+                style={{
                   backgroundColor: era.dotColor,
-                  transform: activeYear === era.year ? "scale(1.2)" : "scale(1)"
+                  transform:
+                    activeYear === era.year ? "scale(1.2)" : "scale(1)",
                 }}
               />
             </div>
           ))}
         </div>
-        
       </div>
     </div>
   );
@@ -403,7 +462,12 @@ export function ZamboStats() {
   const stats = [
     { value: "30+", label: "Anos de História", color: "#e22a1d", rotate: -2 },
     { value: "3k+", label: "Vidas Impactadas", color: "#fdc700", rotate: 1 },
-    { value: "20+", label: "Projetos Realizados", color: "#008236", rotate: -3 },
+    {
+      value: "20+",
+      label: "Projetos Realizados",
+      color: "#008236",
+      rotate: -3,
+    },
   ];
 
   return (
@@ -416,8 +480,8 @@ export function ZamboStats() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {stats.map((stat) => (
             // Card Individual Escuro
-            <div 
-              key={stat.label} 
+            <div
+              key={stat.label}
               className="relative flex flex-col items-center bg-[#292724] px-6 py-12 md:py-16 rounded-[16px] shadow-2xl mt-6"
             >
               {/* Fita Adesiva Tátil */}
@@ -426,22 +490,29 @@ export function ZamboStats() {
                 style={{
                   backgroundColor: stat.color,
                   transform: `translateX(-50%) rotate(${stat.rotate}deg)`,
-                  borderRadius: '2px', // Borda sutilmente suave
+                  borderRadius: "2px", // Borda sutilmente suave
                 }}
               />
-              
+
               {/* Textos */}
-              <div 
-                className="flex flex-col items-center gap-2 text-center" 
+              <div
+                className="flex flex-col items-center gap-2 text-center"
                 style={{ fontFamily: "'Anton', sans-serif", color: "#f1e5d1" }}
               >
-                <span style={{ fontSize: "clamp(56px, 7vw, 72px)", lineHeight: 1 }}>
+                <span
+                  style={{ fontSize: "clamp(56px, 7vw, 72px)", lineHeight: 1 }}
+                >
                   {stat.value}
                 </span>
                 {/* Legenda com cor levemente mais opaca (bege escuro) */}
-                <span 
-                  className="uppercase" 
-                  style={{ fontSize: 16, lineHeight: "24px", letterSpacing: "1px", color: "#c8bfae" }}
+                <span
+                  className="uppercase"
+                  style={{
+                    fontSize: 16,
+                    lineHeight: "24px",
+                    letterSpacing: "1px",
+                    color: "#c8bfae",
+                  }}
                 >
                   {stat.label}
                 </span>
@@ -486,21 +557,23 @@ function ScrollToTop() {
       onClick={scrollToTop}
       aria-label="Voltar ao topo"
       className={`fixed bottom-8 right-8 z-[100] flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-[#f8ba01] rounded-[4px] border-[2px] border-[#121212] transition-all duration-300 hover:-translate-y-2 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+        isVisible
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-10 pointer-events-none"
       }`}
       style={{
         boxShadow: "4px 4px 0px rgba(18, 18, 18, 1)", // Sombra sólida preta igual aos outros botões
       }}
     >
       {/* Ícone de Seta para cima */}
-      <svg 
-        width="28" 
-        height="28" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="#121212" 
-        strokeWidth="3" 
-        strokeLinecap="square" 
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#121212"
+        strokeWidth="3"
+        strokeLinecap="square"
         strokeLinejoin="miter"
       >
         <path d="M12 19V5M5 12l7-7 7 7" />
@@ -520,11 +593,13 @@ export function Historia() {
           if (entry.isIntersecting) {
             activeYearRef.current = entry.target.id;
             // force re-render by dispatching a custom event
-            window.dispatchEvent(new CustomEvent("era-change", { detail: entry.target.id }));
+            window.dispatchEvent(
+              new CustomEvent("era-change", { detail: entry.target.id }),
+            );
           }
         });
       },
-      { rootMargin: "-40% 0px -55% 0px" }
+      { rootMargin: "-40% 0px -55% 0px" },
     );
 
     eras.forEach((era) => {
@@ -537,10 +612,10 @@ export function Historia() {
 
   //inicio do controle de BACKGROUND
   return (
-    <div 
+    <div
       className="relative w-full min-h-screen overflow-hidden"
       style={{
-        backgroundColor: "#EEDEC9", 
+        backgroundColor: "#EEDEC9",
         backgroundImage: `
           radial-gradient(circle at 15% 20%, rgba(0, 0, 0, 0.06) 0%, transparent 40%),
           radial-gradient(circle at 85% 75%, rgba(0, 0, 0, 0.04) 0%, transparent 50%),
@@ -552,9 +627,8 @@ export function Historia() {
       {/* Hero header */}
       <div className="relative w-full pt-16 pb-12 px-6 lg:px-[80px]">
         <div className="relative max-w-[1200px] mx-auto flex flex-col items-center text-center gap-6">
-          
           {/* Label */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mt-[90px]">
             <div className="h-px w-12 bg-black" />
             <span
               style={{
@@ -577,7 +651,10 @@ export function Historia() {
               src="/img/faixa1.png"
               alt=""
               className="absolute inset-0 w-full h-full object-cover z-0"
-              style={{ transform: "translateX(-3px) translateY(44%) scaleX(1.18) scaleY(0.74) scaleX(0.95)" }} //Alterar as dimensões da faixa de nossa jornada
+              style={{
+                transform:
+                  "translateX(-3px) translateY(44%) scaleX(1.18) scaleY(0.74) scaleX(0.95)",
+              }} //Alterar as dimensões da faixa de nossa jornada
               aria-hidden
             />
             <h1
@@ -605,7 +682,7 @@ export function Historia() {
               fontSize: 16,
               lineHeight: "1.4",
               color: "#3a342f",
-              maxWidth: 800, 
+              maxWidth: 800,
             }}
           >
             Mais de três décadas de luta, resistência e transformação social.

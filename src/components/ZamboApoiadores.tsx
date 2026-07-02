@@ -278,30 +278,11 @@ export function ZamboApoiadores() {
   return (
     <section className="w-full">
       {/* ── Top block: header + photo ── */}
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-[80px] pt-20 pb-12">
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
+      <div className="max-w-[1370px] mx-auto px-6 lg:px-[80px] pt-20 pb-12">
+        <div className="flex flex-col lg:flex-row gap-10 items-start justify-between">
           {/* Left: headline */}
           <div>
             <div className="flex flex-col gap-6 flex-1">
-              {/* Label */}
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-1 h-5 shrink-0"
-                  style={{ background: "#f8ba01" }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 800,
-                    fontSize: 14,
-                    letterSpacing: "1.5px",
-                    color: "#121212",
-                  }}
-                >
-                  NOSSA REDE
-                </span>
-              </div>
-
               {/* Heading */}
               <h2
                 className="uppercase"
@@ -333,6 +314,7 @@ export function ZamboApoiadores() {
                   fontSize: 16,
                   lineHeight: "26px",
                   color: "#3a342f",
+                  maxWidth: 600,
                 }}
               >
                 A Zambô existe graças às parcerias que acreditam na cultura como

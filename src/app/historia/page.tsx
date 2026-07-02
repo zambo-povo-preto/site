@@ -1,11 +1,11 @@
 import { ZamboFooter } from "@/components/ZamboFooter";
-import { ZamboNavbar } from "@/components/ZamboNavbar";
 import { Historia } from "./Historia";
+import { ZamboNavbar } from "@/components/ZamboNavbar";
 
 export default function HistoriaPage() {
   return (
     <div className="min-h-screen w-full">
-      <ZamboNavbar />
+      <ZamboNavbar overlaid />
       <Historia />
       <ZamboFooter />
     </div>

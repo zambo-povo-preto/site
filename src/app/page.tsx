@@ -16,7 +16,6 @@ export default function Home() {
       <ZamboHistoryIntro />
       <ZamboHistoria />
       <ZamboPillars />
-      <HistoryBanner />
       <ZamboApoiadores />
       <ZamboFooter />
     </div>

@@ -19,7 +19,7 @@ export function ZamboFooter() {
         <div className="flex-1" style={{ background: "#1a7d3c" }} />
       </div>
 
-      <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-[80px] py-12 flex flex-col gap-10">
+      <div className="w-full max-w-[1380px] mx-auto px-6 lg:px-[80px] py-12 flex flex-col gap-10">
         {/* Top row */}
         <div className="flex flex-col md:flex-row gap-10 justify-between">
           {/* Brand */}
