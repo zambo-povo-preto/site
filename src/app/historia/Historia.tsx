@@ -34,7 +34,7 @@ const eras: Era[] = [
     accentColor: "#dd341f",
     dotColor: "#dd341f",
     paragraphs: [
-      "Fundação do Movimento Negro de Caraguatatuba: idealizado por lideranças negras e apoiadores da causa antirracista em defesa dos direitos da população negra no município.",
+      "Fundação do Movimento Negro de Caraguatatuba: idealizado por lideranças negras e apoiadores da causa antirracista em defesa dos direitos da população negra no município.Surgiu com o objetivo de representar a comunidade negra, promover políticas públicas de combate ao racismo, à discriminação e às desigualdades sociais, além de valorizar e preservar a cultura afro-brasileira, sempre participando dos conselhos municipais e estatual.",
     ],
     quote:
       "A Zambô nasceu de uma necessidade: a de ver nossa cultura valorizada, nossa história contada e nossa identidade celebrada.",
@@ -49,10 +49,10 @@ const eras: Era[] = [
     accentColor: "#f1b412",
     dotColor: "#f1b412",
     paragraphs: [
-      "Realização de atividades culturais, palestras e debates, além da articulação com movimentos sociais e organizações do Litoral Norte voltadas à consciência negra, cidadania e combate ao racismo.",
+      "Realização de atividades culturais, palestras e debates, além da articulação com movimentos sociais e organizações do Litoral Norte voltadas à consciência negra, cidadania e combate ao racismo. Entre suas principais realizações está a tradicional “Kizomba da Consciência Negra”, iniciada em 1996, evento que se tornou referência cultural no município, promovendo apresentações artísticas, reflexões antirracistas e valorização das ancestralidades negras",
     ],
     quote:
-      "Com apoio crescente da comunidade, a Zambô se tornou um espaço de acolhimento, educação e resistência cultural para gerações de jovens.",
+      "O festival nasceu para mostrar que a cultura negra não é margem — é centro. É de onde vem a força criativa deste país.",
     image: "/img/terezinha.jpg",
     imageAlt: "Programas educacionais — 1995",
     imageRight: false,
@@ -64,10 +64,10 @@ const eras: Era[] = [
     accentColor: "#1a7d3c",
     dotColor: "#1a7d3c",
     paragraphs: [
-      "Registrada como associação civil de direito privado, com autonomia administrativa, sob CNPJ nº 04.978.370/0001-59.",
+      "Registrada como associação civil de direito privado, com autonomia administrativa, sob CNPJ nº 04.978.370/0001-59. Oficializada como associação em 2001, a entidade desenvolveu ao longo de sua trajetória diversas ações culturais, educativas e sociais, como oficinas, palestras, seminários, eventos culturais, projetos de geração de renda e atividades de fortalecimento da identidade negra, sempre em parceria com órgãos públicos e privados. ",
     ],
     quote:
-      "O festival nasceu para mostrar que a cultura negra não é margem — é centro. É de onde vem a força criativa deste país.",
+      "A cada nova comunidade alcançada, a Zambô reafirma que a cultura é ferramenta de transformação social.",
     image: "/img/teste4.jpg",
     imageAlt: "Festival Afro-Brasileiro — 2000",
     imageRight: true,
@@ -83,7 +83,7 @@ const eras: Era[] = [
       "Nesse período, a entidade expandiu suas ações de formação e conscientização em escolas e comunidades, promoveu atividades culturais ligadas à memória afro-brasileira valorizando as tradições de matriz africana e fortaleceu sua atuação em conselhos, fóruns e conferências voltados à igualdade racial.",
     ],
     quote:
-      "A cada nova comunidade alcançada, a Zambô reafirma que a cultura é ferramenta de transformação social.",
+      "Com apoio crescente da comunidade, a Zambô se tornou um espaço de acolhimento, educação e resistência cultural para gerações de jovens.",
     image: "/img/teste11.jpg",
     imageAlt: "Expansão e impacto — 2010",
     imageRight: false,
@@ -115,7 +115,7 @@ const eras: Era[] = [
       "Participação em editais e programas de fortalecimento da cultura de base comunitária. Paralelamente, realizou atividades formativas e educativas para jovens, mulheres e lideranças, além de expandir sua presença institucional em redes culturais e movimentos de igualdade racial.",
     ],
     quote:
-      "Nossa força agora abraça todo o Litoral Norte, tecendo uma rede de ancestralidade e transformação social.",
+      "Seguimos construindo com o povo, para o povo. Vemos nossa força se renovar nos olhos de cada jovem que se descobre potência.",
     image: "/img/teste12.jpg", // placeholder de imagem
     imageAlt: "Expansão regional — 2026",
     imageRight: false, // Mantém a alternância (educadores -> registro -> reconhecimento -> referência -> expansão)
@@ -130,7 +130,7 @@ const eras: Era[] = [
       "Certificação como Ponto de Cultura. Fortalecimento das ações voltadas à Política Nacional Cultura Viva. A partir disso, a entidade estruturou e ampliou suas atividades, desenvolvendo novas iniciativas de valorização da ancestralidade, memória e identidade afro-brasileira.",
     ],
     quote:
-      "O som dos nossos tambores quebrou fronteiras; agora levamos nossa história para o mundo.",
+      "Nossa força agora abraça todo o Litoral Norte, tecendo uma rede de ancestralidade e transformação social.",
     image: "/img/teste7.jpg", // placeholder de imagem
     imageAlt: "Zambô Digital — 2024",
     imageRight: true,
@@ -138,14 +138,14 @@ const eras: Era[] = [
   {
     id: "2025",
     year: "2025",
-    title: "35 ANOS", // Título de exemplo
+    title: "35 ANOS DE INSTITUIÇÃO", // Título de exemplo
     accentColor: "#f1b412", // Nova cor: Purple
     dotColor: "#f1b412",
     paragraphs: [
       "Este período marca a consolidação de uma trajetória de 35 anos de atuação contínua da instituição. Paralelamente, a entidade participou do Edital de Premiação de Pontos e Pontões de Cultura – Cultura Viva e teve sua relevância histórica, cultural e social amplamente reconhecida em Caraguatatuba, no Litoral Norte e no Estado de São Paulo.",
     ],
     quote:
-      "Seguimos construindo com o povo, para o povo. Vemos nossa força se renovar nos olhos de cada jovem que se descobre potência.",
+      "O som dos nossos tambores quebrou fronteiras; agora levamos nossa história para o mundo.",
     image: "/img/teste17.jpg", // placeholder de imagem
     imageAlt: "Impacto geracional — 2030",
     imageRight: false,
@@ -337,13 +337,12 @@ function EraSection({ era }: { era: Era }) {
     </section>
   );
 }
+
 // Responsável pela linha do tempo da Zambô
 function TimelineNav({ activeYear }: { activeYear: string }) {
   return (
-    // Adicionado overflow-x-auto para criar rolagem horizontal no celular (evita espremer os itens em telas pequenas)
     <div className="w-full pt-8 pb-7 px-4 lg:px-[80px] z-20 relative overflow-x-auto no-scrollbar">
       
-      {/* MUDANÇA: Aumentado max-w para 1200px e adicionado min-w para garantir respiro */}
       <div className="max-w-[1200px] min-w-[850px] mx-auto">
         
         {/* Container Principal da Linha do Tempo */}
@@ -353,21 +352,21 @@ function TimelineNav({ activeYear }: { activeYear: string }) {
           <div className="absolute bottom-[10px] md:bottom-[11px] left-[5%] right-[5%] h-[2px] bg-[#121212] z-0" />
           
           {eras.map((era) => (
-            // MUDANÇA: Largura aumentada de volta para 130px para garantir distância ("não muito perto")
-            <div key={era.id} className="relative z-10 flex flex-col items-center w-[90px] md:w-[130px] shrink-0 gap-2 group">
+      
+            <div key={era.id} className="relative z-10 flex flex-col items-center w-[90px] md:w-[130px] shrink-0 gap-5 group">
               
               {/* Textos acima da linha */}
-              <div className="flex flex-col items-center text-center w-full px-1">
+              <div className="flex flex-col items-center justify-end text-center w-full px-1">
                 
                 {/* Ano */}
-                {/* MUDANÇA: Adicionado 'whitespace-nowrap' para forçar lado a lado e fonte levemente menor */}
-                <span className="font-['Anton'] text-[20px] md:text-[26px] text-[#121212] leading-none mb-2 whitespace-nowrap">
+              
+                <span className="font-['Anton'] text-[20px] md:text-[26px] text-[#121212] leading-none mb-3 whitespace-nowrap">
                   {era.year}
                 </span>
                 
                 {/* Caixinha do subtítulo */}
-                <div className="h-8 md:h-10 flex items-start justify-center">
-                  <span className="font-['Inter'] text-[10px] md:text-[12px] font-bold text-[#121212] leading-tight capitalize">
+                <div className="flex items-center justify-center w-full min-h-[32px] md:min-h-[40px]">
+                  <span className="font-['Inter'] text-[12px] md:text-[14px] font-bold text-[#121212] leading-tight text-center capitalize">
                     {era.title.toLowerCase()}
                   </span>
                 </div>
@@ -376,7 +375,7 @@ function TimelineNav({ activeYear }: { activeYear: string }) {
               {/* Bolinha com cor dinâmica */}
               <a 
                 href={`#${era.year}`} 
-                className="w-5 h-5 md:w-6 md:h-6 rounded-full border-[2.5px] md:border-[3px] border-[#121212] transition-transform duration-300 hover:scale-110 mt-1 md:mt-2"
+                className="w-5 h-5 md:w-6 md:h-6 rounded-full border-[2.5px] md:border-[3px] border-[#121212] transition-transform duration-300 hover:scale-110"
                 style={{ 
                   backgroundColor: era.dotColor,
                   transform: activeYear === era.year ? "scale(1.2)" : "scale(1)"
@@ -403,8 +402,8 @@ export function ZamboStats() {
   // Adicionamos a propriedade "rotate" para rotacionar levemente cada fita
   const stats = [
     { value: "30+", label: "Anos de História", color: "#e22a1d", rotate: -2 },
-    { value: "15k+", label: "Vidas Impactadas", color: "#fdc700", rotate: 1 },
-    { value: "50+", label: "Projetos Realizados", color: "#008236", rotate: -3 },
+    { value: "3k+", label: "Vidas Impactadas", color: "#fdc700", rotate: 1 },
+    { value: "20+", label: "Projetos Realizados", color: "#008236", rotate: -3 },
   ];
 
   return (
@@ -598,14 +597,15 @@ export function Historia() {
           </div>
 
           {/* Subtitle */}
+          {/* Subtitle */}
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 500,
-              fontSize: 15,
-              lineHeight: "15px",
+              fontSize: 16,
+              lineHeight: "1.4",
               color: "#3a342f",
-              maxWidth: 520,
+              maxWidth: 800, 
             }}
           >
             Mais de três décadas de luta, resistência e transformação social.
