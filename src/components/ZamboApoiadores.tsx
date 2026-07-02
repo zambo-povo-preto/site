@@ -122,7 +122,7 @@ function CategoryCard({
 }
 
 /** Logo placeholder para parceiros institucionais */
-function PartnerLogo({ name, sub }: { name: string; sub: string }) {
+function PartnerLogo({ name, sub }: { name: string; sub?: string }) {
   return (
     <div
       className="flex flex-col items-center justify-center text-center px-4 py-6 flex-1 min-w-0"
