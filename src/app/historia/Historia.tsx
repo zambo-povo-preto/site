@@ -34,9 +34,7 @@ const eras: Era[] = [
     accentColor: "#dd341f",
     dotColor: "#dd341f",
     paragraphs: [
-      "Fundação da ONG Zambô nas periferias de São Paulo com o propósito de valorizar a cultura afro-brasileira.",
-      "Um grupo de artistas e educadores se uniu para criar um espaço de resistência e celebração da cultura negra através da arte, dança e música.",
-      "Nos acostumeiros terreiros de São Paulo, com compromisso com as raízes e a ancestralidade, começamos a tecer nossa rede de influências.",
+      "Fundação do Movimento Negro de Caraguatatuba: idealizado por lideranças negras e apoiadores da causa antirracista em defesa dos direitos da população negra no município.",
     ],
     quote:
       "A Zambô nasceu de uma necessidade: a de ver nossa cultura valorizada, nossa história contada e nossa identidade celebrada.",
@@ -46,14 +44,12 @@ const eras: Era[] = [
   },
   {
     id: "1995",
-    year: "1995",
-    title: "PROGRAMAS EDUCACIONAIS",
+    year: "1991–2000",
+    title: "AÇÕES SOCIOCULTURAIS",
     accentColor: "#f1b412",
     dotColor: "#f1b412",
     paragraphs: [
-      "Lançamento do primeiro programa educacional permanente de capoeira e percussão para crianças e jovens.",
-      "Nos primeiros anos, atendemos mais de 200 crianças e adolescentes regularmente, oferecendo acesso à cultura, educação artística e formação cidadã.",
-      "Com apoio crescente da comunidade, a Zambô consolidou sua presença e começou a expandir o alcance do programa educacional permanente.",
+      "Realização de atividades culturais, palestras e debates, além da articulação com movimentos sociais e organizações do Litoral Norte voltadas à consciência negra, cidadania e combate ao racismo.",
     ],
     quote:
       "Com apoio crescente da comunidade, a Zambô se tornou um espaço de acolhimento, educação e resistência cultural para gerações de jovens.",
@@ -62,55 +58,97 @@ const eras: Era[] = [
     imageRight: false,
   },
   {
-    id: "2000",
-    year: "2000",
-    title: "FESTIVAL AFRO-BRASILEIRO",
+    id: "2001",
+    year: "2001",
+    title: "REGISTRO OFICIAL",
     accentColor: "#1a7d3c",
     dotColor: "#1a7d3c",
     paragraphs: [
-      "Realização do primeiro Festival de Cultura Afro-Brasileira, reunindo mais de 5 mil pessoas em celebração à arte, música e ancestralidade.",
-      "Um marco que consolidou a Zambô como referência na cena cultural paulista, o festival reuniu artistas, mestres de capoeira, percussionistas e comunidades de todo o estado.",
-      "O festival tornou-se anual e um dos mais importantes eventos de afirmação da cultura negra no interior e litoral do estado.",
+      "Registrada como associação civil de direito privado, com autonomia administrativa, sob CNPJ nº 04.978.370/0001-59.",
     ],
     quote:
       "O festival nasceu para mostrar que a cultura negra não é margem — é centro. É de onde vem a força criativa deste país.",
-    image: "/img/teste3.jpg",
+    image: "/img/teste4.jpg",
     imageAlt: "Festival Afro-Brasileiro — 2000",
     imageRight: true,
   },
   {
-    id: "2010",
-    year: "2010",
-    title: "EXPANSÃO E IMPACTO",
+    id: "2002",
+    year: "2002",
+    title: "RECONHECIMENTO MUNICIPAL",
     accentColor: "#d2301f",
     dotColor: "#d2301f",
     paragraphs: [
-      "Expansão para novas comunidades e alcance de 20 mil vidas impactadas através dos programas sociais e culturais.",
-      "Novos parceiros foram construídos, ampliando o acesso à arte, educação e oportunidades para as comunidades negras.",
-      "A Zambô passou a atuar em mais de 10 municípios, levando programas de formação artística, educação patrimonial e fortalecimento identitário.",
+      "Declaração de utilidade pública municipal decretada sob a Lei nº 975 em 22 de Novembro de 2002.",
+      "Nesse período, a entidade expandiu suas ações de formação e conscientização em escolas e comunidades, promoveu atividades culturais ligadas à memória afro-brasileira valorizando as tradições de matriz africana e fortaleceu sua atuação em conselhos, fóruns e conferências voltados à igualdade racial.",
     ],
     quote:
       "A cada nova comunidade alcançada, a Zambô reafirma que a cultura é ferramenta de transformação social.",
-    image: "/img/teste4.jpg",
+    image: "/img/teste11.jpg",
     imageAlt: "Expansão e impacto — 2010",
     imageRight: false,
   },
   {
-    id: "2024",
-    year: "2024",
-    title: "REFERÊNCIA NACIONAL",
+    id: "2010",
+    year: "2010-2019",
+    title: "DESENVOLVIMENTO CULTURAL",
     accentColor: "#f1b412",
     dotColor: "#f1b412",
     paragraphs: [
-      "Mais de 15 mil vidas impactadas, 50+ projetos realizados e reconhecimento como referência na promoção da cultura negra no Brasil.",
-      "A Zambô continua a transformar a cultura afro-brasileira como ponte entre o passado e um futuro mais justo.",
-      "Seguimos construindo com o povo, para o povo, acreditando que cada encontro, cada oficina e cada celebração semeia uma nova geração de transformadores.",
+      "Foco no desenvolvimento de projetos culturais, oficinas e rodas de conversa ligadas ao Dia da Consciência Negra. Além disso, ampliou o diálogo com os setores público e privado para implementar políticas de inclusão e diversidade, atuando firmemente na preservação da memória da população negra de Caraguatatuba e região.",
     ],
     quote:
       "Seguimos construindo com o povo, para o povo. Nossa história é feita de cada pessoa que acredita numa cultura negra viva e transformadora.",
-    image: "/img/teste2.jpg",
+    image: "/img/teste8.jpg",
     imageAlt: "Referência nacional — 2024",
     imageRight: true,
+  },
+  
+  // AQUI COMEÇAM AS NOVAS DATAS (Insira ANTES da função Historia):
+  {
+    id: "2026",
+    year: "2021-2023",
+    title: "FORTALECIMENTO COMUNITÁRIO", // Título de exemplo
+    accentColor: "#1a7d3c", // Nova cor: Teal
+    dotColor: "#1a7d3c",
+    paragraphs: [
+      "Participação em editais e programas de fortalecimento da cultura de base comunitária. Paralelamente, realizou atividades formativas e educativas para jovens, mulheres e lideranças, além de expandir sua presença institucional em redes culturais e movimentos de igualdade racial.",
+    ],
+    quote:
+      "Nossa força agora abraça todo o Litoral Norte, tecendo uma rede de ancestralidade e transformação social.",
+    image: "/img/teste12.jpg", // placeholder de imagem
+    imageAlt: "Expansão regional — 2026",
+    imageRight: false, // Mantém a alternância (educadores -> registro -> reconhecimento -> referência -> expansão)
+  },
+  {
+    id: "2024",
+    year: "2024",
+    title: "PONTO DE CULTURA", // Título de exemplo
+    accentColor: "#d2301f", // Nova cor: Orange
+    dotColor: "#d2301f",
+    paragraphs: [
+      "Certificação como Ponto de Cultura. Fortalecimento das ações voltadas à Política Nacional Cultura Viva. A partir disso, a entidade estruturou e ampliou suas atividades, desenvolvendo novas iniciativas de valorização da ancestralidade, memória e identidade afro-brasileira.",
+    ],
+    quote:
+      "O som dos nossos tambores quebrou fronteiras; agora levamos nossa história para o mundo.",
+    image: "/img/teste7.jpg", // placeholder de imagem
+    imageAlt: "Zambô Digital — 2024",
+    imageRight: true,
+  },
+  {
+    id: "2025",
+    year: "2025",
+    title: "35 ANOS", // Título de exemplo
+    accentColor: "#f1b412", // Nova cor: Purple
+    dotColor: "#f1b412",
+    paragraphs: [
+      "Este período marca a consolidação de uma trajetória de 35 anos de atuação contínua da instituição. Paralelamente, a entidade participou do Edital de Premiação de Pontos e Pontões de Cultura – Cultura Viva e teve sua relevância histórica, cultural e social amplamente reconhecida em Caraguatatuba, no Litoral Norte e no Estado de São Paulo.",
+    ],
+    quote:
+      "Seguimos construindo com o povo, para o povo. Vemos nossa força se renovar nos olhos de cada jovem que se descobre potência.",
+    image: "/img/teste17.jpg", // placeholder de imagem
+    imageAlt: "Impacto geracional — 2030",
+    imageRight: false,
   },
 ];
 
@@ -211,7 +249,8 @@ function EraSection({ era }: { era: Era }) {
   const titleTextColor = isYellow ? "#121212" : "#ffffff";
 
   return (
-    <section id={year} className="relative w-full max-w-[1100px] mx-auto flex items-stretch gap-4 md:gap-8 scroll-mt-10 mb-8 md:mb-4">
+    // Adicionei md:mb-12 para dar mais espaço entre os cards
+    <section id={year} className="relative w-full max-w-[1100px] mx-auto flex items-stretch gap-4 md:gap-8 scroll-mt-10 mb-8 md:mb-12">
       
       {/* LINHA DO TEMPO LATERAL (ESQUERDA) */}
       {imageRight && (
@@ -221,14 +260,15 @@ function EraSection({ era }: { era: Era }) {
         </div>
       )}
 
-      {/* CARD PRINCIPAL: Novo layout sem padding global e com overflow-hidden */}
-      <div className={`relative flex-1 bg-[#f4ebd9] shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc] flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"}`}>
+      {/* CARD PRINCIPAL */}
+      {/* MUDANÇA: Adicionei md:min-h-[420px] para padronizar a altura mínima do card em telas maiores */}
+      <div className={`relative flex-1 bg-[#f4ebd9] md:min-h-[420px] shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc] flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} overflow-hidden`}>
         
         {/* Detalhes pontilhados nos cantos do texto */}
         <DecorativeDots className={`absolute top-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`} />
         <DecorativeDots className={`absolute bottom-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`} />
 
-        {/* BLOCO DE TEXTO: O padding (p-6 md:p-10) agora fica EXCLUSIVAMENTE aqui */}
+        {/* BLOCO DE TEXTO */}
         <div className="flex-1 flex flex-col items-start p-6 md:p-10 z-10 relative">
           
           {/* Cabeçalho do Card */}
@@ -300,8 +340,11 @@ function EraSection({ era }: { era: Era }) {
 // Responsável pela linha do tempo da Zambô
 function TimelineNav({ activeYear }: { activeYear: string }) {
   return (
-    <div className="w-full pt-8 pb-7 px-6 lg:px-[80px] z-20 relative">
-      <div className="max-w-[1000px] mx-auto">
+    // Adicionado overflow-x-auto para criar rolagem horizontal no celular (evita espremer os itens em telas pequenas)
+    <div className="w-full pt-8 pb-7 px-4 lg:px-[80px] z-20 relative overflow-x-auto no-scrollbar">
+      
+      {/* MUDANÇA: Aumentado max-w para 1200px e adicionado min-w para garantir respiro */}
+      <div className="max-w-[1200px] min-w-[850px] mx-auto">
         
         {/* Container Principal da Linha do Tempo */}
         <div className="relative w-full flex justify-between items-end mb-2">
@@ -310,19 +353,21 @@ function TimelineNav({ activeYear }: { activeYear: string }) {
           <div className="absolute bottom-[10px] md:bottom-[11px] left-[5%] right-[5%] h-[2px] bg-[#121212] z-0" />
           
           {eras.map((era) => (
-            <div key={era.id} className="relative z-10 flex flex-col items-center w-[80px] md:w-[140px] shrink-0 gap-2 group">
+            // MUDANÇA: Largura aumentada de volta para 130px para garantir distância ("não muito perto")
+            <div key={era.id} className="relative z-10 flex flex-col items-center w-[90px] md:w-[130px] shrink-0 gap-2 group">
               
               {/* Textos acima da linha */}
-              <div className="flex flex-col items-center text-center w-full">
+              <div className="flex flex-col items-center text-center w-full px-1">
                 
                 {/* Ano */}
-                <span className="font-['Anton'] text-[24px] md:text-[32px] text-[#121212] leading-none mb-2">
+                {/* MUDANÇA: Adicionado 'whitespace-nowrap' para forçar lado a lado e fonte levemente menor */}
+                <span className="font-['Anton'] text-[20px] md:text-[26px] text-[#121212] leading-none mb-2 whitespace-nowrap">
                   {era.year}
                 </span>
                 
                 {/* Caixinha do subtítulo */}
                 <div className="h-8 md:h-10 flex items-start justify-center">
-                  <span className="font-['Inter'] text-[10px] md:text-[13px] font-bold text-[#121212] leading-tight capitalize">
+                  <span className="font-['Inter'] text-[10px] md:text-[12px] font-bold text-[#121212] leading-tight capitalize">
                     {era.title.toLowerCase()}
                   </span>
                 </div>
@@ -412,7 +457,58 @@ export function ZamboStats() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+// ─── Componente Voltar ao Topo ────────────────────────────────────────────────
+function ScrollToTop() {
+  const [isVisible, setIsVisible] = useState(false);
 
+  useEffect(() => {
+    // Função para verificar a rolagem da página
+    const toggleVisibility = () => {
+      if (window.scrollY > 400) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <button
+      onClick={scrollToTop}
+      aria-label="Voltar ao topo"
+      className={`fixed bottom-8 right-8 z-[100] flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-[#f8ba01] rounded-[4px] border-[2px] border-[#121212] transition-all duration-300 hover:-translate-y-2 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+      }`}
+      style={{
+        boxShadow: "4px 4px 0px rgba(18, 18, 18, 1)", // Sombra sólida preta igual aos outros botões
+      }}
+    >
+      {/* Ícone de Seta para cima */}
+      <svg 
+        width="28" 
+        height="28" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="#121212" 
+        strokeWidth="3" 
+        strokeLinecap="square" 
+        strokeLinejoin="miter"
+      >
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </button>
+  );
+}
 
 export function Historia() {
   const activeYearRef = useRef(timelineYears[0]);
@@ -455,7 +551,7 @@ export function Historia() {
       }}
     >
       {/* Hero header */}
-      <div className="relative w-full pt-16 pb-2 px-6 lg:px-[80px]">
+      <div className="relative w-full pt-16 pb-12 px-6 lg:px-[80px]">
         <div className="relative max-w-[1200px] mx-auto flex flex-col items-center text-center gap-6">
           
           {/* Label */}
@@ -564,6 +660,7 @@ export function Historia() {
           <DonateArrow />
         </button>
       </div>
+      <ScrollToTop />
     </div>
   );
 }
