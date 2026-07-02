@@ -1,6 +1,6 @@
 import { ZamboFooter } from "@/components/ZamboFooter";
-import { ZamboNavbar } from "@/components/ZamboNavbar";
 import { Transparencia } from "./Transparencia";
+import { ZamboNavbar } from "@/components/ZamboNavbar";
 
 export default function TransparenciaPage() {
   return (
