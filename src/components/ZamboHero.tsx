@@ -29,12 +29,9 @@ function ArrowRight() {
 export function ZamboHero() {
   return (
     <section
-      className="background relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden"
       style={{ minHeight: "100vh" }}
     >
-      {/* Navbar overlaid on hero */}
-      <ZamboNavbar overlaid />
-
       {/* Hero Content */}
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 lg:px-[80px] pt-[140px] pb-[80px] flex items-center min-h-screen">
         {/* Left side */}

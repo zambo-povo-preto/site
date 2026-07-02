@@ -323,7 +323,7 @@ function FeaturedMemberCard({
 
 export function ZamboMembros() {
   return (
-    <section className="background w-full">
+    <section className="w-full">
       <div className="max-w-[1200px] mx-auto px-6 lg:px-[80px] py-20 flex flex-col gap-16">
         {/* ── Header + President ── */}
         <div className="flex flex-col lg:flex-row gap-12 items-start">
@@ -364,7 +364,7 @@ export function ZamboMembros() {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 500,
-                fontSize: 16,
+                fontSize: 18,
                 lineHeight: "26px",
                 color: "#3a342f",
                 maxWidth: 380,
@@ -383,7 +383,7 @@ export function ZamboMembros() {
         </div>
 
         {/* ── Board members ── */}
-        <div className="flex flex-col gap-6">
+        {/* <div className="flex flex-col gap-6">
           <h3
             className="uppercase"
             style={{
@@ -403,10 +403,10 @@ export function ZamboMembros() {
               <BoardMemberCard key={m.name} member={m} />
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* ── Destaque members ── */}
-        <div className="flex flex-col gap-6">
+        {/* <div className="flex flex-col gap-6">
           <h3
             className="uppercase"
             style={{
@@ -426,11 +426,11 @@ export function ZamboMembros() {
               <FeaturedMemberCard key={m.name} member={m} />
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* ── Footer strip ── */}
-      <div
+      {/* <div
         className="w-full px-6 lg:px-[80px] py-8 flex flex-col lg:flex-row items-center justify-between gap-6"
         style={{ background: "#1d1b18" }}
       >
@@ -475,7 +475,7 @@ export function ZamboMembros() {
             <ArrowIcon />
           </button>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

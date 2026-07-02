@@ -1,5 +1,18 @@
 import type { Metadata } from "next";
+import { Inter, Anton } from "next/font/google"; // Importação adicionada
+
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const anton = Anton({
+  subsets: ["latin"],
+  variable: "--font-anton",
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   title: "Zambô - Ponto de Cultura",
@@ -16,7 +29,11 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
-      <body>{children}</body>
+      <body
+        className={`background ${inter.variable} ${anton.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,3 +1,5 @@
+import { ArrowIcon } from "./icons/ArrowIcon";
+
 const imgFrame68 =
   "/zambo/Frame68/bfe8fac91719951ba5d39ec6b633b2da36c68f6b.png";
 const imgFrame69 =
@@ -20,20 +22,26 @@ const timelineEvents = [
     description:
       "Surgimento da Zambô do Movimento Negro em Caraguatatuba, com o propósito de fortalecer a identidade negra, promover a cultura afro-brasileira e atuar junto às comunidades do município.",
     dotColor: "#dd341f",
+    image: "/historia/photo-1.png",
+    imageTitle: "Reunião com a Diretoria Executiva",
   },
   {
-    year: "1996",
-    title: "Primeira Kizomba",
+    year: "2000",
+    title: "Encontros Comunitários",
     description:
-      "Início da realização da Kizomba da Consciência Negra, evento que se tornou uma das principais celebrações da cultura negra do Litoral Norte, reunindo arte, música, debates e educação antirracista.",
+      "Realização e participação em atividades culturais e educacionais, encontros comunitários, palestras, debates, articulação com movimentos sociais e organizações da sociedade civil do Litoral Norte, sobre consciência negra, cidadania e combate ao racismo. ",
     dotColor: "#f1b412",
+    image: "/historia/photo-2.png",
+    imageTitle: "Encontro na sede com Sambistas de Caraguatatuba",
   },
   {
-    year: "2014",
+    year: "2010",
     title: "Novos Projetos",
     description:
       "Expansão das atividades através da participação em editais e programas de incentivo à cultura, fortalecendo oficinas, eventos e ações voltadas à valorização da cultura afro-brasileira.",
     dotColor: "#d2301f",
+    image: "/historia/photo-3.png",
+    imageTitle: "Reunião do projeto Camugerê Literário",
   },
   {
     year: "2024",
@@ -41,27 +49,8 @@ const timelineEvents = [
     description:
       "Reconhecimento oficial como Ponto de Cultura, consolidando décadas de atuação em Caraguatatuba e reafirmando seu papel como referência regional na promoção da cultura negra e da cidadania.",
     dotColor: "#f1b412",
-  },
-];
-
-const imageCards = [
-  {
-    year: "1990",
-    src: imgPhoto1,
-    label: "FUNDAÇÃO",
-    accentColor: "#dd341f",
-  },
-  {
-    year: "2001",
-    src: imgPhoto1,
-    label: "ASSOCIAÇÃO",
-    accentColor: "#1a7d3c",
-  },
-  {
-    year: "2024",
-    src: imgPhoto1,
-    label: "PONTO DE CULTURA",
-    accentColor: "#f1b412",
+    image: "/historia/photo-4.jpg",
+    imageTitle: "Festival XXIX Kizomba 20 de Novembro de 2025",
   },
 ];
 
@@ -69,35 +58,39 @@ function ImageCard({
   src,
   label,
   accentColor,
-}: { src: string; label: string; accentColor: string }) {
+}: {
+  src: string;
+  label: string;
+  accentColor: string;
+}) {
   return (
     <div
       className="relative w-full overflow-hidden rounded-[2px]"
       style={{ border: "2px solid #121212" }}
     >
-      {/* Colored band on top */}
+      {/* Faixa superior */}
       <div
-        className="w-full h-[6px] shrink-0"
+        className="h-[6px] w-full"
         style={{ backgroundColor: accentColor }}
       />
-      {/* Image */}
-      <div className="relative w-full overflow-hidden" style={{ height: 140 }}>
+
+      {/* Imagem */}
+      <div className="relative aspect-[340/220] w-full overflow-hidden">
         <img
           src={src}
           alt={label}
-          width={260}
-          height={220}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
         />
-        {/* Label overlay */}
+
+        {/* Legenda */}
         <div
-          className="absolute bottom-0 left-0 right-0 px-2 py-1"
+          className="absolute inset-x-0 bottom-0 px-3 py-2"
           style={{ background: "rgba(18,18,18,0.65)" }}
         >
           <span
             style={{
               fontFamily: "'Anton', sans-serif",
-              fontSize: 11,
+              fontSize: 14,
               letterSpacing: "0.5px",
               color: "#f1e5d1",
               lineHeight: 1,
@@ -116,187 +109,202 @@ function TimelineItem({
   title,
   description,
   dotColor,
-  isLast,
+  image,
+  imageTitle,
+  index,
 }: {
   year: string;
   title: string;
   description: string;
   dotColor: string;
-  isLast: boolean;
+  image: string;
+  imageTitle: string;
+  index: number;
 }) {
-  return (
-    <div className="relative w-full">
-      {/* Left vertical border */}
-      <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#030303]" />
-      {/* Dot */}
+  const isLeft = index % 2 === 0;
+
+  const DesktopContent = (
+    <div className={`${isLeft ? "pr-10 text-right" : "pl-10 text-left"} py-8`}>
       <div
-        className="absolute left-[-10px] top-[40px] size-6 rounded-full border-4 border-[#121212]"
-        style={{ backgroundColor: dotColor }}
-      />
-      <div className={`pl-10 py-8 ${isLast ? "" : ""}`}>
-        <div
-          className="flex gap-4 items-end mb-3"
-          style={{ fontFamily: "'Anton', sans-serif", color: "#090908" }}
-        >
-          <span style={{ fontSize: 48, lineHeight: "48px" }}>{year}</span>
-          <span style={{ fontSize: 18, lineHeight: "28px" }}>{title}</span>
-        </div>
-        <p
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 500,
-            fontSize: 16,
-            lineHeight: "24px",
-            color: "#3a342f",
-            maxWidth: 340,
-          }}
-        >
-          {description}
-        </p>
+        className="flex gap-4 items-end mb-3"
+        style={{
+          fontFamily: "'Anton', sans-serif",
+          color: "#090908",
+          flexDirection: isLeft ? "row-reverse" : "row",
+        }}
+      >
+        <span style={{ fontSize: 48 }}>{year}</span>
+        <span style={{ fontSize: 18, marginBottom: 11 }}>{title}</span>
       </div>
+
+      <p
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          fontWeight: 500,
+          fontSize: 16,
+          lineHeight: "24px",
+          color: "#3a342f",
+          maxWidth: 340,
+          marginLeft: isLeft ? "auto" : 0,
+        }}
+      >
+        {description}
+      </p>
     </div>
+  );
+
+  return (
+    <>
+      {/* MOBILE */}
+      <div className="relative pl-12 lg:hidden">
+        {/* Linha */}
+        <div className="absolute left-3 top-0 bottom-0 w-[2px] bg-[#030303]" />
+
+        {/* Bolinha */}
+        <div
+          className="absolute left-0 top-8 size-6 rounded-full border-4 border-[#121212]"
+          style={{ backgroundColor: dotColor }}
+        />
+
+        <div className="py-8">
+          <div
+            className="flex items-end gap-3 mb-6"
+            style={{
+              fontFamily: "'Anton', sans-serif",
+              color: "#090908",
+            }}
+          >
+            <span className="text-5xl">{year}</span>
+            <span className="text-lg mb-2">{title}</span>
+          </div>
+
+          <div className="mb-6 w-full max-w-sm">
+            <ImageCard src={image} label={imageTitle} accentColor={dotColor} />
+          </div>
+
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: "24px",
+              color: "#3a342f",
+            }}
+          >
+            {description}
+          </p>
+        </div>
+      </div>
+
+      {/* DESKTOP */}
+      <div className="relative hidden lg:grid grid-cols-[45%_10%_45%] items-center">
+        <div>
+          {isLeft ? (
+            DesktopContent
+          ) : (
+            <div className="mb-6 w-full max-w-sm ml-auto pr-10">
+              <ImageCard
+                src={image}
+                label={imageTitle}
+                accentColor={dotColor}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="relative flex justify-center">
+          <div
+            className="size-6 rounded-full border-4 border-[#121212] z-10"
+            style={{ backgroundColor: dotColor }}
+          />
+        </div>
+
+        <div>
+          {isLeft ? (
+            <div className="mb-6 w-full max-w-sm pl-10">
+              <ImageCard
+                src={image}
+                label={imageTitle}
+                accentColor={dotColor}
+              />
+            </div>
+          ) : (
+            DesktopContent
+          )}
+        </div>
+      </div>
+    </>
   );
 }
 
 export function ZamboHistoria() {
   return (
-    <section className="background relative w-full overflow-hidden py-[120px] px-6 lg:px-[120px]">
-      <div className="max-w-[1100px] w-full mx-auto">
-        {/* Decorative sketch lines */}
-        <div
-          aria-hidden
-          className="absolute pointer-events-none"
-          style={{ left: -246, top: 705 }}
+    <section id="historia" className="w-full overflow-hidden">
+      {/* Cabeçalho */}
+      <div className="mx-auto mb-20 max-w-4xl text-center pt-[120px] px-6">
+        <h2
+          className="uppercase text-left lg:text-center"
+          style={{
+            fontFamily: "'Anton', sans-serif",
+            fontSize: "clamp(40px, 5.5vw, 72px)",
+            lineHeight: 1,
+            color: "#121212",
+            letterSpacing: "1px",
+          }}
         >
-          <div
-            className="absolute"
-            style={{ left: 0, top: 87, width: 581, height: 386 }}
-          >
-            <div
-              style={{
-                transform: "rotate(21.85deg)",
-                transformOrigin: "center",
-                width: 547,
-                height: 197,
-              }}
-            >
-              <img alt="" src={imgVector} className="block w-full h-full" />
-            </div>
-          </div>
-          <div
-            className="absolute"
-            style={{ left: 290, top: 20, width: 482, height: 347 }}
-          >
-            <div
-              style={{
-                transform: "rotate(21.85deg)",
-                transformOrigin: "center",
-                width: 441,
-                height: 197,
-              }}
-            >
-              <img alt="" src={imgVector1} className="block w-full h-full" />
-            </div>
-          </div>
-          <div
-            className="absolute"
-            style={{ left: 346, top: 0, width: 346, height: 519 }}
-          >
-            <img
-              alt=""
-              src={imgIllustration}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+          NOSSA HISTÓRIA
+        </h2>
+
+        <p
+          className="mt-6 text-xl font-medium leading-normal text-center mx-auto text-left lg:text-center"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 500,
+            fontSize: 18,
+            lineHeight: "26px",
+            color: "#3a342f",
+          }}
+        >
+          A Zambô do Movimento Negro de Caraguatatuba é uma associação civil sem
+          fins lucrativos criada a partir da mobilização de cidadãos negros e
+          simpatizantes da causa antirracista em Caraguatatuba, no ano de 1990.
+          Surgiu com o objetivo de representar a comunidade negra, promover
+          políticas públicas de combate ao racismo, à discriminação e às
+          desigualdades sociais, além de valorizar e preservar a cultura
+          afro-brasileira, Sempre participando dos conselhos municipais e
+          estatual.
+        </p>
+      </div>
+
+      <div className="relative w-full overflow-hidden pb-[120px] px-6 lg:px-[120px]">
+        <div className="max-w-[1100px] w-full mx-auto relative ">
+          {/* linha central */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-[#030303] -translate-x-1/2 hidden lg:block" />
+
+          <div className="flex flex-col gap-16">
+            {timelineEvents.map((event, i) => (
+              <TimelineItem key={event.year} {...event} index={i} />
+            ))}
           </div>
         </div>
 
-        <div className="relative w-full mx-auto flex flex-col lg:flex-row gap-[120px] items-start">
-          {/* Left — text content */}
-          <div className="flex flex-col gap-8 shrink-0 w-full lg:w-[489px]">
-            {/* Section label */}
-            <div className="flex gap-4 items-center">
-              <div className="w-1 h-5 bg-[#f3b309] shrink-0" />
-              <span
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 900,
-                  fontSize: 18,
-                  color: "black",
-                }}
-              >
-                NOSSA HISTÓRIA
-              </span>
-            </div>
-
-            {/* Headline */}
-            <div className="relative">
-              <h2
-                className="relative uppercase"
-                style={{
-                  fontFamily: "'Anton', sans-serif",
-                  fontSize: "clamp(36px, 4vw, 60px)",
-                  lineHeight: "72px",
-                  color: "black",
-                  letterSpacing: "1px",
-                }}
-              >
-                <span className="block">UMA TRAJETÓRIA</span>
-                <span className="block">DE CULTURA,</span>
-                <span className="block">MEMÓRIA E</span>
-                <span className="relative block w-fit">
-                  <span
-                    className="absolute -left-6 -right-6 top-[0.12em] bottom-[-0.04em] overflow-hidden"
-                    style={{ zIndex: 0 }}
-                    aria-hidden
-                  >
-                    <img
-                      alt=""
-                      className="absolute inset-0 size-full object-fill"
-                      src={imgRectangle2}
-                    />
-                    <img
-                      alt=""
-                      className="absolute inset-0 size-full object-cover opacity-35 mix-blend-multiply"
-                      src={imgRectangle3}
-                    />
-                  </span>
-                  <span className="relative" style={{ zIndex: 1 }}>
-                    RESISTÊNCIA.
-                  </span>
-                </span>
-              </h2>
-            </div>
-
-            {/* Body */}
-            <p
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 500,
-                fontSize: 20,
-                lineHeight: "24px",
-                color: "black",
-                maxWidth: 328,
-              }}
-            >
-              Nossa caminhada é feita de encontros, ancestralidade, cultura e
-              compromisso com a construção de um futuro mais justo,
-              representativo e digno para todas as comunidades.
-            </p>
-          </div>
-
-          {/* Right — image cards + timeline */}
-          <div className="flex gap-5 items-start flex-1 min-w-0">
-            {/* Timeline */}
-            <div className="flex flex-col flex-1 min-w-0">
-              {timelineEvents.map((event, i) => (
-                <TimelineItem
-                  key={event.year}
-                  {...event}
-                  isLast={i === timelineEvents.length - 1}
-                />
-              ))}
-            </div>
-          </div>
+        <div className="flex items-start justify-start lg:items-center lg:justify-center">
+          <a
+            href="/historia"
+            className="flex items-center gap-3 shrink-0 bg-[#f8ba01] uppercase rounded-[4px] px-6 py-4"
+            style={{
+              fontFamily: "'Anton', sans-serif",
+              fontSize: 16,
+              lineHeight: "24px",
+              color: "#121212",
+              boxShadow: "6px 6px 0px rgba(29,27,24,0.8)",
+              whiteSpace: "nowrap",
+              marginTop: 60,
+            }}
+          >
+            Ler Mais Sobre a História da Zambô
+            <ArrowIcon />
+          </a>
         </div>
       </div>
     </section>
