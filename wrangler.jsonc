@@ -24,7 +24,7 @@
   },
   "env": {
     "production": {
-      "name": "site",
+      "name": "site-production",
       "workers_dev": false,
       "preview_urls": false,
       "keep_names": true,
