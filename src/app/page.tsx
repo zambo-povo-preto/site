@@ -1,23 +1,21 @@
-import { HistoryBanner } from "@/components/HistoryBanner";
-import { ZamboApoiadores } from "@/components/ZamboApoiadores";
-import { ZamboFooter } from "@/components/ZamboFooter";
-import { ZamboHero } from "@/components/ZamboHero";
-import { ZamboHistoria } from "@/components/ZamboHistoria";
-import { ZamboHistoryIntro } from "@/components/ZamboHistoryIntro";
-import { ZamboMembros } from "@/components/ZamboMembros";
-import { ZamboNavbar } from "@/components/ZamboNavbar";
-import { ZamboPillars } from "@/components/ZamboPillars";
+import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { HeroSection } from "@/components/sections/home/HeroSection";
+import { HistoryIntroSection } from "@/components/sections/home/HistoryIntroSection";
+import { HistorySection } from "@/components/sections/home/HistorySection";
+import { PillarsSection } from "@/components/sections/home/PillarsSection";
+import { SupportersSection } from "@/components/sections/home/SupportersSection";
 
 export default function Home() {
   return (
     <div className="min-h-screen w-full">
-      <ZamboNavbar overlaid />
-      <ZamboHero />
-      <ZamboHistoryIntro />
-      <ZamboHistoria />
-      <ZamboPillars />
-      <ZamboApoiadores />
-      <ZamboFooter />
+      <Navbar overlaid />
+      <HeroSection />
+      <HistoryIntroSection />
+      <HistorySection />
+      <PillarsSection />
+      <SupportersSection />
+      <Footer />
     </div>
   );
 }

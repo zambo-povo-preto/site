@@ -1,9 +1,19 @@
-import svgPaths from "../../imports/Group36/svg-hkzbekptio";
+import svgPaths from "@/imports/Group36/svg-hkzbekptio";
 
-export function ArrowIcon() {
+export function ArrowIcon({
+  color = "#121212",
+  size = 28,
+}: { color?: string; size?: number }) {
   return (
-    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-      <path d={svgPaths.p3e0d45f0} fill="#121212" stroke="#121212" />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 28 28"
+      fill="none"
+      role="img"
+      aria-label="Seta"
+    >
+      <path d={svgPaths.p3e0d45f0} fill={color} stroke={color} />
     </svg>
   );
 }

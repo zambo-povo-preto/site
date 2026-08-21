@@ -1,13 +1,13 @@
-import { ZamboFooter } from "@/components/ZamboFooter";
-import { ZamboNavbar } from "@/components/ZamboNavbar";
-import { Contato } from "./Contato";
+import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { ContactFormSection } from "@/components/sections/contato/ContactFormSection";
 
 export default function ContatoPage() {
   return (
     <div className="min-h-screen w-full">
-      <ZamboNavbar />
-      <Contato />
-      <ZamboFooter />
+      <Navbar />
+      <ContactFormSection />
+      <Footer />
     </div>
   );
 }

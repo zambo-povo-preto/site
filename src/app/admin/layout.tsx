@@ -1,8 +1,8 @@
 "use client";
 
-import { ReactNode } from "react";
-import { AdminAuthProvider } from "./AdminAuthContext";
-import { DocumentsProvider } from "./DocumentsContext";
+import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
+import { DocumentsProvider } from "@/contexts/DocumentsContext";
+import type { ReactNode } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (

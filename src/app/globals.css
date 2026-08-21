@@ -10,7 +10,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: "Inter", Arial, Helvetica, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
 }
 
 @keyframes ticker {
@@ -53,5 +54,10 @@ a {
 }
 
 .background {
-  background: linear-gradient(117deg, rgba(243, 234, 217, 0.20) 0%, rgba(235, 219, 195, 0.20) 25%, rgba(225, 193, 141, 0.20) 100%), url("/background.png") lightgray 50% / cover no-repeat, #F1E3CD;
+  background: linear-gradient(
+      117deg,
+      rgba(243, 234, 217, 0.2) 0%,
+      rgba(235, 219, 195, 0.2) 25%,
+      rgba(225, 193, 141, 0.2) 100%
+    ), url("/background.png") lightgray 50% / cover no-repeat, #f1e3cd;
 }

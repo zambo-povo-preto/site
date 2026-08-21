@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Anton } from "next/font/google"; // Importação adicionada
+import { Anton, Inter } from "next/font/google"; // Importação adicionada
 
 import "./globals.css";
 
