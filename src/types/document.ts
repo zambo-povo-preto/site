@@ -26,6 +26,7 @@ export interface TransparencyDocument {
   fileType: "PDF" | "XLSX" | "DOC";
   fileSize: string;
   date: string;
+  downloadUrl?: string;
 }
 
 export interface YearGroup {

@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  clearTokens,
+  getAccessToken,
+  loginApi,
+  refreshAccessToken,
+} from "@/lib/api";
 import type { AdminAuthContextType, AdminUser } from "@/types/auth";
 import {
   type ReactNode,
@@ -11,42 +17,62 @@ import {
 
 const AdminAuthContext = createContext<AdminAuthContextType | null>(null);
 
-// TODO: replace with real API call
-const MOCK_CREDENTIALS = { email: "admin@zambo.org.br", password: "zambo2024" };
-
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: validate session token with API
-    const stored = sessionStorage.getItem("zambo_admin_user");
-    if (stored) setUser(JSON.parse(stored));
-    setLoading(false);
+    async function checkAuth() {
+      const stored = localStorage.getItem("zambo_admin_user");
+      const token = getAccessToken();
+
+      if (stored && token) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch {
+          clearTokens();
+        }
+      } else if (stored && !token) {
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          try {
+            setUser(JSON.parse(stored));
+          } catch {
+            clearTokens();
+          }
+        } else {
+          clearTokens();
+        }
+      }
+
+      setLoading(false);
+    }
+
+    checkAuth();
   }, []);
 
   async function login(
     email: string,
     password: string,
   ): Promise<{ error: string | null }> {
-    // TODO: replace with POST /api/admin/login
-    await new Promise((r) => setTimeout(r, 800));
-    if (
-      email === MOCK_CREDENTIALS.email &&
-      password === MOCK_CREDENTIALS.password
-    ) {
-      const adminUser = { email, name: "Administrador Zambô" };
+    try {
+      const data = await loginApi(email, password);
+      const adminUser: AdminUser = {
+        name: data.user.name,
+        email: data.user.email,
+      };
       setUser(adminUser);
-      sessionStorage.setItem("zambo_admin_user", JSON.stringify(adminUser));
       return { error: null };
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Erro ao efetuar login.";
+      return { error: message };
     }
-    return { error: "E-mail ou senha incorretos." };
   }
 
   function logout() {
-    // TODO: POST /api/admin/logout to invalidate token
     setUser(null);
-    sessionStorage.removeItem("zambo_admin_user");
+    clearTokens();
   }
 
   return (

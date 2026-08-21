@@ -3,6 +3,7 @@
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { useDocuments } from "@/contexts/DocumentsContext";
 import type { AdminDocument, DocCategory } from "@/types/document";
+import { getFileDownloadUrl, getFilePreviewUrl } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
@@ -141,6 +142,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
       fileType,
       fileSize: size,
       fileName: file.name,
+      file,
     });
     setLoading(false);
     setSuccess(true);
@@ -692,6 +694,287 @@ function DeleteConfirm({
   );
 }
 
+function PreviewModal({
+  doc,
+  onClose,
+  onDownload,
+}: {
+  doc: AdminDocument;
+  onClose: () => void;
+  onDownload: (doc: AdminDocument) => void;
+}) {
+  const previewUrl = getFilePreviewUrl(doc.id);
+  const isPdf =
+    doc.fileType === "PDF" || doc.fileName.toLowerCase().endsWith(".pdf");
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{
+        background: "rgba(0,0,0,0.5)",
+        backdropFilter: "blur(4px)",
+      }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
+      role="presentation"
+    >
+      <div
+        className="w-full max-w-[850px] rounded-[4px] overflow-hidden flex flex-col max-h-[90vh]"
+        style={{
+          background: "#fff",
+          border: "1px solid #d4c9b6",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.16)",
+        }}
+      >
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-6 py-4 shrink-0"
+          style={{ background: "#faf7f2", borderBottom: "1px solid #e8d5b4" }}
+        >
+          <span
+            style={{
+              fontFamily: "'Anton', sans-serif",
+              fontSize: 20,
+              color: "#121212",
+              letterSpacing: "0.5px",
+            }}
+          >
+            PRÉ-VISUALIZAÇÃO DO DOCUMENTO
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{ color: "#9a8f86" }}
+            aria-label="Fechar modal"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Metadata section */}
+        <div
+          className="px-6 py-4 shrink-0 flex flex-col gap-3"
+          style={{ background: "#f5eedd", borderBottom: "1px solid #d4c9b6" }}
+        >
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <FileTag type={doc.fileType} />
+              <div className="flex flex-col gap-1 min-w-0">
+                <h3
+                  style={{
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 18,
+                    color: "#121212",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {doc.title}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    fontSize: 12,
+                    color: "#6b5e55",
+                  }}
+                >
+                  {doc.fileName} · {doc.fileSize}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Badge category={doc.category} />
+              <StatusPill status={doc.status} />
+              <span
+                style={{
+                  fontFamily: "'Anton', sans-serif",
+                  fontSize: 14,
+                  color: "#121212",
+                  background: "#fff",
+                  padding: "2px 8px",
+                  borderRadius: 2,
+                  border: "1px solid #d4c9b6",
+                }}
+              >
+                {doc.year}
+              </span>
+            </div>
+          </div>
+
+          {doc.description && (
+            <p
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 500,
+                fontSize: 13,
+                color: "#3a342f",
+                lineHeight: "20px",
+              }}
+            >
+              {doc.description}
+            </p>
+          )}
+        </div>
+
+        {/* Preview Frame */}
+        <div className="flex-1 p-4 bg-[#e8d5b4]/20 min-h-[380px] overflow-hidden flex flex-col">
+          {isPdf ? (
+            <iframe
+              src={previewUrl}
+              title={`Pré-visualização de ${doc.title}`}
+              className="w-full h-full min-h-[380px] rounded-[3px] border border-[#d4c9b6] bg-white"
+            />
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center gap-4 py-12 px-6 text-center bg-white rounded-[3px] border border-[#d4c9b6]">
+              <div
+                className="flex items-center justify-center w-16 h-16 rounded-full"
+                style={{
+                  background: "rgba(248,186,1,0.15)",
+                  border: "2px solid #f8ba01",
+                }}
+              >
+                <FileTag type={doc.fileType} />
+              </div>
+              <div className="flex flex-col gap-1 max-w-[440px]">
+                <p
+                  style={{
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 18,
+                    color: "#121212",
+                  }}
+                >
+                  PRÉ-VISUALIZAÇÃO DIRETA NÃO DISPONÍVEL
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    fontSize: 13,
+                    color: "#6b5e55",
+                    lineHeight: "20px",
+                  }}
+                >
+                  Arquivos do tipo{" "}
+                  <strong>.{doc.fileType.toLowerCase()}</strong> não possuem
+                  visualizador direto no navegador. Clique abaixo para fazer o
+                  download.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => onDownload(doc)}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-[3px] cursor-pointer"
+                style={{
+                  fontFamily: "'Anton', sans-serif",
+                  fontSize: 14,
+                  color: "#121212",
+                  background: "#f8ba01",
+                  border: "2px solid #121212",
+                  boxShadow: "3px 3px 0px #121212",
+                }}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                BAIXAR AGORA ({doc.fileSize})
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div
+          className="flex items-center justify-between px-6 py-4 shrink-0 gap-3"
+          style={{ background: "#faf7f2", borderTop: "1px solid #e8d5b4" }}
+        >
+          <a
+            href={previewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 800,
+              fontSize: 12,
+              color: "#6b5e55",
+              textDecoration: "underline",
+            }}
+          >
+            Abrir em nova aba
+          </a>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2.5 rounded-[3px]"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 800,
+                fontSize: 13,
+                color: "#6b5e55",
+                background: "transparent",
+                border: "2px solid #d4c9b6",
+              }}
+            >
+              FECHAR
+            </button>
+            <button
+              type="button"
+              onClick={() => onDownload(doc)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-[3px] cursor-pointer"
+              style={{
+                fontFamily: "'Anton', sans-serif",
+                fontSize: 14,
+                color: "#121212",
+                background: "#f8ba01",
+                border: "2px solid #121212",
+                boxShadow: "3px 3px 0px #121212",
+              }}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              BAIXAR DOCUMENTO
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AdminDashboard() {
   const { user, loading, logout } = useAdminAuth();
   const { documents, deleteDocument, toggleStatus } = useDocuments();
@@ -699,9 +982,24 @@ export function AdminDashboard() {
 
   const [showUpload, setShowUpload] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<AdminDocument | null>(null);
+  const [previewTarget, setPreviewTarget] = useState<AdminDocument | null>(
+    null,
+  );
   const [filterYear, setFilterYear] = useState<number | "all">("all");
   const [filterCat, setFilterCat] = useState<DocCategory | "all">("all");
   const [search, setSearch] = useState("");
+
+  function handleDownloadDocument(doc: AdminDocument) {
+    const downloadUrl = getFileDownloadUrl(doc.id);
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = doc.fileName || doc.title;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 
   useEffect(() => {
     if (!loading && !user) router.push("/admin/login");
@@ -850,7 +1148,7 @@ export function AdminDashboard() {
           <button
             type="button"
             onClick={() => setShowUpload(true)}
-            className="flex items-center gap-2.5 px-5 py-3 rounded-[3px] shrink-0"
+            className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-[3px] w-full sm:w-auto shrink-0 cursor-pointer"
             style={{
               fontFamily: "'Anton', sans-serif",
               fontSize: 15,
@@ -932,7 +1230,7 @@ export function AdminDashboard() {
         </div>
 
         <div
-          className="flex flex-wrap gap-3 items-center px-4 py-3 rounded-[3px]"
+          className="flex flex-col sm:flex-row flex-wrap gap-3 items-stretch sm:items-center px-4 py-3 rounded-[3px]"
           style={{ background: "#fff", border: "1px solid #e8d5b4" }}
         >
           <div className="relative flex-1 min-w-[180px]">
@@ -973,7 +1271,7 @@ export function AdminDashboard() {
                 e.target.value === "all" ? "all" : Number(e.target.value),
               )
             }
-            className="px-3 py-2 rounded-[3px] outline-none"
+            className="w-full sm:w-auto px-3 py-2 rounded-[3px] outline-none cursor-pointer"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 800,
@@ -995,7 +1293,7 @@ export function AdminDashboard() {
             onChange={(e) =>
               setFilterCat(e.target.value as DocCategory | "all")
             }
-            className="px-3 py-2 rounded-[3px] outline-none"
+            className="w-full sm:w-auto px-3 py-2 rounded-[3px] outline-none cursor-pointer"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 800,
@@ -1014,6 +1312,7 @@ export function AdminDashboard() {
           </select>
           {filtered.length !== documents.length && (
             <span
+              className="text-center sm:text-left"
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 500,
@@ -1033,7 +1332,7 @@ export function AdminDashboard() {
           <div
             className="hidden md:grid px-5 py-3"
             style={{
-              gridTemplateColumns: "40px 1fr 160px 60px 100px 90px 80px",
+              gridTemplateColumns: "40px 1fr 160px 60px 100px 90px 140px",
               background: "#f5eedd",
               borderBottom: "2px solid #121212",
               gap: 12,
@@ -1065,181 +1364,461 @@ export function AdminDashboard() {
 
           {filtered.length === 0 ? (
             <div
-              className="flex flex-col items-center justify-center py-16 gap-3"
+              className="flex flex-col items-center justify-center py-16 px-6 gap-3 text-center"
               style={{ background: "#fff" }}
             >
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#d4c9b6"
-                strokeWidth="2"
-                strokeLinecap="round"
-                role="img"
-                aria-label="Nenhum documento"
+              <div
+                className="flex items-center justify-center w-12 h-12 rounded-full mb-1"
+                style={{
+                  background: "rgba(248,186,1,0.15)",
+                  border: "1px solid rgba(248,186,1,0.5)",
+                }}
               >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#121212"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  role="img"
+                  aria-label="Nenhum documento"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="9" y1="15" x2="15" y2="15" />
+                </svg>
+              </div>
+              <p
+                style={{
+                  fontFamily: "'Anton', sans-serif",
+                  fontSize: 18,
+                  color: "#121212",
+                  letterSpacing: "0.5px",
+                }}
+              >
+                {documents.length === 0
+                  ? "NENHUM DOCUMENTO CADASTRADO NO BANCO"
+                  : "NENHUM DOCUMENTO ENCONTRADO PARA ESTE FILTRO"}
+              </p>
               <p
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 500,
-                  fontSize: 14,
-                  color: "#9a8f86",
+                  fontSize: 13,
+                  color: "#6b5e55",
+                  maxWidth: 400,
                 }}
               >
-                Nenhum documento encontrado
+                {documents.length === 0
+                  ? "Clique no botão 'ENVIAR DOCUMENTO' acima para fazer upload do primeiro arquivo no portal de transparência."
+                  : "Tente alterar os termos de busca ou o filtro de categoria selecionado."}
               </p>
             </div>
           ) : (
             filtered.map((doc, i) => (
-              <div
-                key={doc.id}
-                className="flex md:grid items-center gap-3 px-5 py-4 flex-wrap md:flex-nowrap transition-colors"
-                style={{
-                  gridTemplateColumns: "40px 1fr 160px 60px 100px 90px 80px",
-                  gap: 12,
-                  background: i % 2 === 0 ? "#fff" : "#faf7f2",
-                  borderBottom: "1px solid #e8d5b4",
-                }}
-              >
-                <FileTag type={doc.fileType} />
-                <div className="flex flex-col gap-1 min-w-0 flex-1">
+              <div key={doc.id}>
+                {/* Desktop View (md:grid) */}
+                <div
+                  className="hidden md:grid items-center gap-3 px-5 py-4 transition-colors"
+                  style={{
+                    gridTemplateColumns: "40px 1fr 160px 60px 100px 90px 140px",
+                    gap: 12,
+                    background: i % 2 === 0 ? "#fff" : "#faf7f2",
+                    borderBottom: "1px solid #e8d5b4",
+                  }}
+                >
+                  <FileTag type={doc.fileType} />
+                  <div className="flex flex-col gap-1 min-w-0 flex-1">
+                    <span
+                      style={{
+                        fontFamily: "'Anton', sans-serif",
+                        fontSize: 14,
+                        color: "#121212",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {doc.title}
+                    </span>
+                    <span
+                      className="truncate"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        fontSize: 11,
+                        color: "#9a8f86",
+                      }}
+                    >
+                      {doc.fileName}
+                    </span>
+                  </div>
+                  <Badge category={doc.category} />
                   <span
                     style={{
                       fontFamily: "'Anton', sans-serif",
-                      fontSize: 14,
-                      color: "#121212",
-                      lineHeight: 1.2,
+                      fontSize: 16,
+                      color: "#3a342f",
                     }}
                   >
-                    {doc.title}
+                    {doc.year}
                   </span>
                   <span
-                    className="truncate"
                     style={{
                       fontFamily: "'Inter', sans-serif",
                       fontWeight: 500,
-                      fontSize: 11,
+                      fontSize: 12,
                       color: "#9a8f86",
                     }}
                   >
-                    {doc.fileName}
+                    {doc.publishedAt}
                   </span>
-                </div>
-                <Badge category={doc.category} />
-                <span
-                  style={{
-                    fontFamily: "'Anton', sans-serif",
-                    fontSize: 16,
-                    color: "#3a342f",
-                  }}
-                >
-                  {doc.year}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 500,
-                    fontSize: 12,
-                    color: "#9a8f86",
-                  }}
-                >
-                  {doc.publishedAt}
-                </span>
-                <StatusPill status={doc.status} />
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => toggleStatus(doc.id)}
-                    title={
-                      doc.status === "published" ? "Despublicar" : "Publicar"
-                    }
-                    className="flex items-center justify-center size-8 rounded-[3px]"
-                    style={{
-                      background: "transparent",
-                      border: "1px solid #d4c9b6",
-                      color: "#9a8f86",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "#121212";
-                      e.currentTarget.style.color = "#121212";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "#d4c9b6";
-                      e.currentTarget.style.color = "#9a8f86";
-                    }}
-                  >
-                    {doc.status === "published" ? (
+                  <StatusPill status={doc.status} />
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setPreviewTarget(doc)}
+                      title="Pré-visualizar documento"
+                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                      style={{
+                        background: "transparent",
+                        border: "1px solid #d4c9b6",
+                        color: "#9a8f86",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#121212";
+                        e.currentTarget.style.color = "#121212";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#d4c9b6";
+                        e.currentTarget.style.color = "#9a8f86";
+                      }}
+                    >
                       <svg
-                        width="12"
-                        height="12"
+                        width="13"
+                        height="13"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2.5"
                         strokeLinecap="round"
                         role="img"
-                        aria-label="Despublicar"
-                      >
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                        <line x1="1" y1="1" x2="23" y2="23" />
-                      </svg>
-                    ) : (
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        role="img"
-                        aria-label="Publicar"
+                        aria-label="Pré-visualizar"
                       >
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                         <circle cx="12" cy="12" r="3" />
                       </svg>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeleteTarget(doc)}
-                    title="Remover"
-                    className="flex items-center justify-center size-8 rounded-[3px]"
-                    style={{
-                      background: "transparent",
-                      border: "1px solid #d4c9b6",
-                      color: "#9a8f86",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "#dd341f";
-                      e.currentTarget.style.color = "#dd341f";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "#d4c9b6";
-                      e.currentTarget.style.color = "#9a8f86";
-                    }}
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      role="img"
-                      aria-label="Remover"
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadDocument(doc)}
+                      title="Baixar documento"
+                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                      style={{
+                        background: "transparent",
+                        border: "1px solid #d4c9b6",
+                        color: "#9a8f86",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#1a7d3c";
+                        e.currentTarget.style.color = "#1a7d3c";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#d4c9b6";
+                        e.currentTarget.style.color = "#9a8f86";
+                      }}
                     >
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6l-1 14H6L5 6" />
-                      <path d="M10 11v6M14 11v6" />
-                      <path d="M9 6V4h6v2" />
-                    </svg>
-                  </button>
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        role="img"
+                        aria-label="Baixar"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleStatus(doc.id)}
+                      title={
+                        doc.status === "published" ? "Despublicar" : "Publicar"
+                      }
+                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                      style={{
+                        background: "transparent",
+                        border: "1px solid #d4c9b6",
+                        color: "#9a8f86",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#121212";
+                        e.currentTarget.style.color = "#121212";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#d4c9b6";
+                        e.currentTarget.style.color = "#9a8f86";
+                      }}
+                    >
+                      {doc.status === "published" ? (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          role="img"
+                          aria-label="Despublicar"
+                        >
+                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                          <line x1="1" y1="1" x2="23" y2="23" />
+                        </svg>
+                      ) : (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          role="img"
+                          aria-label="Publicar"
+                        >
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTarget(doc)}
+                      title="Remover"
+                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                      style={{
+                        background: "transparent",
+                        border: "1px solid #d4c9b6",
+                        color: "#9a8f86",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#dd341f";
+                        e.currentTarget.style.color = "#dd341f";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#d4c9b6";
+                        e.currentTarget.style.color = "#9a8f86";
+                      }}
+                    >
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        role="img"
+                        aria-label="Remover"
+                      >
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14H6L5 6" />
+                        <path d="M10 11v6M14 11v6" />
+                        <path d="M9 6V4h6v2" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mobile View (md:hidden) */}
+                <div
+                  className="md:hidden flex flex-col gap-3 px-4 py-4 border-b border-[#e8d5b4]"
+                  style={{
+                    background: i % 2 === 0 ? "#fff" : "#faf7f2",
+                  }}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 min-w-0 flex-1">
+                      <FileTag type={doc.fileType} />
+                      <div className="flex flex-col gap-0.5 min-w-0">
+                        <span
+                          style={{
+                            fontFamily: "'Anton', sans-serif",
+                            fontSize: 15,
+                            color: "#121212",
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {doc.title}
+                        </span>
+                        <span
+                          className="truncate text-[11px]"
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontWeight: 500,
+                            color: "#9a8f86",
+                          }}
+                        >
+                          {doc.fileName}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setPreviewTarget(doc)}
+                        title="Pré-visualizar documento"
+                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                        style={{
+                          background: "transparent",
+                          border: "1px solid #d4c9b6",
+                          color: "#6b5e55",
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          role="img"
+                          aria-label="Pré-visualizar"
+                        >
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDownloadDocument(doc)}
+                        title="Baixar documento"
+                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                        style={{
+                          background: "transparent",
+                          border: "1px solid #d4c9b6",
+                          color: "#1a7d3c",
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          role="img"
+                          aria-label="Baixar"
+                        >
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                          <polyline points="7 10 12 15 17 10" />
+                          <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleStatus(doc.id)}
+                        title={
+                          doc.status === "published"
+                            ? "Despublicar"
+                            : "Publicar"
+                        }
+                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                        style={{
+                          background: "transparent",
+                          border: "1px solid #d4c9b6",
+                          color: "#9a8f86",
+                        }}
+                      >
+                        {doc.status === "published" ? (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            role="img"
+                            aria-label="Despublicar"
+                          >
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                          </svg>
+                        ) : (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            role="img"
+                            aria-label="Publicar"
+                          >
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget(doc)}
+                        title="Remover"
+                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                        style={{
+                          background: "transparent",
+                          border: "1px solid #d4c9b6",
+                          color: "#dd341f",
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          role="img"
+                          aria-label="Remover"
+                        >
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6l-1 14H6L5 6" />
+                          <path d="M10 11v6M14 11v6" />
+                          <path d="M9 6V4h6v2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-black/5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge category={doc.category} />
+                      <StatusPill status={doc.status} />
+                    </div>
+
+                    <span
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        fontSize: 11,
+                        color: "#9a8f86",
+                      }}
+                    >
+                      {doc.publishedAt} ({doc.year})
+                    </span>
+                  </div>
                 </div>
               </div>
             ))
@@ -1248,6 +1827,13 @@ export function AdminDashboard() {
       </div>
 
       {showUpload && <UploadModal onClose={() => setShowUpload(false)} />}
+      {previewTarget && (
+        <PreviewModal
+          doc={previewTarget}
+          onClose={() => setPreviewTarget(null)}
+          onDownload={handleDownloadDocument}
+        />
+      )}
       {deleteTarget && (
         <DeleteConfirm
           doc={deleteTarget}
