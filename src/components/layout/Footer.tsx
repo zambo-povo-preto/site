@@ -2,13 +2,16 @@
 
 import { LogoMark } from "@/components/icons/LogoMark";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
+  const pathname = usePathname();
+
   const links = [
-    { label: "Início", to: "/" },
-    { label: "História", to: "/historia" },
-    { label: "Transparência", to: "/transparencia" },
-    { label: "Contato", to: "/contato" },
+    { label: "INÍCIO", to: "/" },
+    { label: "HISTÓRIA", to: "/historia" },
+    { label: "TRANSPARÊNCIA", to: "/transparencia" },
+    { label: "CONTATO", to: "/contato" },
   ];
 
   return (
@@ -60,27 +63,35 @@ export function Footer() {
                 fontWeight: 800,
                 fontSize: 11,
                 letterSpacing: "1.5px",
-                color: "#3a342f",
+                color: "#8c8077",
+                marginBottom: 8,
               }}
             >
               NAVEGAÇÃO
             </span>
-            {links.map((l) => (
-              <Link
-                key={l.label}
-                href={l.to}
-                className="hover:text-black"
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 500,
-                  fontSize: 14,
-                  color: "#3a342f",
-                  textDecoration: "none",
-                }}
-              >
-                {l.label}
-              </Link>
-            ))}
+            {links.map((l) => {
+              const active = pathname === l.to;
+              return (
+                <Link
+                  key={l.label}
+                  href={l.to}
+                  className={`uppercase transition-all duration-300 ease-in-out ${
+                    active
+                      ? "text-[#c87d00]"
+                      : "text-[#3a342f] hover:text-[#c87d00]"
+                  }`}
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 800,
+                    fontSize: 13.5,
+                    letterSpacing: "0.5px",
+                    textDecoration: "none",
+                  }}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Contact */}
@@ -91,7 +102,8 @@ export function Footer() {
                 fontWeight: 800,
                 fontSize: 11,
                 letterSpacing: "1.5px",
-                color: "#3a342f",
+                color: "#8c8077",
+                marginBottom: 8,
               }}
             >
               CONTATO
@@ -100,18 +112,15 @@ export function Footer() {
               href="https://www.instagram.com/zambomnc/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-black"
+              className="text-[#3a342f] hover:text-[#c87d00] transition-all duration-300 ease-in-out uppercase"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 800,
+                fontSize: 13.5,
+                letterSpacing: "0.5px",
+              }}
             >
-              <span
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 500,
-                  fontSize: 14,
-                  color: "#3a342f",
-                }}
-              >
-                Instagram
-              </span>
+              Instagram
             </a>
           </div>
         </div>

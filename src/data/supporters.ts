@@ -46,5 +46,5 @@ export const institutionalPartners: InstitutionalPartner[] = [
     name: "Coletivos",
     sub: "Mamulengo de Si Mesmo\nLinhas do Mar\nCasa da Democracia",
   },
-  { name: "Matrize Africana\nMatinata" },
+  { name: "Matriz Africana\nMatinata" },
 ];
