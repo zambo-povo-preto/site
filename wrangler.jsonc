@@ -30,8 +30,8 @@
       "keep_names": true,
       "route": {
         "custom_domain": true,
-        "pattern": "site.zambôpovopreto.com.br",
-        "zone_name": "zambôpovopreto.com.br"
+        "pattern": "site.xn--zambpovopreto-slb.com.br",
+        "zone_name": "xn--zambpovopreto-slb.com.br"
       },
       "assets": {
         "binding": "ASSETS",
