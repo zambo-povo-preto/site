@@ -53,7 +53,7 @@ export function HeroSection() {
       style={{ minHeight: "calc(100vh - 120px)" }}
     >
       {/* Hero Content */}
-      <div className="relative z-10 max-w-[1280px] mx-auto px-6 lg:px-[80px] pt-[60px] pb-[80px] flex items-center min-h-screen">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 lg:px-[80px] pt-[90px] md:pt-[60px] pb-[80px] flex items-center min-h-screen">
         {/* Left side */}
         <div className="flex-1 flex flex-col gap-12 lg:min-w-[600px]">
           {/* Tagline */}
@@ -168,7 +168,10 @@ export function HeroSection() {
         </div>
 
         {/* Right side — figure */}
-        <div className="hidden lg:flex items-end justify-center shrink-0">
+        <div
+          className="hidden lg:flex items-end justify-center shrink-0"
+          style={{ marginBottom: "-90px" }}
+        >
           <img src="/logo-mark-hero.png" alt="" width={603} height={701} />
         </div>
       </div>
