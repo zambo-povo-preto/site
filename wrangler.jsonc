@@ -6,9 +6,6 @@
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "workers_dev": true,
   "preview_urls": false,
-  "vars": {
-    "NEXT_PUBLIC_API_URL": "http://localhost:3333"
-  },
   "assets": {
     "binding": "ASSETS",
     "directory": ".open-next/assets"
@@ -31,9 +28,6 @@
       "workers_dev": false,
       "preview_urls": false,
       "keep_names": true,
-      "vars": {
-        "NEXT_PUBLIC_API_URL": "https://api.xn--zambpovopreto-slb.com.br"
-      },
       "route": {
         "custom_domain": true,
         "pattern": "site.xn--zambpovopreto-slb.com.br",
