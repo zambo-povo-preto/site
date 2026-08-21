@@ -353,7 +353,7 @@ export function AdminLoginForm() {
               </button>
             </form>
 
-            <div
+            {/* <div
               className="px-4 py-3 rounded-[3px]"
               style={{
                 background: "rgba(248,186,1,0.1)",
@@ -374,7 +374,7 @@ export function AdminLoginForm() {
                 </span>
                 admin@zambo.org.br / zambo2024
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
