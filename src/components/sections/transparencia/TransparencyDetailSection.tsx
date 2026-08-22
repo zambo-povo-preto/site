@@ -819,7 +819,7 @@ export function TransparencyDetailSection() {
       <div
         className="sticky top-[72px] z-30 w-full py-4 border-b border-[#c8b9a2]"
         style={{
-          background: "#faf4e8",
+          background: "#e6d8be",
           boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
         }}
       >
@@ -845,10 +845,10 @@ export function TransparencyDetailSection() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar por título, favorecido, CPF/CNPJ ou nº da nota..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-[3px] outline-none text-sm font-medium"
+              className="w-full pl-10 pr-4 py-2.5 rounded-[3px] outline-none text-sm font-medium focus:border-[#dd341f]"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                background: "#e6d8be",
+                background: "#faf4e8",
                 border: "1px solid #c8b9a2",
                 color: "#121212",
               }}
@@ -864,10 +864,10 @@ export function TransparencyDetailSection() {
                   e.target.value === "all" ? "all" : Number(e.target.value),
                 )
               }
-              className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold focus:border-[#dd341f]"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                background: "#e6d8be",
+                background: "#faf4e8",
                 border: "1px solid #c8b9a2",
                 color: "#3a342f",
               }}
@@ -886,10 +886,10 @@ export function TransparencyDetailSection() {
               onChange={(e) =>
                 setFilterCat(e.target.value as DocCategory | "all")
               }
-              className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold focus:border-[#dd341f]"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                background: "#e6d8be",
+                background: "#faf4e8",
                 border: "1px solid #c8b9a2",
                 color: "#3a342f",
               }}

@@ -276,7 +276,7 @@ export function ContactFormSection() {
                   id="contact-name"
                   type="text"
                   placeholder="Seu nome completo"
-                  className="w-full bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors"
+                  className="w-full bg-[#faf4e8] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#f8ba01] focus:bg-[#ffffff] transition-colors"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -290,7 +290,7 @@ export function ContactFormSection() {
                   id="contact-email"
                   type="email"
                   placeholder="seu@email.com"
-                  className="w-full bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors"
+                  className="w-full bg-[#faf4e8] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#f8ba01] focus:bg-[#ffffff] transition-colors"
                 />
               </div>
             </div>
@@ -305,7 +305,7 @@ export function ContactFormSection() {
               <div className="relative">
                 <select
                   id="contact-subject"
-                  className="w-full appearance-none bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors cursor-pointer"
+                  className="w-full appearance-none bg-[#faf4e8] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] focus:outline-none focus:border-[#f8ba01] focus:bg-[#ffffff] transition-colors cursor-pointer"
                 >
                   <option>Ser voluntário</option>
                   <option>Dúvidas e Sugestões</option>
@@ -343,7 +343,7 @@ export function ContactFormSection() {
                 id="contact-message"
                 rows={5}
                 placeholder="Escreva sua mensagem aqui..."
-                className="w-full resize-none bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors"
+                className="w-full resize-none bg-[#faf4e8] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#f8ba01] focus:bg-[#ffffff] transition-colors"
               />
             </div>
 
@@ -354,7 +354,7 @@ export function ContactFormSection() {
 
               <button
                 type="submit"
-                className="w-full md:w-auto flex items-center justify-center gap-3 bg-[#f8ba01] hover:bg-[#faf4e8] text-[#121212] border border-[#121212] rounded-[3px] px-8 py-3.5 uppercase font-['Anton'] text-[16px] tracking-wider transition-colors cursor-pointer"
+                className="w-full md:w-auto flex items-center justify-center gap-3 bg-[#f8ba01] hover:bg-[#ffffff] text-[#121212] border border-[#121212] rounded-[3px] px-8 py-3.5 uppercase font-['Anton'] text-[16px] tracking-wider transition-colors cursor-pointer"
                 style={{ boxShadow: "4px 4px 0px rgba(18,18,18,0.1)" }}
               >
                 Enviar
