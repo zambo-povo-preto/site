@@ -717,7 +717,7 @@ export function TransparencyDetailSection() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f0e3cd] text-[#121212] pb-0">
+    <div className="w-full bg-[#f0e3cd] text-[#121212] pb-0">
       {/* ── 1. Hero Section (Fundo Grafite #1d1b18 com Título Claro) ── */}
       <div className="w-full pt-10 pb-12 sm:pt-14 sm:pb-16 bg-[#1d1b18] border-b border-[#3a342f]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start lg:items-end justify-between">
