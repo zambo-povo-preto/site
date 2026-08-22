@@ -170,8 +170,8 @@ function DocumentRow({
     <div
       className="flex flex-col border-b last:border-b-0 transition-colors"
       style={{
-        borderColor: "#e8d5b4",
-        background: "#ffffff",
+        borderColor: "#d8caa6",
+        background: "#faf4e8",
       }}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4.5">
@@ -244,9 +244,9 @@ function DocumentRow({
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide cursor-pointer transition-colors"
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    background: showAttachments ? "#121212" : "#faf7f2",
+                    background: showAttachments ? "#121212" : "#e6d8be",
                     color: showAttachments ? "#f8ba01" : "#121212",
-                    border: "1px solid #d4c9b6",
+                    border: "1px solid #c8b9a2",
                   }}
                 >
                   <span>🧾 NOTAS FISCAIS ({doc.attachments?.length})</span>
@@ -284,8 +284,8 @@ function DocumentRow({
         <div
           className="px-4 sm:px-5 py-4 flex flex-col gap-3 border-t"
           style={{
-            background: "#faf7f2",
-            borderColor: "#e8d5b4",
+            background: "#e6d8be",
+            borderColor: "#c8b9a2",
           }}
         >
           <div className="flex items-center justify-between flex-wrap gap-2">
@@ -330,10 +330,10 @@ function DocumentRow({
               return (
                 <div
                   key={att.id}
-                  className={`flex flex-col justify-between gap-3 p-4 rounded-[3px] bg-white border transition-colors ${
+                  className={`flex flex-col justify-between gap-3 p-4 rounded-[3px] bg-[#faf4e8] border transition-colors ${
                     isMatch
-                      ? "border-[#c87d00] bg-[#f8ba01]/5"
-                      : "border-[#d4c9b6]"
+                      ? "border-[#c87d00] bg-[#f8ba01]/10"
+                      : "border-[#c8b9a2]"
                   }`}
                 >
                   <div className="flex flex-col gap-1.5 min-w-0">
@@ -358,7 +358,7 @@ function DocumentRow({
 
                     {/* Favorecido & CPF/CNPJ */}
                     {att.issuerName ? (
-                      <div className="flex flex-col text-xs text-[#3a342f] bg-[#faf7f2] p-2.5 rounded border border-[#e8d5b4]">
+                      <div className="flex flex-col text-xs text-[#3a342f] bg-[#e6d8be] p-2.5 rounded border border-[#c8b9a2]">
                         <span className="font-bold text-[#121212]">
                           Favorecido: {att.issuerName}
                         </span>
@@ -405,7 +405,7 @@ function DocumentRow({
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2.5 border-t border-[#e8d5b4]">
+                  <div className="flex items-center justify-between pt-2.5 border-t border-[#c8b9a2]">
                     <span className="text-[10px] font-bold text-[#8c8077]">
                       {att.fileSize} · {att.fileType}
                     </span>
@@ -464,17 +464,17 @@ function YearAccordion({
 
   return (
     <div
-      className="overflow-hidden rounded-[3px] transition-all bg-white"
+      className="overflow-hidden rounded-[3px] transition-all bg-[#faf4e8]"
       style={{
-        border: "1px solid #d4c9b6",
+        border: "1px solid #c8b9a2",
       }}
     >
       <button
         type="button"
         className="w-full flex items-center justify-between px-5 sm:px-6 py-4 text-left transition-colors cursor-pointer"
         style={{
-          background: open ? "#f5eedd" : "#ffffff",
-          borderBottom: open ? "1px solid #d4c9b6" : "none",
+          background: open ? "#e6d8be" : "#faf4e8",
+          borderBottom: open ? "1px solid #c8b9a2" : "none",
         }}
         onClick={() => setOpen((v) => !v)}
       >
@@ -507,7 +507,7 @@ function YearAccordion({
                     fontFamily: "'Inter', sans-serif",
                     background: open ? "rgba(18,18,18,0.08)" : meta.bg,
                     color: open ? "#121212" : meta.color,
-                    border: "1px solid #d4c9b6",
+                    border: "1px solid #c8b9a2",
                   }}
                 >
                   {count} {cat.toUpperCase()}
@@ -529,7 +529,7 @@ function YearAccordion({
       </button>
 
       {open && (
-        <div style={{ background: "#ffffff" }}>
+        <div style={{ background: "#faf4e8" }}>
           {group.documents.map((doc) => (
             <DocumentRow key={doc.id} doc={doc} searchTerm={searchTerm} />
           ))}
@@ -548,9 +548,9 @@ function EmptyState({
 }) {
   return (
     <div
-      className="flex flex-col items-center justify-center py-12 sm:py-16 px-6 text-center rounded-[3px] my-4 bg-white"
+      className="flex flex-col items-center justify-center py-12 sm:py-16 px-6 text-center rounded-[3px] my-4 bg-[#faf4e8]"
       style={{
-        border: "1px solid #d4c9b6",
+        border: "1px solid #c8b9a2",
       }}
     >
       <div
@@ -717,27 +717,12 @@ export function TransparencyDetailSection() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#faf7f2] text-[#121212] pb-0">
+    <div className="w-full min-h-screen bg-[#f0e3cd] text-[#121212] pb-0">
       {/* ── 1. Hero Section (Fundo Grafite #1d1b18 com Título Claro) ── */}
       <div className="w-full pt-10 pb-12 sm:pt-14 sm:pb-16 bg-[#1d1b18] border-b border-[#3a342f]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start lg:items-end justify-between">
           {/* Header Text */}
           <div className="flex flex-col gap-4 max-w-[620px]">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-6 bg-[#f8ba01] rounded-[1px]" />
-              <span
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 12,
-                  letterSpacing: "1.8px",
-                  color: "#f8ba01",
-                }}
-              >
-                PONTO DE CULTURA ZAMBÔ
-              </span>
-            </div>
-
             <div>
               <h1
                 className="uppercase"
@@ -790,7 +775,7 @@ export function TransparencyDetailSection() {
             ].map((s) => (
               <div
                 key={s.label}
-                className="flex flex-col items-center justify-center px-6 py-5 rounded-[3px] relative overflow-hidden bg-white border border-[#3a342f] shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:-translate-y-0.5"
+                className="flex flex-col items-center justify-center px-6 py-5 rounded-[3px] relative overflow-hidden bg-[#faf4e8] border border-[#3a342f] shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:-translate-y-0.5"
                 style={{
                   minWidth: 155,
                 }}
@@ -832,9 +817,9 @@ export function TransparencyDetailSection() {
 
       {/* ── 3. Barra de Busca e Filtros (Limpa com Bordas Sutis) ── */}
       <div
-        className="sticky top-[72px] z-30 w-full py-4 border-b border-[#d4c9b6]"
+        className="sticky top-[72px] z-30 w-full py-4 border-b border-[#c8b9a2]"
         style={{
-          background: "#ffffff",
+          background: "#faf4e8",
           boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
         }}
       >
@@ -863,8 +848,8 @@ export function TransparencyDetailSection() {
               className="w-full pl-10 pr-4 py-2.5 rounded-[3px] outline-none text-sm font-medium"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                background: "#f5eedd",
-                border: "1px solid #d4c9b6",
+                background: "#e6d8be",
+                border: "1px solid #c8b9a2",
                 color: "#121212",
               }}
             />
@@ -882,8 +867,8 @@ export function TransparencyDetailSection() {
               className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                background: "#f5eedd",
-                border: "1px solid #d4c9b6",
+                background: "#e6d8be",
+                border: "1px solid #c8b9a2",
                 color: "#3a342f",
               }}
             >
@@ -904,8 +889,8 @@ export function TransparencyDetailSection() {
               className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                background: "#f5eedd",
-                border: "1px solid #d4c9b6",
+                background: "#e6d8be",
+                border: "1px solid #c8b9a2",
                 color: "#3a342f",
               }}
             >

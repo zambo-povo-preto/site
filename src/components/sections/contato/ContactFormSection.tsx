@@ -127,20 +127,20 @@ const SendIcon = () => (
 
 export function ContactFormSection() {
   return (
-    <div className="relative w-full min-h-screen overflow-hidden pt-24 pb-20 px-6 lg:px-[80px]">
+    <div className="relative w-full min-h-screen overflow-hidden pt-24 pb-20 px-6 lg:px-[80px] bg-[#f0e3cd]">
       <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row gap-12 lg:gap-20">
         {/* ─── COLUNA ESQUERDA: INFORMAÇÕES ─── */}
         <div className="w-full md:w-[35%] flex flex-col gap-10 mt-4">
           <div className="flex flex-col gap-8">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 shrink-0 bg-[#dd341f] flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 bg-[#dd341f] border border-[#121212] rounded-[3px] flex items-center justify-center">
                 <MapPinIcon />
               </div>
               <div className="flex flex-col">
                 <span className="font-['Anton'] tracking-wide text-[16px] text-[#121212] uppercase mb-1">
                   Endereço
                 </span>
-                <span className="font-['Inter'] text-[15px] font-medium text-[#3a342f] leading-snug">
+                <span className="font-['Inter'] text-[15px] font-medium text-[#4a4036] leading-snug">
                   Av. X, 1234
                   <br />
                   Caraguatatuba, SP – CEP 00000-000
@@ -149,14 +149,14 @@ export function ContactFormSection() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 shrink-0 bg-[#dd341f] flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 bg-[#dd341f] border border-[#121212] rounded-[3px] flex items-center justify-center">
                 <PhoneIcon />
               </div>
               <div className="flex flex-col">
                 <span className="font-['Anton'] tracking-wide text-[16px] text-[#121212] uppercase mb-1">
                   Telefone
                 </span>
-                <span className="font-['Inter'] text-[15px] font-medium text-[#3a342f] leading-snug">
+                <span className="font-['Inter'] text-[15px] font-medium text-[#4a4036] leading-snug">
                   (71) 3333-4444
                   <br />
                   Seg – Sex, 9h às 18h
@@ -165,14 +165,14 @@ export function ContactFormSection() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 shrink-0 bg-[#dd341f] flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 bg-[#dd341f] border border-[#121212] rounded-[3px] flex items-center justify-center">
                 <MailIcon />
               </div>
               <div className="flex flex-col">
                 <span className="font-['Anton'] tracking-wide text-[16px] text-[#121212] uppercase mb-1">
                   E-mail
                 </span>
-                <span className="font-['Inter'] text-[15px] font-medium text-[#3a342f] leading-snug">
+                <span className="font-['Inter'] text-[15px] font-medium text-[#4a4036] leading-snug">
                   contato@zambo.org.br
                 </span>
               </div>
@@ -180,9 +180,9 @@ export function ContactFormSection() {
           </div>
 
           <div className="flex items-center w-full my-2">
-            <div className="flex-1 h-px bg-[#dcd1bc]" />
+            <div className="flex-1 h-px bg-[#c8b9a2]" />
             <div className="w-2 h-2 bg-[#f8ba01] rotate-45 mx-3" />
-            <div className="flex-1 h-px bg-[#dcd1bc]" />
+            <div className="flex-1 h-px bg-[#c8b9a2]" />
           </div>
 
           <div className="flex flex-col w-full">
@@ -194,11 +194,11 @@ export function ContactFormSection() {
               href="https://www.instagram.com/zambomnc/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 py-3 border-b border-[#dcd1bc] hover:bg-[#e6d6be] transition-colors"
+              className="flex items-center gap-4 py-3 border-b border-[#c8b9a2] hover:bg-[#e6d8be] transition-colors rounded-[3px] px-2"
             >
               <InstagramIcon />
               <div className="flex flex-col">
-                <span className="font-['Inter'] text-[11px] font-bold text-[#5a534e] uppercase leading-none">
+                <span className="font-['Inter'] text-[11px] font-bold text-[#6b5e55] uppercase leading-none">
                   Instagram
                 </span>
                 <span className="font-['Inter'] text-[15px] font-bold text-[#121212]">
@@ -211,11 +211,11 @@ export function ContactFormSection() {
               href="https://www.youtube.com/@zambooficial"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 py-3 border-b border-[#dcd1bc] hover:bg-[#e6d6be] transition-colors"
+              className="flex items-center gap-4 py-3 border-b border-[#c8b9a2] hover:bg-[#e6d8be] transition-colors rounded-[3px] px-2"
             >
               <YoutubeIcon />
               <div className="flex flex-col">
-                <span className="font-['Inter'] text-[11px] font-bold text-[#5a534e] uppercase leading-none">
+                <span className="font-['Inter'] text-[11px] font-bold text-[#6b5e55] uppercase leading-none">
                   YouTube
                 </span>
                 <span className="font-['Inter'] text-[15px] font-bold text-[#121212]">
@@ -228,11 +228,11 @@ export function ContactFormSection() {
               href="https://www.facebook.com/zambooficial"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 py-3 border-b border-[#dcd1bc] hover:bg-[#e6d6be] transition-colors"
+              className="flex items-center gap-4 py-3 border-b border-[#c8b9a2] hover:bg-[#e6d8be] transition-colors rounded-[3px] px-2"
             >
               <FacebookIcon />
               <div className="flex flex-col">
-                <span className="font-['Inter'] text-[11px] font-bold text-[#5a534e] uppercase leading-none">
+                <span className="font-['Inter'] text-[11px] font-bold text-[#6b5e55] uppercase leading-none">
                   Facebook
                 </span>
                 <span className="font-['Inter'] text-[15px] font-bold text-[#121212]">
@@ -251,16 +251,10 @@ export function ContactFormSection() {
         </div>
 
         {/* ─── COLUNA DIREITA: FORMULÁRIO ─── */}
-        <div className="w-full md:w-[65%] relative bg-[#f4ebd9] border border-[#dcd1bc] shadow-[4px_8px_24px_rgba(0,0,0,0.06)] p-8 md:p-12">
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#dd341f]" />
-          <div className="absolute top-0 right-4 w-12 h-14 bg-[#f8ba01] mix-blend-multiply opacity-90 shadow-sm" />
+        <div className="w-full md:w-[65%] relative bg-[#faf4e8] border border-[#c8b9a2] rounded-[3px] shadow-[0_2px_12px_rgba(0,0,0,0.05)] p-8 md:p-12">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#f8ba01]" />
 
           <div className="flex flex-col items-start mb-8">
-            <div className="bg-[#f8ba01] px-2 py-0.5 mb-2">
-              <span className="font-['Anton'] text-[13px] tracking-widest uppercase text-[#121212]">
-                Formulário
-              </span>
-            </div>
             <h2 className="font-['Anton'] text-[40px] md:text-[56px] text-[#121212] leading-none uppercase">
               Escreva para <span className="text-[#dd341f]">a gente</span>
             </h2>
@@ -282,7 +276,7 @@ export function ContactFormSection() {
                   id="contact-name"
                   type="text"
                   placeholder="Seu nome completo"
-                  className="w-full bg-[#EEDEC9] border border-[#dcd1bc] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#8a8178] focus:outline-none focus:border-[#dd341f] transition-colors"
+                  className="w-full bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -296,7 +290,7 @@ export function ContactFormSection() {
                   id="contact-email"
                   type="email"
                   placeholder="seu@email.com"
-                  className="w-full bg-[#EEDEC9] border border-[#dcd1bc] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#8a8178] focus:outline-none focus:border-[#dd341f] transition-colors"
+                  className="w-full bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors"
                 />
               </div>
             </div>
@@ -311,7 +305,7 @@ export function ContactFormSection() {
               <div className="relative">
                 <select
                   id="contact-subject"
-                  className="w-full appearance-none bg-[#EEDEC9] border border-[#dcd1bc] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] focus:outline-none focus:border-[#dd341f] transition-colors cursor-pointer"
+                  className="w-full appearance-none bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors cursor-pointer"
                 >
                   <option>Ser voluntário</option>
                   <option>Dúvidas e Sugestões</option>
@@ -349,18 +343,18 @@ export function ContactFormSection() {
                 id="contact-message"
                 rows={5}
                 placeholder="Escreva sua mensagem aqui..."
-                className="w-full resize-none bg-[#EEDEC9] border border-[#dcd1bc] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#8a8178] focus:outline-none focus:border-[#dd341f] transition-colors"
+                className="w-full resize-none bg-[#e6d8be] border border-[#c8b9a2] rounded-[3px] p-3 md:p-4 font-['Inter'] text-[15px] font-medium text-[#121212] placeholder-[#7a6d5c] focus:outline-none focus:border-[#dd341f] focus:bg-[#faf4e8] transition-colors"
               />
             </div>
 
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 mt-2 pt-2">
-              <span className="font-['Inter'] text-[13px] font-semibold text-[#5a534e]">
+              <span className="font-['Inter'] text-[13px] font-semibold text-[#6b5e55]">
                 Respondemos em até 2 dias úteis.
               </span>
 
               <button
                 type="submit"
-                className="w-full md:w-auto flex items-center justify-center gap-3 bg-[#dd341f] hover:bg-[#c22b19] transition-colors text-white px-8 py-3.5 uppercase font-['Anton'] text-[16px] tracking-wider"
+                className="w-full md:w-auto flex items-center justify-center gap-3 bg-[#f8ba01] hover:bg-[#faf4e8] text-[#121212] border border-[#121212] rounded-[3px] px-8 py-3.5 uppercase font-['Anton'] text-[16px] tracking-wider transition-colors cursor-pointer"
                 style={{ boxShadow: "4px 4px 0px rgba(18,18,18,0.1)" }}
               >
                 Enviar

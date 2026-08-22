@@ -68,7 +68,7 @@ function EraSection({ era }: { era: Era }) {
 
       {/* CARD PRINCIPAL */}
       <div
-        className={`relative flex-1 bg-[#f4ebd9] md:min-h-[420px] shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#dcd1bc] flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} overflow-hidden`}
+        className={`relative flex-1 bg-[#faf4e8] md:min-h-[420px] shadow-[2px_4px_12px_rgba(0,0,0,0.08)] border border-[#c8b9a2] flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} overflow-hidden`}
       >
         <DecorativeDots
           className={`absolute top-3 text-[#5a534e] opacity-30 z-10 ${imageRight ? "left-3" : "right-3"}`}
@@ -102,7 +102,7 @@ function EraSection({ era }: { era: Era }) {
             ))}
           </div>
 
-          <div className="relative bg-[#e6dbce] p-4 pr-6 rounded-sm flex gap-4 w-full border border-[#d8cdb8] mt-auto">
+          <div className="relative bg-[#e6d8be] p-4 pr-6 rounded-sm flex gap-4 w-full border border-[#c8b9a2] mt-auto">
             <span
               className="font-['Anton'] text-[48px] leading-[0.7] mt-2"
               style={{ color: accentColor }}
@@ -306,7 +306,7 @@ export function HistoryDetailSection() {
     <div
       className="relative w-full min-h-screen overflow-hidden"
       style={{
-        backgroundColor: "#EEDEC9",
+        backgroundColor: "#f0e3cd",
         backgroundImage: `
           radial-gradient(circle at 15% 20%, rgba(0, 0, 0, 0.06) 0%, transparent 40%),
           radial-gradient(circle at 85% 75%, rgba(0, 0, 0, 0.04) 0%, transparent 50%),
