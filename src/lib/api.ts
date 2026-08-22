@@ -182,6 +182,25 @@ export async function deleteFileApi(id: string): Promise<void> {
   });
 }
 
+export async function updateFileApi(
+  id: string,
+  params: {
+    fileName?: string;
+    description?: string;
+    categoryId?: string;
+    published?: boolean;
+  },
+): Promise<ApiFileMetadata> {
+  const data = await apiFetch<{ file: ApiFileMetadata }>(
+    `/transparency/files/${id}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(params),
+    },
+  );
+  return data.file;
+}
+
 export async function toggleFileStatusApi(
   id: string,
 ): Promise<ApiFileMetadata> {
@@ -194,6 +213,23 @@ export async function toggleFileStatusApi(
   return data.file;
 }
 
+export interface ApiAttachmentMetadata {
+  id: string;
+  documentId: string;
+  name: string;
+  description: string | null;
+  objectKey: string;
+  contentType: string;
+  size: number;
+  createdAt: string;
+  issuerName?: string | null;
+  issuerDoc?: string | null;
+  invoiceNumber?: string | null;
+  amount?: number | null;
+  issueDate?: string | null;
+  expenseType?: string | null;
+}
+
 export function getFileDownloadUrl(id: string): string {
   return `${API_URL}/transparency/files/${id}/download`;
 }
@@ -202,3 +238,94 @@ export function getFilePreviewUrl(id: string): string {
   return `${API_URL}/transparency/files/${id}/download?inline=true`;
 }
 
+// Attachments / Invoices API methods
+export async function getAttachmentsApi(
+  documentId?: string,
+  searchQuery?: string,
+): Promise<ApiAttachmentMetadata[]> {
+  let endpoint = documentId
+    ? `/transparency/files/${documentId}/attachments`
+    : "/transparency/files/attachments";
+
+  if (searchQuery && searchQuery.trim() !== "") {
+    endpoint += `?q=${encodeURIComponent(searchQuery.trim())}`;
+  }
+
+  const data = await apiFetch<{ attachments: ApiAttachmentMetadata[] }>(
+    endpoint,
+  );
+  return data.attachments || [];
+}
+
+export async function uploadAttachmentApi(params: {
+  documentId: string;
+  fileName: string;
+  description?: string;
+  contentType: string;
+  contentBase64: string;
+  issuerName?: string;
+  issuerDoc?: string;
+  invoiceNumber?: string;
+  amount?: number;
+  issueDate?: string;
+  expenseType?: string;
+}): Promise<ApiAttachmentMetadata> {
+  const data = await apiFetch<{ attachment: ApiAttachmentMetadata }>(
+    `/transparency/files/${params.documentId}/attachments`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        fileName: params.fileName,
+        description: params.description,
+        contentType: params.contentType,
+        contentBase64: params.contentBase64,
+        issuerName: params.issuerName,
+        issuerDoc: params.issuerDoc,
+        invoiceNumber: params.invoiceNumber,
+        amount: params.amount,
+        issueDate: params.issueDate,
+        expenseType: params.expenseType,
+      }),
+    },
+  );
+  return data.attachment;
+}
+
+export async function updateAttachmentApi(
+  attachmentId: string,
+  params: {
+    fileName?: string;
+    description?: string;
+    issuerName?: string;
+    issuerDoc?: string;
+    invoiceNumber?: string;
+    amount?: number;
+    issueDate?: string;
+    expenseType?: string;
+  },
+): Promise<ApiAttachmentMetadata> {
+  const data = await apiFetch<{ attachment: ApiAttachmentMetadata }>(
+    `/transparency/files/attachments/${attachmentId}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(params),
+    },
+  );
+  return data.attachment;
+}
+
+export async function deleteAttachmentApi(
+  attachmentId: string,
+): Promise<void> {
+  await apiFetch(`/transparency/files/attachments/${attachmentId}`, {
+    method: "DELETE",
+  });
+}
+
+export function getAttachmentDownloadUrl(attachmentId: string): string {
+  return `${API_URL}/transparency/files/attachments/${attachmentId}/download`;
+}
+
+export function getAttachmentPreviewUrl(attachmentId: string): string {
+  return `${API_URL}/transparency/files/attachments/${attachmentId}/download?inline=true`;
+}

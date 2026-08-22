@@ -2,14 +2,14 @@
 
 import { useDocuments } from "@/contexts/DocumentsContext";
 import svgPaths from "@/imports/Group36/svg-hkzbekptio";
-import { getFileDownloadUrl } from "@/lib/api";
+import { getAttachmentDownloadUrl, getFileDownloadUrl } from "@/lib/api";
 import type {
   AdminDocument,
   DocCategory,
   TransparencyDocument,
   YearGroup,
 } from "@/types/document";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CATEGORIES: DocCategory[] = [
   "Prestação de Contas",
@@ -24,7 +24,7 @@ const categoryMeta: Record<DocCategory, { color: string; bg: string }> = {
   "Relatório de Atividades": { color: "#121212", bg: "#f8ba01" },
   "Plano de Trabalho": { color: "#ffffff", bg: "#1a7d3c" },
   "Ata de Reunião": { color: "#f5eedd", bg: "#1d1b18" },
-  Edital: { color: "#121212", bg: "#e8d5b4" },
+  Edital: { color: "#121212", bg: "#6b5e55" },
 };
 
 function FileTag({ type }: { type: "PDF" | "XLSX" | "DOC" }) {
@@ -35,13 +35,12 @@ function FileTag({ type }: { type: "PDF" | "XLSX" | "DOC" }) {
   };
   return (
     <div
-      className="flex items-center justify-center rounded-[4px] shrink-0"
+      className="flex items-center justify-center rounded-[3px] shrink-0"
       style={{
         width: 44,
-        height: 52,
+        height: 48,
         background: colors[type] ?? "#dd341f",
-        border: "1.5px solid #121212",
-        boxShadow: "2px 2px 0px #121212",
+        border: "1px solid #121212",
       }}
     >
       <span
@@ -73,7 +72,7 @@ function Badge({ category }: { category: DocCategory }) {
         letterSpacing: "0.8px",
         background: meta.bg,
         color: meta.color,
-        border: "1px solid #121212",
+        border: "1px solid #d4c9b6",
       }}
     >
       {category.toUpperCase()}
@@ -105,8 +104,8 @@ function DownloadIcon() {
 function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg
-      width="24"
-      height="24"
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -124,102 +123,316 @@ function ChevronIcon({ open }: { open: boolean }) {
   );
 }
 
-function DocumentRow({ doc }: { doc: TransparencyDocument }) {
+function DocumentRow({
+  doc,
+  searchTerm,
+}: {
+  doc: TransparencyDocument;
+  searchTerm?: string;
+}) {
   const downloadUrl = getFileDownloadUrl(doc.id);
+
+  // Check if search matches any attachment
+  const q = searchTerm?.toLowerCase().trim() || "";
+  const cleanQ = q.replace(/\D/g, "");
+
+  const hasMatchingAttachment = Boolean(
+    q &&
+      doc.attachments?.some((att) => {
+        return (
+          att.name.toLowerCase().includes(q) ||
+          att.issuerName?.toLowerCase().includes(q) ||
+          att.issuerDoc?.toLowerCase().includes(q) ||
+          (cleanQ.length > 2 &&
+            att.issuerDoc?.replace(/\D/g, "").includes(cleanQ)) ||
+          att.invoiceNumber?.toLowerCase().includes(q) ||
+          att.expenseType?.toLowerCase().includes(q) ||
+          att.description?.toLowerCase().includes(q)
+        );
+      }),
+  );
+
+  const [showAttachments, setShowAttachments] = useState(hasMatchingAttachment);
+  const hasAttachments = Boolean(doc.attachments && doc.attachments.length > 0);
+
+  useEffect(() => {
+    if (hasMatchingAttachment) {
+      setShowAttachments(true);
+    }
+  }, [hasMatchingAttachment]);
+
+  const totalAmount = (doc.attachments || []).reduce(
+    (acc, att) => acc + (att.amount || 0),
+    0,
+  );
 
   return (
     <div
-      className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4.5 transition-colors border-b last:border-b-0"
+      className="flex flex-col border-b last:border-b-0 transition-colors"
       style={{
         borderColor: "#e8d5b4",
         background: "#ffffff",
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "rgba(248,186,1,0.06)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "#ffffff";
-      }}
     >
-      <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
-        <FileTag type={doc.fileType} />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4.5">
+        <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
+          <FileTag type={doc.fileType} />
 
-        <div className="flex flex-col gap-1 flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              style={{
-                fontFamily: "'Anton', sans-serif",
-                fontSize: 17,
-                color: "#121212",
-                letterSpacing: "0.3px",
-                lineHeight: "22px",
-              }}
-            >
-              {doc.title}
-            </span>
-            <Badge category={doc.category} />
-          </div>
+          <div className="flex flex-col gap-1 flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                style={{
+                  fontFamily: "'Anton', sans-serif",
+                  fontSize: 17,
+                  color: "#121212",
+                  letterSpacing: "0.3px",
+                  lineHeight: "22px",
+                }}
+              >
+                {doc.title}
+              </span>
+              <Badge category={doc.category} />
+              {totalAmount > 0 && (
+                <span
+                  className="px-2 py-0.5 rounded text-[10px] font-bold uppercase inline-flex items-center gap-1"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    background: "rgba(26,125,60,0.12)",
+                    color: "#1a7d3c",
+                    border: "1px solid #1a7d3c",
+                  }}
+                >
+                  💰 TOTAL: R${" "}
+                  {totalAmount.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              )}
+            </div>
 
-          {doc.description && (
-            <p
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 500,
-                fontSize: 13,
-                lineHeight: "20px",
-                color: "#5a4e44",
-              }}
-            >
-              {doc.description}
-            </p>
-          )}
+            {doc.description && (
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 500,
+                  fontSize: 13,
+                  lineHeight: "20px",
+                  color: "#5a4e44",
+                }}
+              >
+                {doc.description}
+              </p>
+            )}
 
-          <div className="flex items-center gap-2 mt-0.5">
-            <span
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 600,
-                fontSize: 11,
-                color: "#8a7d73",
-                letterSpacing: "0.3px",
-              }}
-            >
-              Publicado em {doc.date} · {doc.fileSize}
-            </span>
+            <div className="flex flex-wrap items-center gap-3 mt-1">
+              <span
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 600,
+                  fontSize: 11,
+                  color: "#8a7d73",
+                  letterSpacing: "0.3px",
+                }}
+              >
+                Publicado em {doc.date} · {doc.fileSize}
+              </span>
+
+              {hasAttachments && (
+                <button
+                  type="button"
+                  onClick={() => setShowAttachments((v) => !v)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide cursor-pointer transition-colors"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    background: showAttachments ? "#121212" : "#faf7f2",
+                    color: showAttachments ? "#f8ba01" : "#121212",
+                    border: "1px solid #d4c9b6",
+                  }}
+                >
+                  <span>🧾 NOTAS FISCAIS ({doc.attachments?.length})</span>
+                  <ChevronIcon open={showAttachments} />
+                </button>
+              )}
+            </div>
           </div>
         </div>
+
+        <a
+          href={downloadUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          download
+          className="flex items-center justify-center gap-2 shrink-0 rounded-[3px] px-5 py-2.5 transition-all cursor-pointer w-full sm:w-auto"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 800,
+            fontSize: 13,
+            color: "#121212",
+            letterSpacing: "0.5px",
+            border: "1px solid #121212",
+            background: "#f8ba01",
+            textDecoration: "none",
+          }}
+        >
+          <DownloadIcon />
+          BAIXAR
+        </a>
       </div>
 
-      <a
-        href={downloadUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        download
-        className="flex items-center justify-center gap-2 shrink-0 rounded-[4px] px-5 py-2.5 transition-all cursor-pointer w-full sm:w-auto"
-        style={{
-          fontFamily: "'Anton', sans-serif",
-          fontSize: 14,
-          color: "#121212",
-          letterSpacing: "0.5px",
-          border: "1.5px solid #121212",
-          background: "#f8ba01",
-          boxShadow: "3px 3px 0px #121212",
-          textDecoration: "none",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "#ffffff";
-          e.currentTarget.style.transform = "translate(1px, 1px)";
-          e.currentTarget.style.boxShadow = "2px 2px 0px #121212";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "#f8ba01";
-          e.currentTarget.style.transform = "translate(0, 0)";
-          e.currentTarget.style.boxShadow = "3px 3px 0px #121212";
-        }}
-      >
-        <DownloadIcon />
-        BAIXAR
-      </a>
+      {/* Attachments Collapsible Section */}
+      {hasAttachments && showAttachments && (
+        <div
+          className="px-4 sm:px-5 py-4 flex flex-col gap-3 border-t"
+          style={{
+            background: "#faf7f2",
+            borderColor: "#e8d5b4",
+          }}
+        >
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 800,
+                fontSize: 11,
+                letterSpacing: "1.5px",
+                color: "#c87d00",
+              }}
+            >
+              🧾 NOTAS FISCAIS & COMPROVANTES DETALHADOS
+            </span>
+            {totalAmount > 0 && (
+              <span
+                className="text-xs font-bold text-[#1a7d3c]"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                TOTAL COMPROVADO: R${" "}
+                {totalAmount.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
+              </span>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {doc.attachments?.map((att) => {
+              const isMatch = Boolean(
+                q &&
+                  (att.name.toLowerCase().includes(q) ||
+                    att.issuerName?.toLowerCase().includes(q) ||
+                    att.issuerDoc?.toLowerCase().includes(q) ||
+                    (cleanQ.length > 2 &&
+                      att.issuerDoc?.replace(/\D/g, "").includes(cleanQ)) ||
+                    att.invoiceNumber?.toLowerCase().includes(q) ||
+                    att.expenseType?.toLowerCase().includes(q) ||
+                    att.description?.toLowerCase().includes(q)),
+              );
+
+              return (
+                <div
+                  key={att.id}
+                  className={`flex flex-col justify-between gap-3 p-4 rounded-[3px] bg-white border transition-colors ${
+                    isMatch
+                      ? "border-[#c87d00] bg-[#f8ba01]/5"
+                      : "border-[#d4c9b6]"
+                  }`}
+                >
+                  <div className="flex flex-col gap-1.5 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-7 h-7 rounded flex items-center justify-center bg-[#f8ba01]/20 border border-[#121212]/20 shrink-0 font-bold text-xs">
+                          🧾
+                        </div>
+                        <span
+                          className="truncate text-sm font-bold text-[#121212]"
+                          style={{ fontFamily: "'Inter', sans-serif" }}
+                        >
+                          {att.name}
+                        </span>
+                      </div>
+                      {att.invoiceNumber && (
+                        <span className="px-2 py-0.5 rounded bg-[#f8ba01]/30 text-[#121212] text-[10px] font-mono font-bold shrink-0 border border-[#121212]/20">
+                          {att.invoiceNumber}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Favorecido & CPF/CNPJ */}
+                    {att.issuerName ? (
+                      <div className="flex flex-col text-xs text-[#3a342f] bg-[#faf7f2] p-2.5 rounded border border-[#e8d5b4]">
+                        <span className="font-bold text-[#121212]">
+                          Favorecido: {att.issuerName}
+                        </span>
+                        {att.issuerDoc && (
+                          <span className="text-[11px] font-mono text-[#6b5e55] font-semibold mt-0.5">
+                            CPF/CNPJ: {att.issuerDoc}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-xs text-[#8c8077] italic">
+                        Sem favorecido especificado
+                      </span>
+                    )}
+
+                    {/* Description if present */}
+                    {att.description && (
+                      <p className="text-xs text-[#5a4e44] font-medium leading-snug">
+                        {att.description}
+                      </p>
+                    )}
+
+                    {/* Amount & Expense Category badges */}
+                    <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                      {att.amount !== null && att.amount !== undefined && (
+                        <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-300 font-extrabold text-xs">
+                          R${" "}
+                          {att.amount.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                          })}
+                        </span>
+                      )}
+                      {att.expenseType && (
+                        <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300 font-bold text-[10px]">
+                          {att.expenseType}
+                        </span>
+                      )}
+                      {att.issueDate && (
+                        <span className="text-[10px] text-[#8c8077] font-semibold">
+                          Data:{" "}
+                          {new Date(att.issueDate).toLocaleDateString("pt-BR")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2.5 border-t border-[#e8d5b4]">
+                    <span className="text-[10px] font-bold text-[#8c8077]">
+                      {att.fileSize} · {att.fileType}
+                    </span>
+                    <a
+                      href={att.downloadUrl || getAttachmentDownloadUrl(att.id)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wide shrink-0 transition-colors"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        background: "#f8ba01",
+                        color: "#121212",
+                        border: "1px solid #121212",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <DownloadIcon />
+                      <span>VER COMPROVANTE</span>
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -227,8 +440,19 @@ function DocumentRow({ doc }: { doc: TransparencyDocument }) {
 function YearAccordion({
   group,
   defaultOpen,
-}: { group: YearGroup; defaultOpen: boolean }) {
+  searchTerm,
+}: {
+  group: YearGroup;
+  defaultOpen: boolean;
+  searchTerm?: string;
+}) {
   const [open, setOpen] = useState(defaultOpen);
+
+  useEffect(() => {
+    if (searchTerm && searchTerm.trim().length > 0) {
+      setOpen(true);
+    }
+  }, [searchTerm]);
 
   const countByCategory = group.documents.reduce<Record<string, number>>(
     (acc, d) => {
@@ -238,23 +462,19 @@ function YearAccordion({
     {},
   );
 
-  const totalDocs = group.documents.length;
-
   return (
     <div
-      className="overflow-hidden rounded-[4px] transition-all"
+      className="overflow-hidden rounded-[3px] transition-all bg-white"
       style={{
-        border: "1.5px solid #121212",
-        boxShadow: "4px 4px 0px #121212",
-        background: "#fdfaf3",
+        border: "1px solid #d4c9b6",
       }}
     >
       <button
         type="button"
-        className="w-full flex items-center justify-between px-5 sm:px-6 py-4.5 text-left transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-5 sm:px-6 py-4 text-left transition-colors cursor-pointer"
         style={{
-          background: open ? "#f8ba01" : "#fdfaf3",
-          borderBottom: open ? "1.5px solid #121212" : "none",
+          background: open ? "#f5eedd" : "#ffffff",
+          borderBottom: open ? "1px solid #d4c9b6" : "none",
         }}
         onClick={() => setOpen((v) => !v)}
       >
@@ -263,7 +483,7 @@ function YearAccordion({
             <span
               style={{
                 fontFamily: "'Anton', sans-serif",
-                fontSize: "clamp(32px, 5vw, 48px)",
+                fontSize: "clamp(30px, 4.5vw, 42px)",
                 lineHeight: 1,
                 color: "#121212",
                 letterSpacing: "0.5px",
@@ -282,12 +502,12 @@ function YearAccordion({
               return (
                 <span
                   key={cat}
-                  className="px-2 py-0.5 rounded-[3px] text-[10px] font-black uppercase tracking-wide"
+                  className="px-2 py-0.5 rounded-[3px] text-[10px] font-bold uppercase tracking-wide"
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    background: open ? "rgba(18,18,18,0.12)" : meta.bg,
+                    background: open ? "rgba(18,18,18,0.08)" : meta.bg,
                     color: open ? "#121212" : meta.color,
-                    border: "1px solid #121212",
+                    border: "1px solid #d4c9b6",
                   }}
                 >
                   {count} {cat.toUpperCase()}
@@ -311,7 +531,7 @@ function YearAccordion({
       {open && (
         <div style={{ background: "#ffffff" }}>
           {group.documents.map((doc) => (
-            <DocumentRow key={doc.id} doc={doc} />
+            <DocumentRow key={doc.id} doc={doc} searchTerm={searchTerm} />
           ))}
         </div>
       )}
@@ -328,19 +548,16 @@ function EmptyState({
 }) {
   return (
     <div
-      className="flex flex-col items-center justify-center py-12 sm:py-16 px-6 text-center rounded-[4px] my-4"
+      className="flex flex-col items-center justify-center py-12 sm:py-16 px-6 text-center rounded-[3px] my-4 bg-white"
       style={{
-        background: "#fdfaf3",
-        border: "1.5px solid #121212",
-        boxShadow: "4px 4px 0px #121212",
+        border: "1px solid #d4c9b6",
       }}
     >
       <div
         className="flex items-center justify-center w-14 h-14 rounded-full mb-4"
         style={{
-          background: "#f8ba01",
-          border: "1.5px solid #121212",
-          boxShadow: "2px 2px 0px #121212",
+          background: "rgba(248,186,1,0.2)",
+          border: "1px solid #f8ba01",
         }}
       >
         <svg
@@ -349,7 +566,7 @@ function EmptyState({
           viewBox="0 0 24 24"
           fill="none"
           stroke="#121212"
-          strokeWidth="2.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           role="img"
@@ -393,15 +610,9 @@ function EmptyState({
         <button
           type="button"
           onClick={onClear}
-          className="mt-5 px-5 py-2.5 rounded-[4px] cursor-pointer transition-transform hover:translate-x-0.5 hover:translate-y-0.5"
+          className="mt-5 px-5 py-2.5 rounded-[3px] cursor-pointer font-bold text-xs uppercase text-[#121212] bg-[#f8ba01] border border-[#121212] hover:bg-white transition-colors"
           style={{
-            fontFamily: "'Anton', sans-serif",
-            fontSize: 14,
-            color: "#121212",
-            background: "#f8ba01",
-            border: "1.5px solid #121212",
-            boxShadow: "3px 3px 0px #121212",
-            letterSpacing: "0.5px",
+            fontFamily: "'Inter', sans-serif",
           }}
         >
           LIMPAR FILTROS DE BUSCA
@@ -421,6 +632,7 @@ function adminDocToTransparencyDoc(doc: AdminDocument): TransparencyDocument {
     fileType: doc.fileType,
     fileSize: doc.fileSize,
     downloadUrl: getFileDownloadUrl(doc.id),
+    attachments: doc.attachments,
   };
 }
 
@@ -438,11 +650,35 @@ export function TransparencyDetailSection() {
   ).sort((a, b) => b - a);
 
   const filteredDocs = publishedDocs.filter((d) => {
+    const q = search.toLowerCase().trim();
+    const cleanQ = q.replace(/\D/g, "");
+
     const matchSearch =
-      !search ||
-      d.title.toLowerCase().includes(search.toLowerCase()) ||
-      d.description?.toLowerCase().includes(search.toLowerCase()) ||
-      d.fileName?.toLowerCase().includes(search.toLowerCase());
+      !q ||
+      d.title.toLowerCase().includes(q) ||
+      d.description?.toLowerCase().includes(q) ||
+      d.fileName?.toLowerCase().includes(q) ||
+      d.attachments?.some((att) => {
+        const nameMatch = att.name.toLowerCase().includes(q);
+        const issuerMatch = att.issuerName?.toLowerCase().includes(q);
+        const docMatch = att.issuerDoc?.toLowerCase().includes(q);
+        const cleanDocMatch =
+          cleanQ.length > 2 &&
+          att.issuerDoc?.replace(/\D/g, "").includes(cleanQ);
+        const invMatch = att.invoiceNumber?.toLowerCase().includes(q);
+        const expenseMatch = att.expenseType?.toLowerCase().includes(q);
+        const descMatch = att.description?.toLowerCase().includes(q);
+
+        return (
+          nameMatch ||
+          issuerMatch ||
+          docMatch ||
+          cleanDocMatch ||
+          invMatch ||
+          expenseMatch ||
+          descMatch
+        );
+      });
 
     const matchYear = filterYear === "all" || d.year === filterYear;
     const matchCat = filterCat === "all" || d.category === filterCat;
@@ -481,21 +717,21 @@ export function TransparencyDetailSection() {
   };
 
   return (
-    <div className="w-full min-h-screen background pb-12">
-      {/* ── 1. Hero Section (Predominantemente Claro / Creme) ── */}
-      <div className="w-full px-4 sm:px-6 lg:px-[80px] pt-10 pb-12 sm:pt-14 sm:pb-16 border-b border-[#121212]/15">
-        <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-start lg:items-end justify-between">
+    <div className="w-full min-h-screen bg-[#faf7f2] text-[#121212] pb-0">
+      {/* ── 1. Hero Section (Fundo Grafite #1d1b18 com Título Claro) ── */}
+      <div className="w-full pt-10 pb-12 sm:pt-14 sm:pb-16 bg-[#1d1b18] border-b border-[#3a342f]">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start lg:items-end justify-between">
           {/* Header Text */}
           <div className="flex flex-col gap-4 max-w-[620px]">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-6 bg-[#f8ba01] rounded-[1px] border border-[#121212]" />
+              <div className="w-2 h-6 bg-[#f8ba01] rounded-[1px]" />
               <span
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 800,
                   fontSize: 12,
                   letterSpacing: "1.8px",
-                  color: "#121212",
+                  color: "#f8ba01",
                 }}
               >
                 PONTO DE CULTURA ZAMBÔ
@@ -509,7 +745,7 @@ export function TransparencyDetailSection() {
                   fontFamily: "'Anton', sans-serif",
                   fontSize: "clamp(42px, 6.5vw, 76px)",
                   lineHeight: 0.95,
-                  color: "#121212",
+                  color: "#ffffff",
                   letterSpacing: "0.5px",
                 }}
               >
@@ -523,7 +759,7 @@ export function TransparencyDetailSection() {
                 fontWeight: 500,
                 fontSize: 16,
                 lineHeight: "26px",
-                color: "#3a342f",
+                color: "#d4c9b6",
                 marginTop: 4,
               }}
             >
@@ -533,32 +769,29 @@ export function TransparencyDetailSection() {
             </p>
           </div>
 
-          {/* ── 2. Indicators (3 Cards Claros com Acento de Cor) ── */}
+          {/* ── 2. Indicators (Cards com Alto Contraste e Bordas Ajustadas) ── */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full lg:w-auto shrink-0">
             {[
               {
                 value: formatStatValue(filteredDocs.length),
                 label: "DOCUMENTOS PUBLICADOS",
-                accent: "#f8ba01", // Amarelo
+                accent: "#f8ba01",
               },
               {
                 value: formatStatValue(yearGroups.length),
-                label: "ANO DISPONÍVEL",
-                accent: "#1a7d3c", // Verde
+                label: "ANOS DISPONÍVEIS",
+                accent: "#1a7d3c",
               },
               {
                 value: "100%",
-                label: "PÚBLICO",
-                accent: "#dd341f", // Vermelho
+                label: "PÚBLICO E TRANSPARENTE",
+                accent: "#dd341f",
               },
             ].map((s) => (
               <div
                 key={s.label}
-                className="flex flex-col items-center justify-center px-6 py-5 rounded-[4px] relative overflow-hidden transition-transform hover:-translate-y-0.5"
+                className="flex flex-col items-center justify-center px-6 py-5 rounded-[3px] relative overflow-hidden bg-white border border-[#3a342f] shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:-translate-y-0.5"
                 style={{
-                  background: "#fdfaf3",
-                  border: "1.5px solid #121212",
-                  boxShadow: "3px 3px 0px #121212",
                   minWidth: 155,
                 }}
               >
@@ -584,7 +817,7 @@ export function TransparencyDetailSection() {
                     fontFamily: "'Inter', sans-serif",
                     fontWeight: 800,
                     fontSize: 10,
-                    color: "#6b5e55",
+                    color: "#5a4e44",
                     letterSpacing: "1px",
                     marginTop: 6,
                   }}
@@ -597,17 +830,15 @@ export function TransparencyDetailSection() {
         </div>
       </div>
 
-      {/* ── 3. Barra de Busca e Filtros (Faixa Grafite/Preta de Transição) ── */}
+      {/* ── 3. Barra de Busca e Filtros (Limpa com Bordas Sutis) ── */}
       <div
-        className="sticky top-[72px] z-30 w-full px-4 sm:px-6 lg:px-[80px] py-4"
+        className="sticky top-[72px] z-30 w-full py-4 border-b border-[#d4c9b6]"
         style={{
-          background: "#1d1b18",
-          borderTop: "1.5px solid #121212",
-          borderBottom: "1.5px solid #121212",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          background: "#ffffff",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
         }}
       >
-        <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row flex-wrap gap-3 items-stretch sm:items-center justify-between">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row flex-wrap gap-3 items-stretch sm:items-center justify-between">
           {/* Search Input */}
           <div className="relative flex-1 min-w-[240px]">
             <svg
@@ -628,16 +859,13 @@ export function TransparencyDetailSection() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar documento por nome ou descrição..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-[4px] outline-none transition-all"
+              placeholder="Buscar por título, favorecido, CPF/CNPJ ou nº da nota..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-[3px] outline-none text-sm font-medium"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontWeight: 500,
-                fontSize: 13,
-                background: "#fdfaf3",
-                border: "1.5px solid #121212",
+                background: "#f5eedd",
+                border: "1px solid #d4c9b6",
                 color: "#121212",
-                boxShadow: "2px 2px 0px #121212",
               }}
             />
           </div>
@@ -651,15 +879,12 @@ export function TransparencyDetailSection() {
                   e.target.value === "all" ? "all" : Number(e.target.value),
                 )
               }
-              className="w-full sm:w-auto px-4 py-2.5 rounded-[4px] outline-none cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontWeight: 800,
-                fontSize: 12,
-                background: "#fdfaf3",
-                border: "1.5px solid #121212",
-                color: "#121212",
-                boxShadow: "2px 2px 0px #121212",
+                background: "#f5eedd",
+                border: "1px solid #d4c9b6",
+                color: "#3a342f",
               }}
             >
               <option value="all">TODOS OS ANOS</option>
@@ -676,15 +901,12 @@ export function TransparencyDetailSection() {
               onChange={(e) =>
                 setFilterCat(e.target.value as DocCategory | "all")
               }
-              className="w-full sm:w-auto px-4 py-2.5 rounded-[4px] outline-none cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-[3px] outline-none cursor-pointer text-xs font-bold"
               style={{
                 fontFamily: "'Inter', sans-serif",
-                fontWeight: 800,
-                fontSize: 12,
-                background: "#fdfaf3",
-                border: "1.5px solid #121212",
-                color: "#121212",
-                boxShadow: "2px 2px 0px #121212",
+                background: "#f5eedd",
+                border: "1px solid #d4c9b6",
+                color: "#3a342f",
               }}
             >
               <option value="all">TODAS AS CATEGORIAS</option>
@@ -700,13 +922,9 @@ export function TransparencyDetailSection() {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="px-4 py-2.5 rounded-[4px] cursor-pointer text-[11px] font-black uppercase tracking-wider shrink-0 transition-transform active:translate-x-0.5 active:translate-y-0.5"
+                className="px-4 py-2.5 rounded-[3px] cursor-pointer text-[11px] font-extrabold uppercase tracking-wider shrink-0 transition-colors bg-[#f8ba01] text-[#121212] border border-[#121212] hover:bg-white"
                 style={{
                   fontFamily: "'Inter', sans-serif",
-                  background: "#f8ba01",
-                  color: "#121212",
-                  border: "1.5px solid #121212",
-                  boxShadow: "2px 2px 0px #121212",
                 }}
               >
                 LIMPAR FILTROS
@@ -717,7 +935,7 @@ export function TransparencyDetailSection() {
       </div>
 
       {/* ── 4. Seção DOCUMENTOS e Agrupamento por Ano ── */}
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-[80px] pt-10 pb-8 flex flex-col gap-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 flex flex-col gap-6">
         <div className="flex items-center gap-3">
           <h2
             style={{
@@ -727,7 +945,7 @@ export function TransparencyDetailSection() {
               letterSpacing: "0.5px",
             }}
           >
-            DOCUMENTOS
+            DOCUMENTOS PUBLICADOS
           </h2>
         </div>
 
@@ -741,26 +959,17 @@ export function TransparencyDetailSection() {
             <YearAccordion
               key={group.year}
               group={group}
-              defaultOpen={i === 0}
+              defaultOpen={i === 0 || search.trim().length > 0}
+              searchTerm={search}
             />
           ))
         )}
       </div>
 
-      {/* ── 5. Área de Informação / Solicitação (Lei de Acesso à Informação) ── */}
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-[80px] pt-6 pb-4">
-        <div
-          className="w-full rounded-[4px] p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden"
-          style={{
-            background: "#1d1b18",
-            border: "1.5px solid #121212",
-            boxShadow: "4px 4px 0px #121212",
-          }}
-        >
-          {/* Subtle Top Pan-African / Yellow Accent Line */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#f8ba01]" />
-
-          <div className="flex flex-col gap-2 max-w-[680px]">
+      {/* ── 5. Full-Width Banner (Lei de Acesso à Informação) Alinhado ao Footer ── */}
+      <div className="w-full mt-14 bg-[#1d1b18] relative overflow-hidden">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex flex-col gap-2 max-w-[720px]">
             <span
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -796,27 +1005,14 @@ export function TransparencyDetailSection() {
 
           <a
             href="mailto:contato@zambo.org.br?subject=Solicita%C3%A7%C3%A3o%20de%20Documento%20-%20Portal%20de%20Transpar%C3%AAncia"
-            className="flex items-center justify-center gap-2.5 w-full md:w-auto shrink-0 rounded-[4px] px-6 py-3.5 transition-all cursor-pointer text-center"
+            className="flex items-center justify-center gap-2.5 w-full md:w-auto shrink-0 rounded-[3px] px-6 py-3.5 transition-colors cursor-pointer text-center bg-[#f8ba01] text-[#121212] border border-[#121212] hover:bg-white"
             style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: 15,
-              color: "#121212",
-              background: "#f8ba01",
-              border: "1.5px solid #121212",
-              boxShadow: "3px 3px 0px #ffffff",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 800,
+              fontSize: 14,
               letterSpacing: "0.5px",
               whiteSpace: "nowrap",
               textDecoration: "none",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#ffffff";
-              e.currentTarget.style.transform = "translate(1px, 1px)";
-              e.currentTarget.style.boxShadow = "2px 2px 0px #f8ba01";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#f8ba01";
-              e.currentTarget.style.transform = "translate(0, 0)";
-              e.currentTarget.style.boxShadow = "3px 3px 0px #ffffff";
             }}
           >
             SOLICITAR DOCUMENTO

@@ -2,8 +2,15 @@
 
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { useDocuments } from "@/contexts/DocumentsContext";
-import type { AdminDocument, DocCategory } from "@/types/document";
+import type {
+  AdminDocument,
+  AttachmentUploadPayload,
+  DocCategory,
+  DocumentAttachment,
+} from "@/types/document";
+import { AddInvoiceModal } from "./AddInvoiceModal";
 import { getFileDownloadUrl, getFilePreviewUrl } from "@/lib/api";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
@@ -116,6 +123,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
     status: "published" as AdminDocument["status"],
   });
   const [file, setFile] = useState<File | null>(null);
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -143,6 +151,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
       fileSize: size,
       fileName: file.name,
       file,
+      attachmentFiles: attachmentFiles.length > 0 ? attachmentFiles : undefined,
     });
     setLoading(false);
     setSuccess(true);
@@ -174,7 +183,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto py-6"
       style={{
         background: "rgba(0,0,0,0.4)",
         backdropFilter: "blur(4px)",
@@ -184,7 +193,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
       role="presentation"
     >
       <div
-        className="w-full max-w-[600px] rounded-[4px] overflow-hidden"
+        className="w-full max-w-[600px] my-auto rounded-[4px] overflow-hidden flex flex-col max-h-[90vh]"
         style={{
           background: "#fff",
           border: "1px solid #d4c9b6",
@@ -193,7 +202,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between px-6 py-4"
+          className="flex items-center justify-between px-6 py-4 shrink-0"
           style={{ background: "#faf7f2", borderBottom: "1px solid #e8d5b4" }}
         >
           <span
@@ -225,7 +234,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
         </div>
 
         {success ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-16">
+          <div className="flex flex-col items-center justify-center gap-4 py-16 overflow-y-auto">
             <div
               className="flex items-center justify-center rounded-full size-16"
               style={{
@@ -258,7 +267,10 @@ function UploadModal({ onClose }: { onClose: () => void }) {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-6">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-5 p-6 overflow-y-auto min-h-0 flex-1"
+          >
             <button
               type="button"
               className="w-full flex flex-col items-center justify-center gap-3 rounded-[3px] py-8 cursor-pointer"
@@ -480,6 +492,67 @@ function UploadModal({ onClose }: { onClose: () => void }) {
                   onBlur={onBlur}
                 />
               </div>
+              <div
+                className="col-span-2 flex flex-col gap-2 p-3 rounded-[3px]"
+                style={{ background: "#faf7f2", border: "1px solid #d4c9b6" }}
+              >
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="attachment-file-input"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 800,
+                      fontSize: 11,
+                      letterSpacing: "1px",
+                      color: "#c87d00",
+                    }}
+                  >
+                    🧾 NOTAS FISCAIS / COMPROVANTES (OPCIONAL - VÁRIOS ARQUIVOS)
+                  </label>
+                  <span className="text-[10px] text-[#8c8077] font-bold">
+                    {attachmentFiles.length} selecionada(s)
+                  </span>
+                </div>
+                <input
+                  id="attachment-file-input"
+                  type="file"
+                  multiple
+                  accept=".pdf,.xlsx,.doc,.docx"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      const newFiles = Array.from(e.target.files);
+                      setAttachmentFiles((prev) => [...prev, ...newFiles]);
+                    }
+                  }}
+                  className="w-full px-3 py-1.5 rounded-[3px] outline-none text-xs"
+                  style={inputStyle}
+                />
+                {attachmentFiles.length > 0 && (
+                  <div className="flex flex-col gap-1 max-h-[100px] overflow-y-auto mt-1">
+                    {attachmentFiles.map((f, idx) => (
+                      <div
+                        key={`${f.name}-${idx}`}
+                        className="flex items-center justify-between px-2.5 py-1 bg-white rounded border border-[#d4c9b6] text-xs"
+                      >
+                        <span className="truncate font-bold text-[#121212] max-w-[320px]">
+                          🧾 {f.name} ({(f.size / 1024).toFixed(0)} KB)
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setAttachmentFiles((prev) =>
+                              prev.filter((_, i) => i !== idx),
+                            )
+                          }
+                          className="text-[#dd341f] font-bold text-xs hover:opacity-75 cursor-pointer px-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
               <div className="col-span-2 flex items-center gap-3">
                 <button
                   type="button"
@@ -588,6 +661,541 @@ function UploadModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+function EditModal({
+  doc,
+  onClose,
+}: {
+  doc: AdminDocument;
+  onClose: () => void;
+}) {
+  const { updateDocument, deleteAttachment, addAttachment, updateAttachment } =
+    useDocuments();
+  const attFileRef = useRef<HTMLInputElement>(null);
+  const [form, setForm] = useState({
+    title: doc.title,
+    category: doc.category,
+    year: doc.year,
+    description: doc.description,
+    status: doc.status,
+  });
+  const [newAttachmentFiles, setNewAttachmentFiles] = useState<File[]>([]);
+  const [showAddInvoiceModal, setShowAddInvoiceModal] = useState(false);
+  const [editingAttachment, setEditingAttachment] =
+    useState<DocumentAttachment | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  function set(k: string, v: unknown) {
+    setForm((p) => ({ ...p, [k]: v }));
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    await updateDocument(doc.id, form, newAttachmentFiles);
+    setLoading(false);
+    setSuccess(true);
+    setTimeout(onClose, 1000);
+  }
+
+  const inputStyle = {
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 500,
+    fontSize: 14,
+    background: "#f5eedd",
+    border: "2px solid #d4c9b6",
+    color: "#121212",
+  };
+  const onFocus = (
+    e: React.FocusEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    e.target.style.borderColor = "#121212";
+  };
+  const onBlur = (
+    e: React.FocusEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    e.target.style.borderColor = "#d4c9b6";
+  };
+
+  return (
+    <>
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto py-6"
+        style={{
+          background: "rgba(0,0,0,0.4)",
+          backdropFilter: "blur(4px)",
+        }}
+        onClick={(e) => e.target === e.currentTarget && onClose()}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+        role="presentation"
+      >
+        <div
+          className="w-full max-w-[600px] my-auto rounded-[4px] overflow-hidden flex flex-col max-h-[90vh]"
+          style={{
+            background: "#fff",
+            border: "1px solid #d4c9b6",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+          }}
+        >
+          {/* Header */}
+          <div
+            className="flex items-center justify-between px-6 py-4 shrink-0"
+            style={{ background: "#faf7f2", borderBottom: "1px solid #e8d5b4" }}
+          >
+            <span
+              style={{
+                fontFamily: "'Anton', sans-serif",
+                fontSize: 20,
+                color: "#121212",
+                letterSpacing: "0.5px",
+              }}
+            >
+              EDITAR DOCUMENTO
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              style={{ color: "#9a8f86" }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                role="img"
+                aria-label="Fechar modal"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {success ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-16 overflow-y-auto">
+              <div
+                className="flex items-center justify-center rounded-full size-16"
+                style={{
+                  background: "rgba(26,125,60,0.1)",
+                  border: "3px solid #1a7d3c",
+                }}
+              >
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#1a7d3c"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  role="img"
+                  aria-label="Sucesso"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p
+                style={{
+                  fontFamily: "'Anton', sans-serif",
+                  fontSize: 20,
+                  color: "#121212",
+                }}
+              >
+                DOCUMENTO ATUALIZADO!
+              </p>
+            </div>
+          ) : (
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-5 p-6 overflow-y-auto min-h-0 flex-1"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2 flex flex-col gap-1.5">
+                  <label
+                    htmlFor="edit-doc-title"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 800,
+                      fontSize: 11,
+                      letterSpacing: "1px",
+                      color: "#3a342f",
+                    }}
+                  >
+                    TÍTULO *
+                  </label>
+                  <input
+                    id="edit-doc-title"
+                    required
+                    value={form.title}
+                    onChange={(e) => set("title", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-[3px] outline-none"
+                    style={inputStyle}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="edit-doc-category"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 800,
+                      fontSize: 11,
+                      letterSpacing: "1px",
+                      color: "#3a342f",
+                    }}
+                  >
+                    CATEGORIA *
+                  </label>
+                  <select
+                    id="edit-doc-category"
+                    required
+                    value={form.category}
+                    onChange={(e) => set("category", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-[3px] outline-none"
+                    style={inputStyle}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  >
+                    {CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="edit-doc-year"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 800,
+                      fontSize: 11,
+                      letterSpacing: "1px",
+                      color: "#3a342f",
+                    }}
+                  >
+                    ANO *
+                  </label>
+                  <select
+                    id="edit-doc-year"
+                    required
+                    value={form.year}
+                    onChange={(e) => set("year", Number(e.target.value))}
+                    className="w-full px-3 py-2.5 rounded-[3px] outline-none"
+                    style={inputStyle}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  >
+                    {YEARS.map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-span-2 flex flex-col gap-1.5">
+                  <label
+                    htmlFor="edit-doc-desc"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 800,
+                      fontSize: 11,
+                      letterSpacing: "1px",
+                      color: "#3a342f",
+                    }}
+                  >
+                    DESCRIÇÃO
+                  </label>
+                  <textarea
+                    id="edit-doc-desc"
+                    rows={2}
+                    value={form.description}
+                    onChange={(e) => set("description", e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-[3px] outline-none resize-none"
+                    style={inputStyle}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  />
+                </div>
+
+                {/* Status Toggle */}
+                <div className="col-span-2 flex items-center gap-3 py-1">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      set(
+                        "status",
+                        form.status === "published" ? "draft" : "published",
+                      )
+                    }
+                    className="relative rounded-full shrink-0"
+                    style={{
+                      width: 44,
+                      height: 24,
+                      background:
+                        form.status === "published" ? "#1a7d3c" : "#d4c9b6",
+                      border: "2px solid rgba(0,0,0,0.1)",
+                    }}
+                  >
+                    <span
+                      className="absolute top-0.5 rounded-full"
+                      style={{
+                        width: 16,
+                        height: 16,
+                        background: "#fff",
+                        left:
+                          form.status === "published" ? "calc(100% - 20px)" : 2,
+                        transition: "left 0.2s ease",
+                      }}
+                    />
+                  </button>
+                  <span
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 500,
+                      fontSize: 13,
+                      color: "#6b5e55",
+                    }}
+                  >
+                    {form.status === "published"
+                      ? "Publicado no portal de transparência"
+                      : "Rascunho (invisível no portal)"}
+                  </span>
+                </div>
+
+                {/* Existing & New Attachments */}
+                <div
+                  className="col-span-2 flex flex-col gap-2 p-3.5 rounded-[3px]"
+                  style={{ background: "#faf7f2", border: "1px solid #d4c9b6" }}
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 800,
+                        fontSize: 11,
+                        letterSpacing: "1px",
+                        color: "#c87d00",
+                      }}
+                    >
+                      🧾 NOTAS FISCAIS & COMPROVANTES (
+                      {(doc.attachments?.length || 0) +
+                        newAttachmentFiles.length}
+                      )
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddInvoiceModal(true)}
+                      className="px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider bg-[#f8ba01] text-[#121212] border border-[#121212] shadow-[1.5px_1.5px_0px_#121212] cursor-pointer hover:bg-white transition-all"
+                      style={{ fontFamily: "'Inter', sans-serif" }}
+                    >
+                      + NOVA NOTA FISCAL
+                    </button>
+                  </div>
+
+                  {/* Existing attachments */}
+                  {doc.attachments && doc.attachments.length > 0 && (
+                    <div className="flex flex-col gap-2 max-h-[180px] overflow-y-auto mt-1">
+                      {doc.attachments.map((att) => (
+                        <div
+                          key={att.id}
+                          className="flex items-start justify-between p-2.5 bg-white rounded border border-[#d4c9b6] text-xs gap-2"
+                        >
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-bold text-[#121212] truncate">
+                                🧾 {att.name}
+                              </span>
+                              {att.invoiceNumber && (
+                                <span className="px-1.5 py-0.5 rounded bg-[#f8ba01]/20 border border-[#121212]/20 font-mono text-[10px] text-[#121212]">
+                                  {att.invoiceNumber}
+                                </span>
+                              )}
+                            </div>
+                            {att.issuerName ? (
+                              <span className="text-[11px] text-[#3a342f] font-semibold truncate">
+                                Favorecido: <strong>{att.issuerName}</strong>{" "}
+                                {att.issuerDoc ? `(${att.issuerDoc})` : ""}
+                              </span>
+                            ) : (
+                              <span className="text-[11px] text-[#c87d00] font-bold italic">
+                                ⚠️ Sem pessoa/favorecido associado (clique em
+                                Editar Dados)
+                              </span>
+                            )}
+                            <div className="flex items-center gap-2 text-[10px] text-[#8c8077] mt-0.5 flex-wrap">
+                              {att.amount !== null &&
+                                att.amount !== undefined && (
+                                  <span className="font-bold text-[#1a7d3c]">
+                                    R${" "}
+                                    {att.amount.toLocaleString("pt-BR", {
+                                      minimumFractionDigits: 2,
+                                    })}
+                                  </span>
+                                )}
+                              {att.expenseType && (
+                                <span>· {att.expenseType}</span>
+                              )}
+                              <span>· {att.fileSize}</span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => setEditingAttachment(att)}
+                              className="px-2 py-1 text-[11px] font-extrabold text-[#121212] bg-[#f8ba01] rounded border border-[#121212] cursor-pointer hover:bg-white transition-colors"
+                              style={{ fontFamily: "'Inter', sans-serif" }}
+                            >
+                              {att.issuerName
+                                ? "EDITAR DADOS"
+                                : "ASSOCIAR PESSOA"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => deleteAttachment(att.id)}
+                              className="text-[#dd341f] font-bold hover:underline text-xs cursor-pointer"
+                            >
+                              Remover
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* New attachments staged */}
+                  {newAttachmentFiles.length > 0 && (
+                    <div className="flex flex-col gap-1.5 mt-1">
+                      <span className="text-[11px] font-bold text-[#1a7d3c]">
+                        Novos arquivos simples para anexar ao salvar:
+                      </span>
+                      {newAttachmentFiles.map((f, idx) => (
+                        <div
+                          key={`new-${f.name}-${idx}`}
+                          className="flex items-center justify-between px-2.5 py-1.5 bg-white rounded border border-[#1a7d3c]/40 text-xs"
+                        >
+                          <span className="truncate font-bold text-[#1a7d3c]">
+                            + 🧾 {f.name} ({(f.size / 1024).toFixed(0)} KB)
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setNewAttachmentFiles((prev) =>
+                                prev.filter((_, i) => i !== idx),
+                              )
+                            }
+                            className="text-[#dd341f] font-bold ml-2 cursor-pointer"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Quick file add input */}
+                  <div className="mt-1.5 flex items-center justify-between">
+                    <input
+                      ref={attFileRef}
+                      type="file"
+                      multiple
+                      accept=".pdf,.xlsx,.doc,.docx"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          const files = Array.from(e.target.files);
+                          setNewAttachmentFiles((prev) => [...prev, ...files]);
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => attFileRef.current?.click()}
+                      className="text-[11px] font-bold text-[#6b5e55] hover:text-[#121212] underline cursor-pointer"
+                    >
+                      + Anexar arquivo rápido sem formulário
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="flex gap-3 pt-2"
+                style={{ borderTop: "1px solid #e8d5b4" }}
+              >
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-2.5 rounded-[3px]"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 800,
+                    fontSize: 13,
+                    color: "#6b5e55",
+                    background: "transparent",
+                    border: "2px solid #d4c9b6",
+                  }}
+                >
+                  CANCELAR
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[3px]"
+                  style={{
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 15,
+                    letterSpacing: "0.5px",
+                    color: loading ? "#9a8f86" : "#121212",
+                    background: loading ? "#e8d5b4" : "#f8ba01",
+                    border: `2px solid ${loading ? "#d4c9b6" : "#121212"}`,
+                    boxShadow: loading ? "none" : "3px 3px 0px #121212",
+                    cursor: loading ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {loading ? "SALVANDO..." : "SALVAR ALTERAÇÕES"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+
+      {(showAddInvoiceModal || editingAttachment) && (
+        <AddInvoiceModal
+          documentTitle={doc.title}
+          initialAttachment={editingAttachment || undefined}
+          onClose={() => {
+            setShowAddInvoiceModal(false);
+            setEditingAttachment(null);
+          }}
+          onSave={async (payload) => {
+            if (editingAttachment) {
+              await updateAttachment(editingAttachment.id, payload);
+            } else if (payload.file) {
+              await addAttachment(doc.id, payload as AttachmentUploadPayload);
+            }
+            setShowAddInvoiceModal(false);
+            setEditingAttachment(null);
+          }}
+        />
+      )}
+    </>
+  );
+}
+
 function DeleteConfirm({
   doc,
   onCancel,
@@ -600,11 +1208,11 @@ function DeleteConfirm({
   const [loading, setLoading] = useState(false);
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto py-6"
       style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
     >
       <div
-        className="w-full max-w-[420px] p-6 rounded-[4px] flex flex-col gap-5"
+        className="w-full max-w-[420px] my-auto p-6 rounded-[4px] flex flex-col gap-5 max-h-[90vh] overflow-y-auto"
         style={{
           background: "#fff",
           border: "1px solid #d4c9b6",
@@ -703,178 +1311,388 @@ function PreviewModal({
   onClose: () => void;
   onDownload: (doc: AdminDocument) => void;
 }) {
+  const { addAttachment, updateAttachment, deleteAttachment } = useDocuments();
+  const attFileRef = useRef<HTMLInputElement>(null);
+  const [attLoading, setAttLoading] = useState(false);
+  const [editingAttachment, setEditingAttachment] =
+    useState<DocumentAttachment | null>(null);
   const previewUrl = getFilePreviewUrl(doc.id);
   const isPdf =
     doc.fileType === "PDF" || doc.fileName.toLowerCase().endsWith(".pdf");
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{
-        background: "rgba(0,0,0,0.5)",
-        backdropFilter: "blur(4px)",
-      }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-      onKeyDown={(e) => e.key === "Escape" && onClose()}
-      role="presentation"
-    >
+    <>
       <div
-        className="w-full max-w-[850px] rounded-[4px] overflow-hidden flex flex-col max-h-[90vh]"
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto py-6"
         style={{
-          background: "#fff",
-          border: "1px solid #d4c9b6",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.16)",
+          background: "rgba(0,0,0,0.5)",
+          backdropFilter: "blur(4px)",
         }}
+        onClick={(e) => e.target === e.currentTarget && onClose()}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+        role="presentation"
       >
-        {/* Header */}
         <div
-          className="flex items-center justify-between px-6 py-4 shrink-0"
-          style={{ background: "#faf7f2", borderBottom: "1px solid #e8d5b4" }}
+          className="w-full max-w-[850px] my-auto rounded-[4px] overflow-hidden flex flex-col max-h-[90vh]"
+          style={{
+            background: "#fff",
+            border: "1px solid #d4c9b6",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.16)",
+          }}
         >
-          <span
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: 20,
-              color: "#121212",
-              letterSpacing: "0.5px",
-            }}
+          {/* Header */}
+          <div
+            className="flex items-center justify-between px-6 py-4 shrink-0"
+            style={{ background: "#faf7f2", borderBottom: "1px solid #e8d5b4" }}
           >
-            PRÉ-VISUALIZAÇÃO DO DOCUMENTO
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            style={{ color: "#9a8f86" }}
-            aria-label="Fechar modal"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Metadata section */}
-        <div
-          className="px-6 py-4 shrink-0 flex flex-col gap-3"
-          style={{ background: "#f5eedd", borderBottom: "1px solid #d4c9b6" }}
-        >
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <FileTag type={doc.fileType} />
-              <div className="flex flex-col gap-1 min-w-0">
-                <h3
-                  style={{
-                    fontFamily: "'Anton', sans-serif",
-                    fontSize: 18,
-                    color: "#121212",
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {doc.title}
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 500,
-                    fontSize: 12,
-                    color: "#6b5e55",
-                  }}
-                >
-                  {doc.fileName} · {doc.fileSize}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge category={doc.category} />
-              <StatusPill status={doc.status} />
-              <span
-                style={{
-                  fontFamily: "'Anton', sans-serif",
-                  fontSize: 14,
-                  color: "#121212",
-                  background: "#fff",
-                  padding: "2px 8px",
-                  borderRadius: 2,
-                  border: "1px solid #d4c9b6",
-                }}
-              >
-                {doc.year}
-              </span>
-            </div>
-          </div>
-
-          {doc.description && (
-            <p
+            <span
               style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 500,
-                fontSize: 13,
-                color: "#3a342f",
-                lineHeight: "20px",
+                fontFamily: "'Anton', sans-serif",
+                fontSize: 20,
+                color: "#121212",
+                letterSpacing: "0.5px",
               }}
             >
-              {doc.description}
-            </p>
-          )}
-        </div>
-
-        {/* Preview Frame */}
-        <div className="flex-1 p-4 bg-[#e8d5b4]/20 min-h-[380px] overflow-hidden flex flex-col">
-          {isPdf ? (
-            <iframe
-              src={previewUrl}
-              title={`Pré-visualização de ${doc.title}`}
-              className="w-full h-full min-h-[380px] rounded-[3px] border border-[#d4c9b6] bg-white"
-            />
-          ) : (
-            <div className="flex-1 flex flex-col items-center justify-center gap-4 py-12 px-6 text-center bg-white rounded-[3px] border border-[#d4c9b6]">
-              <div
-                className="flex items-center justify-center w-16 h-16 rounded-full"
-                style={{
-                  background: "rgba(248,186,1,0.15)",
-                  border: "2px solid #f8ba01",
-                }}
+              PRÉ-VISUALIZAÇÃO DO DOCUMENTO
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              style={{ color: "#9a8f86" }}
+              aria-label="Fechar modal"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
               >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Metadata section */}
+          <div
+            className="px-6 py-4 shrink-0 flex flex-col gap-3"
+            style={{ background: "#f5eedd", borderBottom: "1px solid #d4c9b6" }}
+          >
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
                 <FileTag type={doc.fileType} />
+                <div className="flex flex-col gap-1 min-w-0">
+                  <h3
+                    style={{
+                      fontFamily: "'Anton', sans-serif",
+                      fontSize: 18,
+                      color: "#121212",
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {doc.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 500,
+                      fontSize: 12,
+                      color: "#6b5e55",
+                    }}
+                  >
+                    {doc.fileName} · {doc.fileSize}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col gap-1 max-w-[440px]">
-                <p
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge category={doc.category} />
+                <StatusPill status={doc.status} />
+                <span
                   style={{
                     fontFamily: "'Anton', sans-serif",
-                    fontSize: 18,
+                    fontSize: 14,
                     color: "#121212",
+                    background: "#fff",
+                    padding: "2px 8px",
+                    borderRadius: 2,
+                    border: "1px solid #d4c9b6",
                   }}
                 >
-                  PRÉ-VISUALIZAÇÃO DIRETA NÃO DISPONÍVEL
-                </p>
-                <p
+                  {doc.year}
+                </span>
+              </div>
+            </div>
+
+            {doc.description && (
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 500,
+                  fontSize: 13,
+                  color: "#3a342f",
+                  lineHeight: "20px",
+                }}
+              >
+                {doc.description}
+              </p>
+            )}
+          </div>
+
+          {/* Preview Frame */}
+          <div className="flex-1 p-4 bg-[#e8d5b4]/20 min-h-[300px] overflow-hidden flex flex-col">
+            {isPdf ? (
+              <iframe
+                src={previewUrl}
+                title={`Pré-visualização de ${doc.title}`}
+                className="w-full h-full min-h-[300px] rounded-[3px] border border-[#d4c9b6] bg-white"
+              />
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center gap-4 py-12 px-6 text-center bg-white rounded-[3px] border border-[#d4c9b6]">
+                <div
+                  className="flex items-center justify-center w-16 h-16 rounded-full"
+                  style={{
+                    background: "rgba(248,186,1,0.15)",
+                    border: "2px solid #f8ba01",
+                  }}
+                >
+                  <FileTag type={doc.fileType} />
+                </div>
+                <div className="flex flex-col gap-1 max-w-[440px]">
+                  <p
+                    style={{
+                      fontFamily: "'Anton', sans-serif",
+                      fontSize: 18,
+                      color: "#121212",
+                    }}
+                  >
+                    PRÉ-VISUALIZAÇÃO DIRETA NÃO DISPONÍVEL
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 500,
+                      fontSize: 13,
+                      color: "#6b5e55",
+                      lineHeight: "20px",
+                    }}
+                  >
+                    Arquivos do tipo{" "}
+                    <strong>.{doc.fileType.toLowerCase()}</strong> não possuem
+                    visualizador direto no navegador. Clique abaixo para fazer o
+                    download.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onDownload(doc)}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-[3px] cursor-pointer"
+                  style={{
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 14,
+                    color: "#121212",
+                    background: "#f8ba01",
+                    border: "2px solid #121212",
+                    boxShadow: "3px 3px 0px #121212",
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  BAIXAR AGORA ({doc.fileSize})
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Attachments & Invoices Section */}
+          <div className="px-6 py-4 bg-[#fdfaf3] border-t border-[#d4c9b6] flex flex-col gap-3 shrink-0">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-base">🧾</span>
+                <span
+                  style={{
+                    fontFamily: "'Anton', sans-serif",
+                    fontSize: 16,
+                    color: "#121212",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  NOTAS FISCAIS & COMPROVANTES ({doc.attachments?.length || 0})
+                </span>
+              </div>
+              <div>
+                <input
+                  ref={attFileRef}
+                  type="file"
+                  accept=".pdf,.xlsx,.doc,.docx"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    if (f) {
+                      setAttLoading(true);
+                      await addAttachment(doc.id, f);
+                      setAttLoading(false);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  disabled={attLoading}
+                  onClick={() => attFileRef.current?.click()}
+                  className="px-3 py-1.5 rounded-[3px] text-xs font-extrabold uppercase tracking-wider cursor-pointer"
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    fontWeight: 500,
-                    fontSize: 13,
-                    color: "#6b5e55",
-                    lineHeight: "20px",
+                    background: "#f8ba01",
+                    color: "#121212",
+                    border: "1.5px solid #121212",
+                    boxShadow: "2px 2px 0px #121212",
                   }}
                 >
-                  Arquivos do tipo{" "}
-                  <strong>.{doc.fileType.toLowerCase()}</strong> não possuem
-                  visualizador direto no navegador. Clique abaixo para fazer o
-                  download.
-                </p>
+                  {attLoading ? "ENVIANDO..." : "+ ANEXAR ARQUIVO RÁPIDO"}
+                </button>
               </div>
+            </div>
+
+            {doc.attachments && doc.attachments.length > 0 ? (
+              <div className="flex flex-col gap-2 max-h-[160px] overflow-y-auto pr-1">
+                {doc.attachments.map((att) => (
+                  <div
+                    key={att.id}
+                    className="flex items-center justify-between px-3 py-2 bg-white rounded border border-[#d4c9b6] text-xs gap-2"
+                  >
+                    <div className="flex flex-col min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-black text-[#c87d00]">
+                          🧾 NF:
+                        </span>
+                        <span className="text-xs font-bold text-[#121212]">
+                          {att.name}
+                        </span>
+                        {att.invoiceNumber && (
+                          <span className="px-1.5 py-0.5 rounded bg-[#f8ba01]/20 font-mono text-[10px] text-[#121212]">
+                            {att.invoiceNumber}
+                          </span>
+                        )}
+                        <span className="text-[11px] text-[#8c8077]">
+                          ({att.fileSize})
+                        </span>
+                      </div>
+                      {att.issuerName ? (
+                        <span className="text-[11px] text-[#3a342f] font-semibold truncate">
+                          Favorecido: <strong>{att.issuerName}</strong>{" "}
+                          {att.issuerDoc ? `(${att.issuerDoc})` : ""}
+                          {att.amount && (
+                            <span className="ml-2 font-bold text-[#1a7d3c]">
+                              — R${" "}
+                              {att.amount.toLocaleString("pt-BR", {
+                                minimumFractionDigits: 2,
+                              })}
+                            </span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-[#c87d00] font-bold italic">
+                          ⚠️ Sem pessoa/favorecido associado
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setEditingAttachment(att)}
+                        className="px-2 py-1 text-[11px] font-extrabold text-[#121212] bg-[#f8ba01] rounded border border-[#121212] cursor-pointer hover:bg-white transition-colors"
+                        style={{ fontFamily: "'Inter', sans-serif" }}
+                      >
+                        {att.issuerName ? "EDITAR DADOS" : "ASSOCIAR PESSOA"}
+                      </button>
+
+                      {att.downloadUrl && (
+                        <a
+                          href={att.downloadUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          download
+                          className="px-2.5 py-1 text-[11px] font-extrabold rounded bg-white text-[#121212] border border-[#121212]"
+                        >
+                          BAIXAR
+                        </a>
+                      )}
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          await deleteAttachment(att.id);
+                        }}
+                        className="px-2 py-1 text-[11px] font-extrabold text-[#dd341f] hover:underline cursor-pointer"
+                      >
+                        EXCLUIR
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-[#8c8077] italic">
+                Nenhuma nota fiscal ou comprovante anexado a este documento até
+                o momento.
+              </p>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div
+            className="flex items-center justify-between px-6 py-4 shrink-0 gap-3"
+            style={{ background: "#faf7f2", borderTop: "1px solid #e8d5b4" }}
+          >
+            <a
+              href={previewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 800,
+                fontSize: 12,
+                color: "#6b5e55",
+                textDecoration: "underline",
+              }}
+            >
+              Abrir em nova aba
+            </a>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-5 py-2.5 rounded-[3px]"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  color: "#6b5e55",
+                  background: "transparent",
+                  border: "2px solid #d4c9b6",
+                }}
+              >
+                FECHAR
+              </button>
               <button
                 type="button"
                 onClick={() => onDownload(doc)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-[3px] cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-[3px]"
                 style={{
                   fontFamily: "'Anton', sans-serif",
                   fontSize: 14,
@@ -897,81 +1715,25 @@ function PreviewModal({
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-                BAIXAR AGORA ({doc.fileSize})
+                BAIXAR DOCUMENTO PRINCIPAL
               </button>
             </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div
-          className="flex items-center justify-between px-6 py-4 shrink-0 gap-3"
-          style={{ background: "#faf7f2", borderTop: "1px solid #e8d5b4" }}
-        >
-          <a
-            href={previewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2"
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 800,
-              fontSize: 12,
-              color: "#6b5e55",
-              textDecoration: "underline",
-            }}
-          >
-            Abrir em nova aba
-          </a>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2.5 rounded-[3px]"
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 800,
-                fontSize: 13,
-                color: "#6b5e55",
-                background: "transparent",
-                border: "2px solid #d4c9b6",
-              }}
-            >
-              FECHAR
-            </button>
-            <button
-              type="button"
-              onClick={() => onDownload(doc)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-[3px] cursor-pointer"
-              style={{
-                fontFamily: "'Anton', sans-serif",
-                fontSize: 14,
-                color: "#121212",
-                background: "#f8ba01",
-                border: "2px solid #121212",
-                boxShadow: "3px 3px 0px #121212",
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              BAIXAR DOCUMENTO
-            </button>
           </div>
         </div>
       </div>
-    </div>
+
+      {editingAttachment && (
+        <AddInvoiceModal
+          documentTitle={doc.title}
+          initialAttachment={editingAttachment}
+          onClose={() => setEditingAttachment(null)}
+          onSave={async (payload) => {
+            await updateAttachment(editingAttachment.id, payload);
+            setEditingAttachment(null);
+          }}
+        />
+      )}
+    </>
   );
 }
 
@@ -982,6 +1744,9 @@ export function AdminDashboard() {
 
   const [showUpload, setShowUpload] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<AdminDocument | null>(null);
+  const [editingTarget, setEditingTarget] = useState<AdminDocument | null>(
+    null,
+  );
   const [previewTarget, setPreviewTarget] = useState<AdminDocument | null>(
     null,
   );
@@ -1010,8 +1775,47 @@ export function AdminDashboard() {
   const filtered = documents.filter((d) => {
     if (filterYear !== "all" && d.year !== filterYear) return false;
     if (filterCat !== "all" && d.category !== filterCat) return false;
-    if (search && !d.title.toLowerCase().includes(search.toLowerCase()))
-      return false;
+
+    if (search) {
+      const q = search.toLowerCase().trim();
+      const cleanQ = q.replace(/\D/g, "");
+
+      const matchTitle = d.title.toLowerCase().includes(q);
+      const matchDescription = d.description?.toLowerCase().includes(q);
+      const matchFileName = d.fileName?.toLowerCase().includes(q);
+
+      const matchAttachments = d.attachments?.some((att) => {
+        const nameMatch = att.name.toLowerCase().includes(q);
+        const issuerMatch = att.issuerName?.toLowerCase().includes(q);
+        const docMatch = att.issuerDoc?.toLowerCase().includes(q);
+        const cleanDocMatch =
+          cleanQ.length > 2 &&
+          att.issuerDoc?.replace(/\D/g, "").includes(cleanQ);
+        const invMatch = att.invoiceNumber?.toLowerCase().includes(q);
+        const expenseMatch = att.expenseType?.toLowerCase().includes(q);
+        const descMatch = att.description?.toLowerCase().includes(q);
+
+        return (
+          nameMatch ||
+          issuerMatch ||
+          docMatch ||
+          cleanDocMatch ||
+          invMatch ||
+          expenseMatch ||
+          descMatch
+        );
+      });
+
+      if (
+        !matchTitle &&
+        !matchDescription &&
+        !matchFileName &&
+        !matchAttachments
+      ) {
+        return false;
+      }
+    }
+
     return true;
   });
 
@@ -1145,10 +1949,9 @@ export function AdminDashboard() {
               Gerencie os documentos exibidos no portal público de transparência
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowUpload(true)}
-            className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-[3px] w-full sm:w-auto shrink-0 cursor-pointer"
+          <Link
+            href="/admin/novo"
+            className="flex items-center justify-center gap-2.5 px-5 py-3 rounded-[3px] w-full sm:w-auto shrink-0 cursor-pointer transition-all active:translate-x-0.5 active:translate-y-0.5"
             style={{
               fontFamily: "'Anton', sans-serif",
               fontSize: 15,
@@ -1174,8 +1977,8 @@ export function AdminDashboard() {
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            ENVIAR DOCUMENTO
-          </button>
+            NOVO DOCUMENTO
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1252,7 +2055,7 @@ export function AdminDashboard() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar documento..."
+              placeholder="Buscar por título, favorecido, CPF/CNPJ ou nº da nota..."
               className="w-full pl-8 pr-3 py-2 rounded-[3px] outline-none"
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -1332,7 +2135,7 @@ export function AdminDashboard() {
           <div
             className="hidden md:grid px-5 py-3"
             style={{
-              gridTemplateColumns: "40px 1fr 160px 60px 100px 90px 140px",
+              gridTemplateColumns: "40px 1fr 190px 55px 95px 90px 220px",
               background: "#f5eedd",
               borderBottom: "2px solid #121212",
               gap: 12,
@@ -1421,9 +2224,9 @@ export function AdminDashboard() {
               <div key={doc.id}>
                 {/* Desktop View (md:grid) */}
                 <div
-                  className="hidden md:grid items-center gap-3 px-5 py-4 transition-colors"
+                  className="hidden md:grid items-center gap-3 px-5 py-5 transition-colors"
                   style={{
-                    gridTemplateColumns: "40px 1fr 160px 60px 100px 90px 140px",
+                    gridTemplateColumns: "40px 1fr 190px 55px 95px 90px 220px",
                     gap: 12,
                     background: i % 2 === 0 ? "#fff" : "#faf7f2",
                     borderBottom: "1px solid #e8d5b4",
@@ -1434,7 +2237,7 @@ export function AdminDashboard() {
                     <span
                       style={{
                         fontFamily: "'Anton', sans-serif",
-                        fontSize: 14,
+                        fontSize: 15,
                         color: "#121212",
                         lineHeight: 1.2,
                       }}
@@ -1453,7 +2256,17 @@ export function AdminDashboard() {
                       {doc.fileName}
                     </span>
                   </div>
-                  <Badge category={doc.category} />
+                  <div className="flex flex-col items-start gap-1 min-w-0">
+                    <Badge category={doc.category} />
+                    {doc.attachments && doc.attachments.length > 0 && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#f8ba01]/30 text-[#121212] border border-[#121212]/20 shrink-0">
+                        🧾 {doc.attachments.length}{" "}
+                        {doc.attachments.length === 1
+                          ? "Nota Fiscal"
+                          : "Notas Fiscais"}
+                      </span>
+                    )}
+                  </div>
                   <span
                     style={{
                       fontFamily: "'Anton', sans-serif",
@@ -1474,46 +2287,75 @@ export function AdminDashboard() {
                     {doc.publishedAt}
                   </span>
                   <StatusPill status={doc.status} />
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setPreviewTarget(doc)}
-                      title="Pré-visualizar documento"
-                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+
+                  {/* Desktop Action Buttons */}
+                  <div className="flex items-center gap-1.5 justify-end">
+                    <Link
+                      href={`/admin/documento/${doc.id}/notas/nova`}
+                      title="Incluir Nota Fiscal / Recibo"
+                      className="px-2.5 py-1.5 rounded font-extrabold text-[11px] bg-[#f8ba01] text-[#121212] border border-[#121212] hover:bg-white transition-colors shrink-0 flex items-center gap-1"
+                      style={{ fontFamily: "'Inter', sans-serif" }}
+                    >
+                      + NF
+                    </Link>
+                    <Link
+                      href={`/admin/documento/${doc.id}/editar`}
+                      title="Editar documento"
+                      className="flex items-center justify-center size-9 rounded-[3px] cursor-pointer hover:bg-white transition-colors"
                       style={{
                         background: "transparent",
                         border: "1px solid #d4c9b6",
-                        color: "#9a8f86",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "#121212";
-                        e.currentTarget.style.color = "#121212";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = "#d4c9b6";
-                        e.currentTarget.style.color = "#9a8f86";
+                        color: "#c87d00",
                       }}
                     >
                       <svg
-                        width="13"
-                        height="13"
+                        width="14"
+                        height="14"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2.5"
                         strokeLinecap="round"
+                        strokeLinejoin="round"
                         role="img"
-                        aria-label="Pré-visualizar"
+                        aria-label="Editar"
                       >
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                       </svg>
-                    </button>
+                    </Link>
+                    <Link
+                      href={`/admin/documento/${doc.id}`}
+                      title="Ver detalhes do documento"
+                      className="flex items-center justify-center size-9 rounded-[3px] cursor-pointer hover:bg-white transition-colors"
+                      style={{
+                        background: "transparent",
+                        border: "1px solid #d4c9b6",
+                        color: "#1a5fa8",
+                      }}
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        role="img"
+                        aria-label="Ver detalhes"
+                      >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </Link>
                     <button
                       type="button"
                       onClick={() => handleDownloadDocument(doc)}
                       title="Baixar documento"
-                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                      className="flex items-center justify-center size-9 rounded-[3px] cursor-pointer hover:bg-white transition-colors"
                       style={{
                         background: "transparent",
                         border: "1px solid #d4c9b6",
@@ -1529,8 +2371,8 @@ export function AdminDashboard() {
                       }}
                     >
                       <svg
-                        width="13"
-                        height="13"
+                        width="14"
+                        height="14"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -1548,52 +2390,49 @@ export function AdminDashboard() {
                       type="button"
                       onClick={() => toggleStatus(doc.id)}
                       title={
-                        doc.status === "published" ? "Despublicar" : "Publicar"
+                        doc.status === "published"
+                          ? "Publicado - Clique para despublicar"
+                          : "Rascunho - Clique para publicar"
                       }
-                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                      className="flex items-center justify-center size-9 rounded-[3px] cursor-pointer hover:bg-white transition-colors"
                       style={{
                         background: "transparent",
                         border: "1px solid #d4c9b6",
-                        color: "#9a8f86",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "#121212";
-                        e.currentTarget.style.color = "#121212";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = "#d4c9b6";
-                        e.currentTarget.style.color = "#9a8f86";
+                        color:
+                          doc.status === "published" ? "#1a7d3c" : "#9a8f86",
                       }}
                     >
                       {doc.status === "published" ? (
                         <svg
-                          width="12"
-                          height="12"
+                          width="14"
+                          height="14"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2.5"
                           strokeLinecap="round"
+                          strokeLinejoin="round"
                           role="img"
-                          aria-label="Despublicar"
+                          aria-label="Publicado no portal público"
                         >
-                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                          <line x1="1" y1="1" x2="23" y2="23" />
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="2" y1="12" x2="22" y2="12" />
+                          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                         </svg>
                       ) : (
                         <svg
-                          width="12"
-                          height="12"
+                          width="14"
+                          height="14"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                           role="img"
-                          aria-label="Publicar"
+                          aria-label="Rascunho privado"
                         >
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                          <circle cx="12" cy="12" r="3" />
+                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                          <line x1="1" y1="1" x2="23" y2="23" />
                         </svg>
                       )}
                     </button>
@@ -1601,7 +2440,7 @@ export function AdminDashboard() {
                       type="button"
                       onClick={() => setDeleteTarget(doc)}
                       title="Remover"
-                      className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                      className="flex items-center justify-center size-9 rounded-[3px] cursor-pointer hover:bg-white transition-colors"
                       style={{
                         background: "transparent",
                         border: "1px solid #d4c9b6",
@@ -1617,8 +2456,8 @@ export function AdminDashboard() {
                       }}
                     >
                       <svg
-                        width="12"
-                        height="12"
+                        width="14"
+                        height="14"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -1638,7 +2477,7 @@ export function AdminDashboard() {
 
                 {/* Mobile View (md:hidden) */}
                 <div
-                  className="md:hidden flex flex-col gap-3 px-4 py-4 border-b border-[#e8d5b4]"
+                  className="md:hidden flex flex-col gap-4 p-5 border-b border-[#e8d5b4]"
                   style={{
                     background: i % 2 === 0 ? "#fff" : "#faf7f2",
                   }}
@@ -1646,11 +2485,11 @@ export function AdminDashboard() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3 min-w-0 flex-1">
                       <FileTag type={doc.fileType} />
-                      <div className="flex flex-col gap-0.5 min-w-0">
+                      <div className="flex flex-col gap-1 min-w-0">
                         <span
                           style={{
                             fontFamily: "'Anton', sans-serif",
-                            fontSize: 15,
+                            fontSize: 16,
                             color: "#121212",
                             lineHeight: 1.2,
                           }}
@@ -1658,28 +2497,50 @@ export function AdminDashboard() {
                           {doc.title}
                         </span>
                         <span
-                          className="truncate text-[11px]"
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 500,
-                            color: "#9a8f86",
-                          }}
+                          className="truncate text-xs font-medium text-[#9a8f86]"
+                          style={{ fontFamily: "'Inter', sans-serif" }}
                         >
                           {doc.fileName}
                         </span>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setPreviewTarget(doc)}
-                        title="Pré-visualizar documento"
-                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#e8d5b4]">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge category={doc.category} />
+                      <StatusPill status={doc.status} />
+                    </div>
+
+                    <span
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        fontSize: 12,
+                        color: "#9a8f86",
+                      }}
+                    >
+                      {doc.publishedAt} ({doc.year})
+                    </span>
+                  </div>
+
+                  {/* Explicit Mobile Actions Bar */}
+                  <div className="flex flex-col min-[450px]:flex-row min-[450px]:items-center justify-between gap-2.5 pt-2.5 border-t border-[#e8d5b4]">
+                    <Link
+                      href={`/admin/documento/${doc.id}/notas/nova`}
+                      className="w-full min-[450px]:flex-1 py-2.5 px-3 rounded font-extrabold text-xs bg-[#f8ba01] text-[#121212] border border-[#121212] text-center hover:bg-white transition-colors"
+                      style={{ fontFamily: "'Inter', sans-serif" }}
+                    >
+                      + NOTA FISCAL
+                    </Link>
+                    <div className="flex items-center justify-between min-[450px]:justify-end gap-1.5 w-full min-[450px]:w-auto shrink-0">
+                      <Link
+                        href={`/admin/documento/${doc.id}/editar`}
+                        title="Editar documento"
+                        className="flex items-center justify-center flex-1 min-[450px]:flex-initial size-9 rounded-[3px] cursor-pointer bg-white"
                         style={{
-                          background: "transparent",
                           border: "1px solid #d4c9b6",
-                          color: "#6b5e55",
+                          color: "#c87d00",
                         }}
                       >
                         <svg
@@ -1690,20 +2551,46 @@ export function AdminDashboard() {
                           stroke="currentColor"
                           strokeWidth="2.5"
                           strokeLinecap="round"
+                          strokeLinejoin="round"
                           role="img"
-                          aria-label="Pré-visualizar"
+                          aria-label="Editar"
                         >
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                          <circle cx="12" cy="12" r="3" />
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
-                      </button>
+                      </Link>
+                      <Link
+                        href={`/admin/documento/${doc.id}`}
+                        title="Ver detalhes do documento"
+                        className="flex items-center justify-center flex-1 min-[450px]:flex-initial size-9 rounded-[3px] cursor-pointer bg-white"
+                        style={{
+                          border: "1px solid #d4c9b6",
+                          color: "#1a5fa8",
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          role="img"
+                          aria-label="Ver detalhes"
+                        >
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                          <polyline points="15 3 21 3 21 9" />
+                          <line x1="10" y1="14" x2="21" y2="3" />
+                        </svg>
+                      </Link>
                       <button
                         type="button"
                         onClick={() => handleDownloadDocument(doc)}
                         title="Baixar documento"
-                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                        className="flex items-center justify-center flex-1 min-[450px]:flex-initial size-9 rounded-[3px] cursor-pointer bg-white"
                         style={{
-                          background: "transparent",
                           border: "1px solid #d4c9b6",
                           color: "#1a7d3c",
                         }}
@@ -1729,14 +2616,14 @@ export function AdminDashboard() {
                         onClick={() => toggleStatus(doc.id)}
                         title={
                           doc.status === "published"
-                            ? "Despublicar"
-                            : "Publicar"
+                            ? "Publicado - Clique para despublicar"
+                            : "Rascunho - Clique para publicar"
                         }
-                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                        className="flex items-center justify-center flex-1 min-[450px]:flex-initial size-9 rounded-[3px] cursor-pointer bg-white"
                         style={{
-                          background: "transparent",
                           border: "1px solid #d4c9b6",
-                          color: "#9a8f86",
+                          color:
+                            doc.status === "published" ? "#1a7d3c" : "#9a8f86",
                         }}
                       >
                         {doc.status === "published" ? (
@@ -1748,11 +2635,13 @@ export function AdminDashboard() {
                             stroke="currentColor"
                             strokeWidth="2.5"
                             strokeLinecap="round"
+                            strokeLinejoin="round"
                             role="img"
-                            aria-label="Despublicar"
+                            aria-label="Publicado no portal público"
                           >
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                            <line x1="1" y1="1" x2="23" y2="23" />
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                           </svg>
                         ) : (
                           <svg
@@ -1764,10 +2653,10 @@ export function AdminDashboard() {
                             strokeWidth="2.5"
                             strokeLinecap="round"
                             role="img"
-                            aria-label="Publicar"
+                            aria-label="Rascunho privado"
                           >
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
                           </svg>
                         )}
                       </button>
@@ -1775,9 +2664,8 @@ export function AdminDashboard() {
                         type="button"
                         onClick={() => setDeleteTarget(doc)}
                         title="Remover"
-                        className="flex items-center justify-center size-8 rounded-[3px] cursor-pointer"
+                        className="flex items-center justify-center flex-1 min-[450px]:flex-initial size-9 rounded-[3px] cursor-pointer bg-white"
                         style={{
-                          background: "transparent",
                           border: "1px solid #d4c9b6",
                           color: "#dd341f",
                         }}
@@ -1801,24 +2689,6 @@ export function AdminDashboard() {
                       </button>
                     </div>
                   </div>
-
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-black/5">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Badge category={doc.category} />
-                      <StatusPill status={doc.status} />
-                    </div>
-
-                    <span
-                      style={{
-                        fontFamily: "'Inter', sans-serif",
-                        fontWeight: 500,
-                        fontSize: 11,
-                        color: "#9a8f86",
-                      }}
-                    >
-                      {doc.publishedAt} ({doc.year})
-                    </span>
-                  </div>
                 </div>
               </div>
             ))
@@ -1826,14 +2696,6 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      {showUpload && <UploadModal onClose={() => setShowUpload(false)} />}
-      {previewTarget && (
-        <PreviewModal
-          doc={previewTarget}
-          onClose={() => setPreviewTarget(null)}
-          onDownload={handleDownloadDocument}
-        />
-      )}
       {deleteTarget && (
         <DeleteConfirm
           doc={deleteTarget}
