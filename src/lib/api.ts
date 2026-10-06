@@ -18,12 +18,36 @@ export interface ApiFileMetadata {
   name: string;
   description: string | null;
   objectKey: string;
+  publicObjectKey: string | null;
   contentType: string;
   size: number;
   categoryId: string | null;
-  uploadedBy: string;
+  uploadedBy?: string;
   publishedAt: string | null;
   createdAt: string;
+  hasPublicFile?: boolean;
+}
+
+export interface ApiAttachmentMetadata {
+  id: string;
+  documentId: string | null;
+  name: string;
+  description: string | null;
+  objectKey?: string;
+  publicObjectKey: string | null;
+  contentType: string;
+  size: number;
+  attachmentType: "invoice" | "document";
+  createdAt: string;
+  hasPublicFile?: boolean;
+  issuerName?: string | null;
+  issuerDoc?: string | null;
+  cnpj?: string | null;
+  invoiceNumber?: string | null;
+  amount?: number | null;
+  issueDate?: string | null;
+  expenseType?: string | null;
+  downloadUrl?: string | null;
 }
 
 // Token storage helpers
@@ -189,6 +213,7 @@ export async function updateFileApi(
     description?: string;
     categoryId?: string;
     published?: boolean;
+    publicObjectKey?: string | null;
   },
 ): Promise<ApiFileMetadata> {
   const data = await apiFetch<{ file: ApiFileMetadata }>(
@@ -213,23 +238,6 @@ export async function toggleFileStatusApi(
   return data.file;
 }
 
-export interface ApiAttachmentMetadata {
-  id: string;
-  documentId: string;
-  name: string;
-  description: string | null;
-  objectKey: string;
-  contentType: string;
-  size: number;
-  createdAt: string;
-  issuerName?: string | null;
-  issuerDoc?: string | null;
-  invoiceNumber?: string | null;
-  amount?: number | null;
-  issueDate?: string | null;
-  expenseType?: string | null;
-}
-
 export function getFileDownloadUrl(id: string): string {
   return `${API_URL}/transparency/files/${id}/download`;
 }
@@ -239,16 +247,32 @@ export function getFilePreviewUrl(id: string): string {
 }
 
 // Attachments / Invoices API methods
-export async function getAttachmentsApi(
-  documentId?: string,
-  searchQuery?: string,
-): Promise<ApiAttachmentMetadata[]> {
+export async function getAttachmentsApi(options?: {
+  documentId?: string;
+  searchQuery?: string;
+  attachmentType?: "invoice" | "document";
+  unlinked?: boolean;
+}): Promise<ApiAttachmentMetadata[]> {
+  const { documentId, searchQuery, attachmentType, unlinked } = options || {};
+
   let endpoint = documentId
     ? `/transparency/files/${documentId}/attachments`
     : "/transparency/files/attachments";
 
+  const params = new URLSearchParams();
   if (searchQuery && searchQuery.trim() !== "") {
-    endpoint += `?q=${encodeURIComponent(searchQuery.trim())}`;
+    params.append("q", searchQuery.trim());
+  }
+  if (attachmentType) {
+    params.append("type", attachmentType);
+  }
+  if (unlinked) {
+    params.append("unlinked", "true");
+  }
+
+  const queryStr = params.toString();
+  if (queryStr) {
+    endpoint += `?${queryStr}`;
   }
 
   const data = await apiFetch<{ attachments: ApiAttachmentMetadata[] }>(
@@ -258,11 +282,15 @@ export async function getAttachmentsApi(
 }
 
 export async function uploadAttachmentApi(params: {
-  documentId: string;
+  documentId?: string | null;
   fileName: string;
   description?: string;
   contentType: string;
   contentBase64: string;
+  publicContentBase64?: string;
+  publicFileName?: string;
+  attachmentType?: "invoice" | "document";
+  isPublicSafe?: boolean;
   issuerName?: string;
   issuerDoc?: string;
   invoiceNumber?: string;
@@ -270,22 +298,15 @@ export async function uploadAttachmentApi(params: {
   issueDate?: string;
   expenseType?: string;
 }): Promise<ApiAttachmentMetadata> {
+  const endpoint = params.documentId
+    ? `/transparency/files/${params.documentId}/attachments`
+    : "/transparency/files/attachments";
+
   const data = await apiFetch<{ attachment: ApiAttachmentMetadata }>(
-    `/transparency/files/${params.documentId}/attachments`,
+    endpoint,
     {
       method: "POST",
-      body: JSON.stringify({
-        fileName: params.fileName,
-        description: params.description,
-        contentType: params.contentType,
-        contentBase64: params.contentBase64,
-        issuerName: params.issuerName,
-        issuerDoc: params.issuerDoc,
-        invoiceNumber: params.invoiceNumber,
-        amount: params.amount,
-        issueDate: params.issueDate,
-        expenseType: params.expenseType,
-      }),
+      body: JSON.stringify(params),
     },
   );
   return data.attachment;
@@ -296,6 +317,10 @@ export async function updateAttachmentApi(
   params: {
     fileName?: string;
     description?: string;
+    documentId?: string | null;
+    attachmentType?: "invoice" | "document";
+    isPublicSafe?: boolean;
+    publicObjectKey?: string | null;
     issuerName?: string;
     issuerDoc?: string;
     invoiceNumber?: string;
@@ -312,6 +337,41 @@ export async function updateAttachmentApi(
     },
   );
   return data.attachment;
+}
+
+export async function linkAttachmentApi(
+  attachmentId: string,
+  documentId: string | null,
+): Promise<ApiAttachmentMetadata> {
+  const data = await apiFetch<{ attachment: ApiAttachmentMetadata }>(
+    `/transparency/files/attachments/${attachmentId}/link`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ documentId }),
+    },
+  );
+  return data.attachment;
+}
+
+export async function uploadPublicFileApi(params: {
+  id?: string;
+  attachmentId?: string;
+  fileName: string;
+  contentType: string;
+  contentBase64: string;
+}): Promise<void> {
+  const endpoint = params.id
+    ? `/transparency/files/${params.id}/public-file`
+    : `/transparency/files/attachments/${params.attachmentId}/public-file`;
+
+  await apiFetch(endpoint, {
+    method: "POST",
+    body: JSON.stringify({
+      fileName: params.fileName,
+      contentType: params.contentType,
+      contentBase64: params.contentBase64,
+    }),
+  });
 }
 
 export async function deleteAttachmentApi(

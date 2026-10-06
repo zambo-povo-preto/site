@@ -2,13 +2,11 @@
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { useDocuments } from "@/contexts/DocumentsContext";
-import type {
-  AdminDocument,
-  DocCategory,
-} from "@/types/document";
+import type { AdminDocument, DocCategory } from "@/types/document";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useState } from "react";
+import { FileUploadDropzone } from "./FileUploadDropzone";
 
 const CATEGORIES: DocCategory[] = [
   "Prestação de Contas",
@@ -28,7 +26,6 @@ interface DocumentFormProps {
 export function DocumentForm({ initialDocument }: DocumentFormProps) {
   const router = useRouter();
   const { addDocument, updateDocument, deleteAttachment } = useDocuments();
-  const mainFileRef = useRef<HTMLInputElement>(null);
   const isEditing = Boolean(initialDocument);
 
   const [title, setTitle] = useState(initialDocument?.title || "");
@@ -97,7 +94,9 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
           description,
           status,
           fileName: mainFile?.name || "documento.pdf",
-          fileSize: mainFile ? `${(mainFile.size / 1024).toFixed(0)} KB` : "0 KB",
+          fileSize: mainFile
+            ? `${(mainFile.size / 1024).toFixed(0)} KB`
+            : "0 KB",
           fileType: mainFile?.name.toLowerCase().endsWith(".xlsx")
             ? "XLSX"
             : mainFile?.name.toLowerCase().endsWith(".doc") ||
@@ -110,7 +109,7 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
       }
 
       setTimeout(() => {
-        router.push("/admin");
+        router.push("/admin/relatorios");
       }, 1000);
     } catch (err) {
       console.error("Erro ao salvar documento:", err);
@@ -120,17 +119,14 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] text-[#121212] pb-16">
+    <div className="min-h-screen bg-[#F7F3EA] text-[#222222] pb-16">
       {/* Header Bar */}
-      <header
-        className="sticky top-0 z-40 px-4 sm:px-8 py-3 border-b border-[#d4c9b6]"
-        style={{ background: "#ffffff", boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}
-      >
+      <header className="sticky top-16 z-30 px-4 sm:px-8 py-3 border-b border-[#E3DCCF] bg-white shadow-xs">
         <div className="flex items-center gap-3 min-w-0 max-w-4xl mx-auto">
           <Link
-            href="/admin"
-            className="flex items-center justify-center w-8 h-8 rounded border border-[#d4c9b6] bg-[#faf7f2] text-[#121212] font-bold hover:bg-[#121212] hover:text-white hover:border-[#121212] transition-colors text-sm shrink-0"
-            title="Voltar ao Painel"
+            href="/admin/relatorios"
+            className="flex items-center justify-center w-8 h-8 rounded-md border border-[#E3DCCF] bg-[#FAF7F2] text-[#756F67] hover:text-[#222222] hover:bg-white transition-colors text-sm shrink-0"
+            title="Voltar aos Relatórios"
           >
             ←
           </Link>
@@ -138,12 +134,12 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
             <Breadcrumbs
               items={[
                 { label: "Admin", href: "/admin" },
-                { label: "Transparência", href: "/admin" },
-                { label: isEditing ? "Editar Documento" : "Novo Documento" },
+                { label: "Relatórios", href: "/admin/relatorios" },
+                { label: isEditing ? "Editar Relatório" : "Novo Relatório" },
               ]}
             />
             <h1
-              className="text-base sm:text-lg font-bold text-[#121212] truncate"
+              className="text-base sm:text-lg font-semibold text-[#222222] truncate"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               {isEditing ? initialDocument?.title : "Criar Novo Relatório"}
@@ -317,65 +313,21 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
                   color: "#3a342f",
                 }}
               >
-                ARQUIVO PRINCIPAL DO RELATÓRIO {isEditing ? "(OPCIONAL SE MANTIVER O ATUAL)" : "*"}
+                ARQUIVO PRINCIPAL DO RELATÓRIO{" "}
+                {isEditing ? "(OPCIONAL SE MANTIVER O ATUAL)" : "*"}
               </label>
 
-              <div
-                className="w-full flex flex-col items-center justify-center gap-3 rounded-[3px] py-8 px-4 cursor-pointer transition-colors"
-                style={{
-                  border: `2px dashed ${mainFile ? "#1a7d3c" : "#d4c9b6"}`,
-                  background: mainFile ? "rgba(26,125,60,0.04)" : "#faf7f2",
-                }}
-                onClick={() => mainFileRef.current?.click()}
-                onKeyDown={(e) => e.key === "Enter" && mainFileRef.current?.click()}
-                role="button"
-                tabIndex={0}
-              >
-                <input
-                  ref={mainFileRef}
-                  id="main-file-input"
-                  type="file"
-                  accept=".pdf,.xlsx,.doc,.docx"
-                  className="hidden"
-                  onChange={(e) => e.target.files?.[0] && setMainFile(e.target.files[0])}
-                />
-
-                {mainFile ? (
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">📄</span>
-                    <div className="flex flex-col text-left">
-                      <span className="font-bold text-base text-[#1a7d3c]">
-                        Novo arquivo selecionado: {mainFile.name}
-                      </span>
-                      <span className="text-xs text-[#8c8077]">
-                        {(mainFile.size / 1024).toFixed(0)} KB · Clique para trocar
-                      </span>
-                    </div>
-                  </div>
-                ) : isEditing && initialDocument ? (
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">📄</span>
-                    <div className="flex flex-col text-left">
-                      <span className="font-bold text-base text-[#121212]">
-                        Arquivo atual: {initialDocument.fileName} ({initialDocument.fileSize})
-                      </span>
-                      <span className="text-xs text-[#8c8077]">
-                        Clique aqui para substituir por outro PDF / Planilha
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <span className="text-3xl">📥</span>
-                    <span
-                      className="font-bold text-sm sm:text-base text-[#121212]"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
-                      Clique para selecionar ou arraste o arquivo do Relatório (PDF, XLSX, DOC) *
-                    </span>
-                  </>
-                )}
-              </div>
+              <FileUploadDropzone
+                id="main-file-input"
+                accept=".pdf,.xlsx,.doc,.docx"
+                formatsHint="PDF, XLSX, DOC ou DOCX"
+                maxSizeMB={50}
+                required={!isEditing}
+                file={mainFile}
+                onFileChange={setMainFile}
+                currentFileName={isEditing && initialDocument ? initialDocument.fileName : undefined}
+                currentFileSize={isEditing && initialDocument ? initialDocument.fileSize : undefined}
+              />
             </div>
 
             {/* Status Toggle */}
@@ -396,7 +348,9 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
 
               <button
                 type="button"
-                onClick={() => setStatus(status === "published" ? "draft" : "published")}
+                onClick={() =>
+                  setStatus(status === "published" ? "draft" : "published")
+                }
                 className="relative rounded-full shrink-0 cursor-pointer"
                 style={{
                   width: 48,
@@ -427,20 +381,22 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
                       className="text-base font-bold text-[#121212]"
                       style={{ fontFamily: "'Inter', sans-serif" }}
                     >
-                      Notas Fiscais e Comprovantes Vinculados ({initialDocument.attachments?.length || 0})
+                      Notas Fiscais e Comprovantes Vinculados (
+                      {initialDocument.attachments?.length || 0})
                     </h3>
                   </div>
 
                   <Link
-                    href={`/admin/documento/${initialDocument.id}/notas/nova`}
+                    href={`/admin/relatorios/${initialDocument.id}/comprovantes/novo`}
                     className="px-3.5 py-1.5 rounded font-extrabold text-xs bg-[#f8ba01] text-[#121212] border border-[#121212] hover:bg-white transition-all"
                     style={{ fontFamily: "'Inter', sans-serif" }}
                   >
-                    + ADICIONAR NOTA FISCAL
+                    + Adicionar Comprovante
                   </Link>
                 </div>
 
-                {initialDocument.attachments && initialDocument.attachments.length > 0 ? (
+                {initialDocument.attachments &&
+                initialDocument.attachments.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-1">
                     {initialDocument.attachments.map((att) => (
                       <div
@@ -461,7 +417,8 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
 
                           {att.issuerName ? (
                             <span className="text-xs text-[#121212] font-bold truncate mt-1">
-                              Favorecido: {att.issuerName} {att.issuerDoc ? `(${att.issuerDoc})` : ""}
+                              Favorecido: {att.issuerName}{" "}
+                              {att.issuerDoc ? `(${att.issuerDoc})` : ""}
                             </span>
                           ) : (
                             <span className="text-xs text-[#c87d00] font-bold italic mt-1">
@@ -470,18 +427,24 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
                           )}
 
                           <div className="flex items-center gap-3 text-xs text-[#6b5e55] font-semibold mt-1">
-                            {att.amount !== null && att.amount !== undefined && (
-                              <span className="font-black text-[#1a7d3c]">
-                                R$ {att.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                              </span>
+                            {att.amount !== null &&
+                              att.amount !== undefined && (
+                                <span className="font-black text-[#1a7d3c]">
+                                  R${" "}
+                                  {att.amount.toLocaleString("pt-BR", {
+                                    minimumFractionDigits: 2,
+                                  })}
+                                </span>
+                              )}
+                            {att.expenseType && (
+                              <span>· {att.expenseType}</span>
                             )}
-                            {att.expenseType && <span>· {att.expenseType}</span>}
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2 pt-2 border-t border-[#e8d5b4]">
                           <Link
-                            href={`/admin/documento/${initialDocument.id}/notas/${att.id}/editar`}
+                            href={`/admin/relatorios/${initialDocument.id}/comprovantes/${att.id}/editar`}
                             className="flex-1 py-1.5 text-center text-xs font-bold rounded bg-[#f8ba01] text-[#121212] border border-[#121212] hover:bg-white transition-colors"
                             style={{ fontFamily: "'Inter', sans-serif" }}
                           >
@@ -500,7 +463,9 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
                   </div>
                 ) : (
                   <p className="text-xs text-[#8c8077] italic py-2">
-                    Nenhuma nota fiscal ou recibo associado a este documento. Clique em "+ ADICIONAR NOTA FISCAL" para incluir.
+                    Nenhuma comprovante ou recibo associado a este documento.
+                    Clique em &ldquo;+ ADICIONAR COMPROVANTE&rdquo; para
+                    incluir.
                   </p>
                 )}
               </div>
@@ -509,7 +474,7 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
             {/* Actions Bar */}
             <div className="flex items-center gap-4 pt-4 border-t border-[#e8d5b4]">
               <Link
-                href="/admin"
+                href="/admin/relatorios"
                 className="flex-1 py-3 text-center rounded text-xs font-bold text-[#6b5e55] border border-[#d4c9b6] bg-white hover:border-[#121212] hover:text-[#121212] transition-colors"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >

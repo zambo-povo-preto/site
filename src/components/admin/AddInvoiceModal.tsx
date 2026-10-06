@@ -1,7 +1,12 @@
 "use client";
 
-import type { AttachmentUploadPayload, DocumentAttachment, ExpenseCategory } from "@/types/document";
-import { type FormEvent, useRef, useState } from "react";
+import type {
+  AttachmentUploadPayload,
+  DocumentAttachment,
+  ExpenseCategory,
+} from "@/types/document";
+import { type FormEvent, useState } from "react";
+import { FileUploadDropzone } from "./FileUploadDropzone";
 
 export const EXPENSE_CATEGORIES: ExpenseCategory[] = [
   "Cachê Artístico & Arte-Educadores",
@@ -18,7 +23,9 @@ interface AddInvoiceModalProps {
   documentTitle?: string;
   initialAttachment?: DocumentAttachment;
   onAdd?: (payload: AttachmentUploadPayload) => void;
-  onSave?: (payload: Partial<AttachmentUploadPayload> & { file?: File }) => void;
+  onSave?: (
+    payload: Partial<AttachmentUploadPayload> & { file?: File },
+  ) => void;
   onClose: () => void;
 }
 
@@ -29,17 +36,25 @@ export function AddInvoiceModal({
   onSave,
   onClose,
 }: AddInvoiceModalProps) {
-  const fileRef = useRef<HTMLInputElement>(null);
   const isEditing = Boolean(initialAttachment);
 
   const [docType, setDocType] = useState<"PJ" | "PF">(
-    initialAttachment?.issuerDoc && initialAttachment.issuerDoc.length <= 14 ? "PF" : "PJ",
+    initialAttachment?.issuerDoc && initialAttachment.issuerDoc.length <= 14
+      ? "PF"
+      : "PJ",
   );
-  const [issuerName, setIssuerName] = useState(initialAttachment?.issuerName || "");
-  const [issuerDoc, setIssuerDoc] = useState(initialAttachment?.issuerDoc || "");
-  const [invoiceNumber, setInvoiceNumber] = useState(initialAttachment?.invoiceNumber || "");
+  const [issuerName, setIssuerName] = useState(
+    initialAttachment?.issuerName || "",
+  );
+  const [issuerDoc, setIssuerDoc] = useState(
+    initialAttachment?.issuerDoc || "",
+  );
+  const [invoiceNumber, setInvoiceNumber] = useState(
+    initialAttachment?.invoiceNumber || "",
+  );
   const [amountRaw, setAmountRaw] = useState(
-    initialAttachment?.amount !== null && initialAttachment?.amount !== undefined
+    initialAttachment?.amount !== null &&
+      initialAttachment?.amount !== undefined
       ? String(initialAttachment.amount)
       : "",
   );
@@ -47,11 +62,13 @@ export function AddInvoiceModal({
     initialAttachment?.issueDate || new Date().toISOString().split("T")[0],
   );
   const [expenseType, setExpenseType] = useState<ExpenseCategory>(
-    (initialAttachment?.expenseType as ExpenseCategory) || EXPENSE_CATEGORIES[0],
+    (initialAttachment?.expenseType as ExpenseCategory) ||
+      EXPENSE_CATEGORIES[0],
   );
-  const [description, setDescription] = useState(initialAttachment?.description || "");
+  const [description, setDescription] = useState(
+    initialAttachment?.description || "",
+  );
   const [file, setFile] = useState<File | null>(null);
-  const [dragging, setDragging] = useState(false);
 
   // Helper mask for CPF / CNPJ
   const handleDocChange = (val: string) => {
@@ -60,9 +77,15 @@ export function AddInvoiceModal({
       // Mask CNPJ: 00.000.000/0001-00
       let masked = digits.slice(0, 14);
       if (masked.length > 12) {
-        masked = masked.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})$/, "$1.$2.$3/$4-$5");
+        masked = masked.replace(
+          /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})$/,
+          "$1.$2.$3/$4-$5",
+        );
       } else if (masked.length > 8) {
-        masked = masked.replace(/^(\d{2})(\d{3})(\d{3})(\d{1,4})$/, "$1.$2.$3/$4");
+        masked = masked.replace(
+          /^(\d{2})(\d{3})(\d{3})(\d{1,4})$/,
+          "$1.$2.$3/$4",
+        );
       } else if (masked.length > 5) {
         masked = masked.replace(/^(\d{2})(\d{3})(\d{1,3})$/, "$1.$2.$3");
       } else if (masked.length > 2) {
@@ -73,7 +96,10 @@ export function AddInvoiceModal({
       // Mask CPF: 000.000.000-00
       let masked = digits.slice(0, 11);
       if (masked.length > 9) {
-        masked = masked.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, "$1.$2.$3-$4");
+        masked = masked.replace(
+          /^(\d{3})(\d{3})(\d{3})(\d{1,2})$/,
+          "$1.$2.$3-$4",
+        );
       } else if (masked.length > 6) {
         masked = masked.replace(/^(\d{3})(\d{3})(\d{1,3})$/, "$1.$2.$3");
       } else if (masked.length > 3) {
@@ -170,7 +196,9 @@ export function AddInvoiceModal({
                 lineHeight: 1.1,
               }}
             >
-              {isEditing ? "✏️ EDITAR NOTA FISCAL / COMPROVANTE" : "🧾 ADICIONAR NOTA FISCAL / COMPROVANTE"}
+              {isEditing
+                ? "✏️ EDITAR COMPROVANTE / COMPROVANTE"
+                : "🧾 ADICIONAR COMPROVANTE / COMPROVANTE"}
             </span>
             {documentTitle && (
               <span
@@ -190,93 +218,25 @@ export function AddInvoiceModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-5 sm:p-6 overflow-y-auto min-h-0 flex-1">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 p-5 sm:p-6 overflow-y-auto min-h-0 flex-1"
+        >
           {/* File Upload Box */}
-          <button
-            type="button"
-            className="w-full flex flex-col items-center justify-center gap-2 rounded-[3px] py-5 px-4 cursor-pointer transition-colors"
-            style={{
-              border: `2px dashed ${dragging ? "#121212" : file ? "#1a7d3c" : "#d4c9b6"}`,
-              background: dragging
-                ? "rgba(248,186,1,0.08)"
-                : file
-                  ? "rgba(26,125,60,0.04)"
-                  : "#faf7f2",
-            }}
-            onClick={() => fileRef.current?.click()}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragging(true);
-            }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragging(false);
-              const f = e.dataTransfer.files[0];
-              if (f) setFile(f);
-            }}
-          >
-            <input
-              ref={fileRef}
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg,.xlsx,.doc,.docx"
-              className="hidden"
-              onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0])}
-            />
-            {file ? (
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">📄</span>
-                <div className="flex flex-col text-left">
-                  <span
-                    className="font-bold text-sm text-[#1a7d3c] truncate max-w-[340px]"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    Novo arquivo: {file.name}
-                  </span>
-                  <span
-                    className="text-xs text-[#8c8077]"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    {(file.size / 1024).toFixed(0)} KB · Clique para trocar o arquivo
-                  </span>
-                </div>
-              </div>
-            ) : initialAttachment ? (
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">📄</span>
-                <div className="flex flex-col text-left">
-                  <span
-                    className="font-bold text-sm text-[#121212] truncate max-w-[340px]"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    Arquivo anexado: {initialAttachment.name}
-                  </span>
-                  <span
-                    className="text-xs text-[#8c8077]"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    Clique aqui para substituir o arquivo (opcional)
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <>
-                <span className="text-2xl">📥</span>
-                <span
-                  className="font-bold text-xs sm:text-sm text-[#6b5e55]"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  Arraste a Nota Fiscal / Recibo ou clique para selecionar *
-                </span>
-                <span
-                  className="text-[11px] text-[#9a8f86]"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  PDF, Imagem, XLSX ou DOC (máx 20MB)
-                </span>
-              </>
-            )}
-          </button>
+          <FileUploadDropzone
+            id="modal-invoice-file"
+            label="Comprovante / Recibo"
+            sublabel={isEditing ? "(Opcional se mantiver o comprovante atual)" : "Comprovante fiscal, recibo ou extrato"}
+            accept=".pdf,.png,.jpg,.jpeg,.xlsx,.doc,.docx"
+            formatsHint="PDF, Imagem, XLSX ou DOC"
+            maxSizeMB={20}
+            required={!isEditing}
+            file={file}
+            onFileChange={setFile}
+            currentFileName={isEditing && initialAttachment ? initialAttachment.name : undefined}
+            currentFileSize={isEditing && initialAttachment ? initialAttachment.fileSize : undefined}
+            compact
+          />
 
           {/* Person Type & Favorecido */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -345,7 +305,11 @@ export function AddInvoiceModal({
                 required
                 value={issuerName}
                 onChange={(e) => setIssuerName(e.target.value)}
-                placeholder={docType === "PJ" ? "Ex: Oficina Som & Ritmo LTDA" : "Ex: Mestre João da Percussão"}
+                placeholder={
+                  docType === "PJ"
+                    ? "Ex: Oficina Som & Ritmo LTDA"
+                    : "Ex: Mestre João da Percussão"
+                }
                 className="w-full px-3 py-2 rounded-[3px] outline-none"
                 style={inputStyle}
                 onFocus={onFocus}
@@ -367,14 +331,18 @@ export function AddInvoiceModal({
                   color: "#3a342f",
                 }}
               >
-                {docType === "PJ" ? "CNPJ DO FAVORECIDO *" : "CPF DO FAVORECIDO *"}
+                {docType === "PJ"
+                  ? "CNPJ DO FAVORECIDO *"
+                  : "CPF DO FAVORECIDO *"}
               </label>
               <input
                 id="issuer-doc"
                 required
                 value={issuerDoc}
                 onChange={(e) => handleDocChange(e.target.value)}
-                placeholder={docType === "PJ" ? "00.000.000/0001-00" : "000.000.000-00"}
+                placeholder={
+                  docType === "PJ" ? "00.000.000/0001-00" : "000.000.000-00"
+                }
                 className="w-full px-3 py-2 rounded-[3px] outline-none"
                 style={inputStyle}
                 onFocus={onFocus}
@@ -480,7 +448,9 @@ export function AddInvoiceModal({
                 id="expense-type-select"
                 required
                 value={expenseType}
-                onChange={(e) => setExpenseType(e.target.value as ExpenseCategory)}
+                onChange={(e) =>
+                  setExpenseType(e.target.value as ExpenseCategory)
+                }
                 className="w-full px-3 py-2 rounded-[3px] outline-none cursor-pointer"
                 style={inputStyle}
                 onFocus={onFocus}
@@ -535,19 +505,44 @@ export function AddInvoiceModal({
 
             <button
               type="submit"
-              disabled={!isEditing && !file ? true : !issuerName || !issuerDoc || !invoiceNumber || !amountRaw}
+              disabled={
+                !isEditing && !file
+                  ? true
+                  : !issuerName || !issuerDoc || !invoiceNumber || !amountRaw
+              }
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[3px] cursor-pointer transition-all active:translate-x-0.5 active:translate-y-0.5"
               style={{
                 fontFamily: "'Anton', sans-serif",
                 fontSize: 15,
                 letterSpacing: "0.5px",
-                color: (!isEditing && !file) || !issuerName || !issuerDoc || !invoiceNumber || !amountRaw ? "#9a8f86" : "#121212",
-                background: (!isEditing && !file) || !issuerName || !issuerDoc || !invoiceNumber || !amountRaw ? "#e8d5b4" : "#f8ba01",
+                color:
+                  (!isEditing && !file) ||
+                  !issuerName ||
+                  !issuerDoc ||
+                  !invoiceNumber ||
+                  !amountRaw
+                    ? "#9a8f86"
+                    : "#121212",
+                background:
+                  (!isEditing && !file) ||
+                  !issuerName ||
+                  !issuerDoc ||
+                  !invoiceNumber ||
+                  !amountRaw
+                    ? "#e8d5b4"
+                    : "#f8ba01",
                 border: "2px solid #121212",
-                boxShadow: (!isEditing && !file) || !issuerName || !issuerDoc || !invoiceNumber || !amountRaw ? "none" : "3px 3px 0px #121212",
+                boxShadow:
+                  (!isEditing && !file) ||
+                  !issuerName ||
+                  !issuerDoc ||
+                  !invoiceNumber ||
+                  !amountRaw
+                    ? "none"
+                    : "3px 3px 0px #121212",
               }}
             >
-              {isEditing ? "SALVAR ALTERAÇÕES DA NOTA" : "SALVAR NOTA FISCAL"}
+              {isEditing ? "SALVAR ALTERAÇÕES DA NOTA" : "SALVAR COMPROVANTE"}
             </button>
           </div>
         </form>

@@ -10,11 +10,13 @@ import {
   getAttachmentsApi,
   getCategoriesApi,
   getFilesApi,
+  linkAttachmentApi,
   toggleFileStatusApi,
   updateAttachmentApi,
   updateFileApi,
   uploadAttachmentApi,
   uploadFileApi,
+  uploadPublicFileApi,
 } from "@/lib/api";
 import type {
   AdminDocument,
@@ -34,16 +36,20 @@ export type { DocCategory, AdminDocument, DocumentAttachment };
 
 interface DocumentsContextType {
   documents: AdminDocument[];
+  allAttachments: DocumentAttachment[];
+  invoices: DocumentAttachment[];
+  complementaryDocuments: DocumentAttachment[];
   categories: ApiCategory[];
   loading: boolean;
   addDocument: (
     doc: Omit<AdminDocument, "id" | "publishedAt"> & {
       file?: File;
+      publicFile?: File;
       attachmentFile?: File;
       attachmentFiles?: File[];
       attachmentPayloads?: AttachmentUploadPayload[];
     },
-  ) => Promise<void>;
+  ) => Promise<string | undefined>;
   updateDocument: (
     id: string,
     docData: Partial<AdminDocument>,
@@ -53,14 +59,19 @@ interface DocumentsContextType {
   deleteDocument: (id: string) => Promise<void>;
   toggleStatus: (id: string) => Promise<void>;
   addAttachment: (
-    documentId: string,
+    documentId: string | null,
     fileInput: File | File[] | AttachmentUploadPayload | AttachmentUploadPayload[],
   ) => Promise<void>;
   updateAttachment: (
     attachmentId: string,
-    data: Partial<AttachmentUploadPayload>,
+    data: Partial<AttachmentUploadPayload> & { documentId?: string | null; isPublicSafe?: boolean },
   ) => Promise<void>;
   deleteAttachment: (attachmentId: string) => Promise<void>;
+  linkAttachment: (attachmentId: string, documentId: string | null) => Promise<void>;
+  uploadPublicFile: (
+    target: { id?: string; attachmentId?: string },
+    file: File,
+  ) => Promise<void>;
   refreshDocuments: () => Promise<void>;
 }
 
@@ -87,6 +98,29 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+function mapApiAttachmentToDocAttachment(att: ApiAttachmentMetadata): DocumentAttachment {
+  return {
+    id: att.id,
+    documentId: att.documentId,
+    name: att.name,
+    description: att.description,
+    fileType: mapFileType(att.contentType, att.name),
+    fileSize: formatBytes(att.size),
+    attachmentType: att.attachmentType || "invoice",
+    createdAt: new Date(att.createdAt || Date.now()).toLocaleDateString("pt-BR"),
+    downloadUrl: getAttachmentDownloadUrl(att.id),
+    publicObjectKey: att.publicObjectKey,
+    hasPublicFile: att.hasPublicFile ?? Boolean(att.publicObjectKey),
+    issuerName: att.issuerName ?? null,
+    issuerDoc: att.issuerDoc ?? null,
+    cnpj: att.cnpj ?? null,
+    invoiceNumber: att.invoiceNumber ?? null,
+    amount: att.amount ?? null,
+    issueDate: att.issueDate ?? null,
+    expenseType: att.expenseType ?? null,
+  };
+}
+
 function mapApiFileToAdminDoc(
   file: ApiFileMetadata,
   categoriesMap: Map<string, string>,
@@ -106,24 +140,7 @@ function mapApiFileToAdminDoc(
 
   const docAttachments: DocumentAttachment[] = attachmentsList
     .filter((att) => att.documentId === file.id)
-    .map((att) => ({
-      id: att.id,
-      documentId: att.documentId,
-      name: att.name,
-      description: att.description,
-      fileType: mapFileType(att.contentType, att.name),
-      fileSize: formatBytes(att.size),
-      createdAt: new Date(att.createdAt || Date.now()).toLocaleDateString(
-        "pt-BR",
-      ),
-      downloadUrl: getAttachmentDownloadUrl(att.id),
-      issuerName: att.issuerName ?? null,
-      issuerDoc: att.issuerDoc ?? null,
-      invoiceNumber: att.invoiceNumber ?? null,
-      amount: att.amount ?? null,
-      issueDate: att.issueDate ?? null,
-      expenseType: att.expenseType ?? null,
-    }));
+    .map(mapApiAttachmentToDocAttachment);
 
   return {
     id: file.id,
@@ -136,6 +153,8 @@ function mapApiFileToAdminDoc(
     fileName: file.name,
     status: file.publishedAt ? "published" : "draft",
     publishedAt: publishedDateStr,
+    publicObjectKey: file.publicObjectKey,
+    hasPublicFile: file.hasPublicFile ?? Boolean(file.publicObjectKey),
     attachments: docAttachments,
   };
 }
@@ -156,6 +175,7 @@ function fileToBase64(file: File): Promise<string> {
 
 export function DocumentsProvider({ children }: { children: ReactNode }) {
   const [documents, setDocuments] = useState<AdminDocument[]>([]);
+  const [allAttachments, setAllAttachments] = useState<DocumentAttachment[]>([]);
   const [categories, setCategories] = useState<ApiCategory[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -174,12 +194,16 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
         catMap.set(cat.id, cat.name);
       }
 
+      const mappedAtts = attachmentList.map(mapApiAttachmentToDocAttachment);
+      setAllAttachments(mappedAtts);
+
       const mappedDocs = fileList.map((f) =>
         mapApiFileToAdminDoc(f, catMap, attachmentList),
       );
       setDocuments(mappedDocs);
     } catch {
       setDocuments([]);
+      setAllAttachments([]);
     } finally {
       setLoading(false);
     }
@@ -193,11 +217,12 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
   async function addDocument(
     doc: Omit<AdminDocument, "id" | "publishedAt"> & {
       file?: File;
+      publicFile?: File;
       attachmentFile?: File;
       attachmentFiles?: File[];
       attachmentPayloads?: AttachmentUploadPayload[];
     },
-  ) {
+  ): Promise<string | undefined> {
     if (doc.file) {
       try {
         const contentBase64 = await fileToBase64(doc.file);
@@ -218,6 +243,16 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
           published: doc.status === "published",
         });
 
+        if (uploaded?.id && doc.publicFile) {
+          const publicBase64 = await fileToBase64(doc.publicFile);
+          await uploadPublicFileApi({
+            id: uploaded.id,
+            fileName: doc.publicFile.name,
+            contentType: doc.publicFile.type || "application/pdf",
+            contentBase64: publicBase64,
+          });
+        }
+
         // Collect all attachment payloads
         const payloads: AttachmentUploadPayload[] = doc.attachmentPayloads
           ? [...doc.attachmentPayloads]
@@ -233,12 +268,21 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
         if (uploaded?.id && payloads.length > 0) {
           for (const p of payloads) {
             const attBase64 = await fileToBase64(p.file);
+            let publicAttBase64: string | undefined;
+            if (p.publicFile) {
+              publicAttBase64 = await fileToBase64(p.publicFile);
+            }
+
             await uploadAttachmentApi({
               documentId: uploaded.id,
               fileName: p.file.name,
               description: p.description,
               contentType: p.file.type || "application/pdf",
               contentBase64: attBase64,
+              publicContentBase64: publicAttBase64,
+              publicFileName: p.publicFile?.name,
+              attachmentType: p.attachmentType,
+              isPublicSafe: p.isPublicSafe,
               issuerName: p.issuerName,
               issuerDoc: p.issuerDoc,
               invoiceNumber: p.invoiceNumber,
@@ -250,34 +294,11 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
         }
 
         await loadData();
-        return;
+        return uploaded?.id;
       } catch (error) {
         console.error("Erro ao fazer upload na API:", error);
       }
     }
-
-    const localAtts: DocumentAttachment[] = (
-      doc.attachmentPayloads?.map((p) => p.file) ||
-      doc.attachmentFiles ||
-      (doc.attachmentFile ? [doc.attachmentFile] : [])
-    ).map((f, i) => ({
-      id: String(Date.now() + i + 1),
-      documentId: String(Date.now()),
-      name: f.name,
-      fileType: mapFileType(f.type, f.name),
-      fileSize: formatBytes(f.size),
-      createdAt: new Date().toLocaleDateString("pt-BR"),
-    }));
-
-    setDocuments((prev) => [
-      {
-        ...doc,
-        id: String(Date.now()),
-        publishedAt: new Date().toLocaleDateString("pt-BR"),
-        attachments: localAtts,
-      },
-      ...prev,
-    ]);
   }
 
   async function updateDocument(
@@ -309,12 +330,21 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
       if (payloads.length > 0) {
         for (const p of payloads) {
           const contentBase64 = await fileToBase64(p.file);
+          let publicBase64: string | undefined;
+          if (p.publicFile) {
+            publicBase64 = await fileToBase64(p.publicFile);
+          }
+
           await uploadAttachmentApi({
             documentId: id,
             fileName: p.file.name,
             description: p.description,
             contentType: p.file.type || "application/pdf",
             contentBase64,
+            publicContentBase64: publicBase64,
+            publicFileName: p.publicFile?.name,
+            attachmentType: p.attachmentType,
+            isPublicSafe: p.isPublicSafe,
             issuerName: p.issuerName,
             issuerDoc: p.issuerDoc,
             invoiceNumber: p.invoiceNumber,
@@ -335,7 +365,7 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
   }
 
   async function addAttachment(
-    documentId: string,
+    documentId: string | null,
     fileInput: File | File[] | AttachmentUploadPayload | AttachmentUploadPayload[],
   ) {
     try {
@@ -346,12 +376,23 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
         const payload = isPayload ? (item as AttachmentUploadPayload) : null;
 
         const contentBase64 = await fileToBase64(file);
+        let publicBase64: string | undefined;
+        if (payload?.publicFile) {
+          publicBase64 = await fileToBase64(payload.publicFile);
+        }
+
+        const effectiveDocId = payload?.documentId !== undefined ? payload.documentId : documentId;
+
         await uploadAttachmentApi({
-          documentId,
+          documentId: effectiveDocId,
           fileName: file.name,
           description: payload?.description,
           contentType: file.type || "application/pdf",
           contentBase64,
+          publicContentBase64: publicBase64,
+          publicFileName: payload?.publicFile?.name,
+          attachmentType: payload?.attachmentType,
+          isPublicSafe: payload?.isPublicSafe,
           issuerName: payload?.issuerName,
           issuerDoc: payload?.issuerDoc,
           invoiceNumber: payload?.invoiceNumber,
@@ -368,12 +409,15 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
 
   async function updateAttachment(
     attachmentId: string,
-    data: Partial<AttachmentUploadPayload>,
+    data: Partial<AttachmentUploadPayload> & { documentId?: string | null; isPublicSafe?: boolean },
   ) {
     try {
       await updateAttachmentApi(attachmentId, {
         fileName: data.file?.name,
         description: data.description,
+        documentId: data.documentId,
+        attachmentType: data.attachmentType,
+        isPublicSafe: data.isPublicSafe,
         issuerName: data.issuerName,
         issuerDoc: data.issuerDoc,
         invoiceNumber: data.invoiceNumber,
@@ -381,9 +425,50 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
         issueDate: data.issueDate,
         expenseType: data.expenseType,
       });
+
+      if (data.publicFile) {
+        const publicBase64 = await fileToBase64(data.publicFile);
+        await uploadPublicFileApi({
+          attachmentId,
+          fileName: data.publicFile.name,
+          contentType: data.publicFile.type || "application/pdf",
+          contentBase64: publicBase64,
+        });
+      }
+
       await loadData();
     } catch (error) {
       console.error("Erro ao atualizar anexo:", error);
+    }
+  }
+
+  async function linkAttachment(attachmentId: string, documentId: string | null) {
+    try {
+      await linkAttachmentApi(attachmentId, documentId);
+      await loadData();
+    } catch (error) {
+      console.error("Erro ao vincular anexo:", error);
+      throw error;
+    }
+  }
+
+  async function uploadPublicFile(
+    target: { id?: string; attachmentId?: string },
+    file: File,
+  ) {
+    try {
+      const contentBase64 = await fileToBase64(file);
+      await uploadPublicFileApi({
+        id: target.id,
+        attachmentId: target.attachmentId,
+        fileName: file.name,
+        contentType: file.type || "application/pdf",
+        contentBase64,
+      });
+      await loadData();
+    } catch (error) {
+      console.error("Erro ao enviar arquivo público:", error);
+      throw error;
     }
   }
 
@@ -400,6 +485,7 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
     try {
       await deleteFileApi(id);
       setDocuments((prev) => prev.filter((d) => d.id !== id));
+      await loadData();
     } catch {
       setDocuments((prev) => prev.filter((d) => d.id !== id));
     }
@@ -408,28 +494,22 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
   async function toggleStatus(id: string) {
     try {
       await toggleFileStatusApi(id);
-      setDocuments((prev) =>
-        prev.map((d) =>
-          d.id === id
-            ? { ...d, status: d.status === "published" ? "draft" : "published" }
-            : d,
-        ),
-      );
+      await loadData();
     } catch {
-      setDocuments((prev) =>
-        prev.map((d) =>
-          d.id === id
-            ? { ...d, status: d.status === "published" ? "draft" : "published" }
-            : d,
-        ),
-      );
+      await loadData();
     }
   }
+
+  const invoices = allAttachments.filter((a) => a.attachmentType === "invoice");
+  const complementaryDocuments = allAttachments.filter((a) => a.attachmentType === "document");
 
   return (
     <DocumentsContext.Provider
       value={{
         documents,
+        allAttachments,
+        invoices,
+        complementaryDocuments,
         categories,
         loading,
         addDocument,
@@ -439,6 +519,8 @@ export function DocumentsProvider({ children }: { children: ReactNode }) {
         addAttachment,
         updateAttachment,
         deleteAttachment,
+        linkAttachment,
+        uploadPublicFile,
         refreshDocuments: loadData,
       }}
     >

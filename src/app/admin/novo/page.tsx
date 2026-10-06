@@ -1,5 +1,5 @@
-import { DocumentForm } from "@/components/admin/DocumentForm";
+import { redirect } from "next/navigation";
 
-export default function NewDocumentPage() {
-  return <DocumentForm />;
+export default function LegacyNewPageRedirect() {
+  redirect("/admin/relatorios/novo");
 }

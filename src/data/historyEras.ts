@@ -53,7 +53,7 @@ export const eras: Era[] = [
       "Registrada como associação civil de direito privado, com autonomia administrativa, sob CNPJ nº 04.978.370/0001-59. Oficializada como associação em 2001, a entidade desenvolveu ao longo de sua trajetória diversas ações culturais, educativas e sociais, como oficinas, palestras, seminários, eventos culturais, projetos de geração de renda e atividades de fortalecimento da identidade negra, sempre em parceria com órgãos públicos e privados. ",
     ],
     quote:
-      "A cada nova comunidade alcançada, a Zambô reafirma que a cultura é ferramenta de transformação social.",
+      "A cada novo comunidade alcançada, a Zambô reafirma que a cultura é ferramenta de transformação social.",
     image: "/img/teste4.jpg",
     imageAlt: "Festival Afro-Brasileiro — 2000",
     imageRight: true,
@@ -99,7 +99,7 @@ export const eras: Era[] = [
       "Participação em editais e programas de fortalecimento da cultura de base comunitária. Paralelamente, realizou atividades formativas e educativas para jovens, mulheres e lideranças, além de expandir sua presença institucional em redes culturais e movimentos de igualdade racial.",
     ],
     quote:
-      "Seguimos construindo com o povo, para o povo. Vemos nossa força se renovar nos olhos de cada jovem que se descobre potência.",
+      "Seguimos construindo com o povo, para o povo. Vemos nossa força se renovor nos olhos de cada jovem que se descobre potência.",
     image: "/img/teste12.jpg",
     imageAlt: "Expansão regional — 2026",
     imageRight: false,
@@ -111,7 +111,7 @@ export const eras: Era[] = [
     accentColor: "#d2301f",
     dotColor: "#d2301f",
     paragraphs: [
-      "Certificação como Ponto de Cultura. Fortalecimento das ações voltadas à Política Nacional Cultura Viva. A partir disso, a entidade estruturou e ampliou suas atividades, desenvolvendo novas iniciativas de valorização da ancestralidade, memória e identidade afro-brasileira.",
+      "Certificação como Ponto de Cultura. Fortalecimento das ações voltadas à Política Nacional Cultura Viva. A partir disso, a entidade estruturou e ampliou suas atividades, desenvolvendo novos iniciativas de valorização da ancestralidade, memória e identidade afro-brasileira.",
     ],
     quote:
       "Nossa força agora abraça todo o Litoral Norte, tecendo uma rede de ancestralidade e transformação social.",
