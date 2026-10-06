@@ -105,7 +105,7 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
               : "PDF",
           file: mainFile || undefined,
         });
-        setSuccessMsg("Novo documento criado com sucesso!");
+        setSuccessMsg("Novo Documento criado com sucesso!");
       }
 
       setTimeout(() => {
@@ -325,8 +325,16 @@ export function DocumentForm({ initialDocument }: DocumentFormProps) {
                 required={!isEditing}
                 file={mainFile}
                 onFileChange={setMainFile}
-                currentFileName={isEditing && initialDocument ? initialDocument.fileName : undefined}
-                currentFileSize={isEditing && initialDocument ? initialDocument.fileSize : undefined}
+                currentFileName={
+                  isEditing && initialDocument
+                    ? initialDocument.fileName
+                    : undefined
+                }
+                currentFileSize={
+                  isEditing && initialDocument
+                    ? initialDocument.fileSize
+                    : undefined
+                }
               />
             </div>
 

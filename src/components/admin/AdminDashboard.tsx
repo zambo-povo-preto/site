@@ -150,7 +150,7 @@ export function AdminDashboard() {
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               <Plus className="w-4 h-4" />
-              <span>Novo relatório</span>
+              <span>Novo Relatório</span>
             </Link>
           </div>
         </div>
@@ -358,7 +358,7 @@ export function AdminDashboard() {
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 <Plus className="w-4 h-4" />
-                <span>Novo relatório</span>
+                <span>Novo Relatório</span>
               </Link>
             </div>
           ) : (

@@ -360,16 +360,20 @@ export function AdminHomeView() {
               Carregando relatórios...
             </div>
           ) : recentReports.length === 0 ? (
-            <div className="py-12 text-center flex flex-col items-center gap-3">
-              <p className="text-xs text-[#756F67]">
-                Nenhum relatório cadastrado ainda.
-              </p>
+            <div className="bg-white rounded-lg border border-[#E3DCCF] p-16 text-center flex flex-col items-center justify-center gap-3">
+              <FileText className="w-10 h-10 text-[#A69E93]" />
+              <h3
+                className="text-base font-semibold text-[#222222]"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                Nenhum relatório cadastrado.
+              </h3>
               <Link
                 href="/admin/relatorios/novo"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md font-semibold text-xs text-[#222222] bg-[#F5B900] hover:bg-[#e0a800] border border-[#E0A800]"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Criar primeiro relatório</span>
+                <span>Criar Primeiro Relatório</span>
               </Link>
             </div>
           ) : (

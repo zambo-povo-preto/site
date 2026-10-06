@@ -74,7 +74,7 @@ export function DocumentsManagementView() {
               className="text-2xl sm:text-3xl font-extrabold text-[#222222] tracking-tight leading-tight"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Documentos Oficias
+              Documentos Complementares
             </h1>
             <p
               className="text-xs sm:text-sm text-[#756F67]"
@@ -100,7 +100,7 @@ export function DocumentsManagementView() {
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             <Plus className="w-4 h-4" />
-            <span>Novo documento</span>
+            <span>Novo Documento</span>
           </button>
         </div>
       </div>
@@ -200,7 +200,7 @@ export function DocumentsManagementView() {
                 className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-md font-semibold text-xs text-[#222222] bg-[#F5B900] hover:bg-[#e0a800] border border-[#E0A800]"
               >
                 <Plus className="w-4 h-4" />
-                <span>Novo documento</span>
+                <span>Novo Documento</span>
               </button>
             </div>
           ) : (
