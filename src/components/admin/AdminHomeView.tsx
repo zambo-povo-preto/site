@@ -294,7 +294,7 @@ export function AdminHomeView() {
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center justify-between gap-1">
                   <h3 className="font-bold text-sm text-[#222222] group-hover:text-[#C02D1D] transition-colors">
-                    Comprovantes & Notas Fiscais
+                    Comprovantes e Notas Fiscais
                   </h3>
                   <ArrowRight className="w-3.5 h-3.5 text-[#756F67] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all shrink-0" />
                 </div>

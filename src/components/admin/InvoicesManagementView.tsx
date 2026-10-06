@@ -103,14 +103,14 @@ export function InvoicesManagementView() {
   return (
     <div className="min-h-screen bg-[#F7F3EA] text-[#222222] pb-16">
       {/* ── Page Header ── */}
-      <div className="bg-white border-b border-[#E3DCCF] px-4 sm:px-8 lg:px-12 py-7">
+      <div className="px-4 sm:px-8 lg:px-12 pt-7">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
             <h1
               className="text-2xl sm:text-3xl font-extrabold text-[#222222] tracking-tight leading-tight"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Comprovantes & Notas Fiscais
+              Comprovantes r Notas Fiscais
             </h1>
             <p
               className="text-xs sm:text-sm text-[#756F67]"
