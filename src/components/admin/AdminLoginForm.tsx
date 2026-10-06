@@ -113,7 +113,7 @@ export function AdminLoginForm() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••••••••"
+                    placeholder="Digite sua senha"
                     className="w-full pl-11 pr-11 py-3 rounded-lg border border-[#D4C9B6] bg-[#FAF7F2]/60 hover:border-[#B3A692] focus:border-[#F5B900] focus:bg-white focus:outline-none text-sm text-[#121212] transition-colors placeholder:text-[#9A8F86]"
                     style={{ fontFamily: "'Inter', sans-serif" }}
                   />
