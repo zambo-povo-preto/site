@@ -360,7 +360,7 @@ export function AdminHomeView() {
               Carregando relatórios...
             </div>
           ) : recentReports.length === 0 ? (
-            <div className="bg-white rounded-lg border border-[#E3DCCF] p-16 text-center flex flex-col items-center justify-center gap-3">
+            <div className="bg-white rounded-lg border border-[#E3DCCF] p-16 text-center flex flex-col items-center justify-center gap-5">
               <FileText className="w-10 h-10 text-[#A69E93]" />
               <p
                 className="text-xs text-[#756F67] mt-0.5"
