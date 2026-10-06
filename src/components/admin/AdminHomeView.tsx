@@ -82,15 +82,6 @@ export function AdminHomeView() {
               Gerencie as publicações institucionais, relatórios de prestação de
               contas, notas fiscais e documentos.
             </p>
-            {currentDateFormatted && (
-              <p
-                className="text-xs text-[#756F67] capitalize mt-2 flex items-center gap-1.5"
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                <Calendar className="w-3.5 h-3.5 text-[#A69E93]" />
-                <span>{currentDateFormatted}</span>
-              </p>
-            )}
           </div>
 
           {/* Ação Primária de Destaque */}
