@@ -366,7 +366,7 @@ export function AdminHomeView() {
                 className="text-xs text-[#756F67] mt-0.5"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                Nenhum relatório cadastrado.
+                Nenhum relatório foi cadastrado ainda.
               </p>
               <Link
                 href="/admin/relatorios/novo"
