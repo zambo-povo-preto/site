@@ -188,7 +188,7 @@ export function DocumentsManagementView() {
             <div className="py-16 px-6 text-center flex flex-col items-center justify-center gap-3">
               <Folder className="w-10 h-10 text-[#A69E93]" />
               <h3 className="text-base font-semibold text-[#222222]">
-                Nenhum documento complementar cadastrado
+                Nenhum documento cadastrado
               </h3>
               <p className="text-xs text-[#756F67] max-w-sm">
                 Envie novos arquivos avulsos para organizá-los e vinculá-los às

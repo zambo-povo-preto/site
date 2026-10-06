@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { FileUploadDropzone } from "./FileUploadDropzone";
+import { InvoiceNavIcon } from "./icons/NavIcons";
 
 const EXPENSE_CATEGORIES: ExpenseCategory[] = [
   "Cachê Artístico & Arte-Educadores",
@@ -247,9 +248,9 @@ export function InvoicesManagementView() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-16 px-6 text-center flex flex-col items-center justify-center gap-3">
-              <span className="text-3xl">🧾</span>
+              <InvoiceNavIcon className="w-10 h-10 text-[#A69E93]" />
               <h3 className="text-base font-semibold text-[#222222]">
-                Nenhumo comprovate encontrada
+                Nenhumo comprovate encontrado
               </h3>
               <p className="text-xs text-[#756F67] max-w-sm">
                 Cadastre novos notas fiscais de forma autônoma para vinculá-las
