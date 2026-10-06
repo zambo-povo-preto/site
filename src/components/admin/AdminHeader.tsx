@@ -124,7 +124,7 @@ export function AdminHeader({
                 {initialLetter}
               </div>
               <span className="hidden sm:inline font-medium text-xs text-[#222222] max-w-[150px] truncate">
-                {user?.name.split(" ") || "Admin"}
+                {user?.name.split(" ")?.[0] || "Admin"}
               </span>
               <ChevronDown
                 className={`w-3.5 h-3.5 text-[#756F67] transition-transform duration-200 ${
