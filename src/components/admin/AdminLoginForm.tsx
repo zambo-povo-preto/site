@@ -57,7 +57,7 @@ export function AdminLoginForm() {
                 className="text-2xl sm:text-[28px] font-bold text-[#121212] tracking-tight"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                Faça seu login
+                Entrar no Painel
               </h1>
               <p
                 className="text-sm text-[#756F67] leading-relaxed"
