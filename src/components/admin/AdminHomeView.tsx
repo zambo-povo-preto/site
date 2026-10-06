@@ -362,12 +362,12 @@ export function AdminHomeView() {
           ) : recentReports.length === 0 ? (
             <div className="bg-white rounded-lg border border-[#E3DCCF] p-16 text-center flex flex-col items-center justify-center gap-3">
               <FileText className="w-10 h-10 text-[#A69E93]" />
-              <h3
-                className="text-base font-semibold text-[#222222]"
+              <p
+                className="text-xs text-[#756F67] mt-0.5"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 Nenhum relatório cadastrado.
-              </h3>
+              </p>
               <Link
                 href="/admin/relatorios/novo"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md font-semibold text-xs text-[#222222] bg-[#F5B900] hover:bg-[#e0a800] border border-[#E0A800]"
