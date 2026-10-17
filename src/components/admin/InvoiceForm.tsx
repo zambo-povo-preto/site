@@ -11,27 +11,39 @@ import type {
 } from "@/types/document";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useState } from "react";
+import { FileUploadDropzone } from "./FileUploadDropzone";
 
 interface InvoiceFormProps {
   document: AdminDocument;
   initialAttachment?: DocumentAttachment;
 }
 
-export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormProps) {
+export function InvoiceForm({
+  document: doc,
+  initialAttachment,
+}: InvoiceFormProps) {
   const router = useRouter();
   const { addAttachment, updateAttachment } = useDocuments();
-  const fileRef = useRef<HTMLInputElement>(null);
   const isEditing = Boolean(initialAttachment);
 
   const [docType, setDocType] = useState<"PJ" | "PF">(
-    initialAttachment?.issuerDoc && initialAttachment.issuerDoc.length <= 14 ? "PF" : "PJ",
+    initialAttachment?.issuerDoc && initialAttachment.issuerDoc.length <= 14
+      ? "PF"
+      : "PJ",
   );
-  const [issuerName, setIssuerName] = useState(initialAttachment?.issuerName || "");
-  const [issuerDoc, setIssuerDoc] = useState(initialAttachment?.issuerDoc || "");
-  const [invoiceNumber, setInvoiceNumber] = useState(initialAttachment?.invoiceNumber || "");
+  const [issuerName, setIssuerName] = useState(
+    initialAttachment?.issuerName || "",
+  );
+  const [issuerDoc, setIssuerDoc] = useState(
+    initialAttachment?.issuerDoc || "",
+  );
+  const [invoiceNumber, setInvoiceNumber] = useState(
+    initialAttachment?.invoiceNumber || "",
+  );
   const [amountRaw, setAmountRaw] = useState(
-    initialAttachment?.amount !== null && initialAttachment?.amount !== undefined
+    initialAttachment?.amount !== null &&
+      initialAttachment?.amount !== undefined
       ? String(initialAttachment.amount)
       : "",
   );
@@ -39,9 +51,12 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
     initialAttachment?.issueDate || new Date().toISOString().split("T")[0],
   );
   const [expenseType, setExpenseType] = useState<ExpenseCategory>(
-    (initialAttachment?.expenseType as ExpenseCategory) || EXPENSE_CATEGORIES[0],
+    (initialAttachment?.expenseType as ExpenseCategory) ||
+      EXPENSE_CATEGORIES[0],
   );
-  const [description, setDescription] = useState(initialAttachment?.description || "");
+  const [description, setDescription] = useState(
+    initialAttachment?.description || "",
+  );
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -76,9 +91,15 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
     if (docType === "PJ") {
       let masked = digits.slice(0, 14);
       if (masked.length > 12) {
-        masked = masked.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})$/, "$1.$2.$3/$4-$5");
+        masked = masked.replace(
+          /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})$/,
+          "$1.$2.$3/$4-$5",
+        );
       } else if (masked.length > 8) {
-        masked = masked.replace(/^(\d{2})(\d{3})(\d{3})(\d{1,4})$/, "$1.$2.$3/$4");
+        masked = masked.replace(
+          /^(\d{2})(\d{3})(\d{3})(\d{1,4})$/,
+          "$1.$2.$3/$4",
+        );
       } else if (masked.length > 5) {
         masked = masked.replace(/^(\d{2})(\d{3})(\d{1,3})$/, "$1.$2.$3");
       } else if (masked.length > 2) {
@@ -88,7 +109,10 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
     } else {
       let masked = digits.slice(0, 11);
       if (masked.length > 9) {
-        masked = masked.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, "$1.$2.$3-$4");
+        masked = masked.replace(
+          /^(\d{3})(\d{3})(\d{3})(\d{1,2})$/,
+          "$1.$2.$3-$4",
+        );
       } else if (masked.length > 6) {
         masked = masked.replace(/^(\d{3})(\d{3})(\d{1,3})$/, "$1.$2.$3");
       } else if (masked.length > 3) {
@@ -122,34 +146,31 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
     try {
       if (isEditing && initialAttachment) {
         await updateAttachment(initialAttachment.id, payload);
-        setSuccessMsg("Nota Fiscal / Comprovante atualizado com sucesso!");
+        setSuccessMsg("Comprovante atualizado com sucesso!");
       } else {
         await addAttachment(doc.id, payload as AttachmentUploadPayload);
-        setSuccessMsg("Nota Fiscal cadastrada com sucesso!");
+        setSuccessMsg("Comprovante cadastrad0 com sucesso!");
       }
 
       setTimeout(() => {
-        router.push(`/admin/documento/${doc.id}/editar`);
+        router.push(`/admin/relatorios/${doc.id}/editar`);
       }, 1000);
     } catch (err) {
-      console.error("Erro ao salvar nota fiscal:", err);
+      console.error("Erro ao salvar comprovante:", err);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] text-[#121212] pb-16">
+    <div className="min-h-screen bg-[#F7F3EA] text-[#222222] pb-16">
       {/* Header Bar */}
-      <header
-        className="sticky top-0 z-40 px-4 sm:px-8 py-3 border-b border-[#d4c9b6]"
-        style={{ background: "#ffffff", boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}
-      >
+      <header className="sticky top-16 z-30 px-4 sm:px-8 py-3 border-b border-[#E3DCCF] bg-white shadow-xs">
         <div className="flex items-center gap-3 min-w-0 max-w-3xl mx-auto">
           <Link
-            href={`/admin/documento/${doc.id}/editar`}
-            className="flex items-center justify-center w-8 h-8 rounded border border-[#d4c9b6] bg-[#faf7f2] text-[#121212] font-bold hover:bg-[#121212] hover:text-white hover:border-[#121212] transition-colors text-sm shrink-0"
-            title="Voltar ao Documento"
+            href={`/admin/relatorios/${doc.id}/editar`}
+            className="flex items-center justify-center w-8 h-8 rounded-md border border-[#E3DCCF] bg-[#FAF7F2] text-[#756F67] hover:text-[#222222] hover:bg-white transition-colors text-sm shrink-0"
+            title="Voltar ao Relatório"
           >
             ←
           </Link>
@@ -157,15 +178,25 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
             <Breadcrumbs
               items={[
                 { label: "Admin", href: "/admin" },
-                { label: doc.title, href: `/admin/documento/${doc.id}/editar` },
-                { label: isEditing ? "Editar Comprovante" : "Incluir Comprovante" },
+                { label: "Relatórios", href: "/admin/relatorios" },
+                {
+                  label: doc.title,
+                  href: `/admin/relatorios/${doc.id}/editar`,
+                },
+                {
+                  label: isEditing
+                    ? "Editar Comprovante"
+                    : "Incluir Comprovante",
+                },
               ]}
             />
             <h1
-              className="text-base sm:text-lg font-bold text-[#121212] truncate"
+              className="text-base sm:text-lg font-semibold text-[#222222] truncate"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              {isEditing ? initialAttachment?.name : "Incluir Nota Fiscal / Recibo"}
+              {isEditing
+                ? initialAttachment?.name
+                : "Incluir Comprovante / Recibo"}
             </h1>
           </div>
         </div>
@@ -198,7 +229,7 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
                 className="text-xs font-extrabold text-[#c87d00] uppercase tracking-wider"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                🧾 DADOS DA NOTA FISCAL / RECIBO DE PAGAMENTO
+                🧾 DADOS DA COMPROVANTE / RECIBO DE PAGAMENTO
               </span>
               <span className="text-xs text-[#8c8077] font-medium">
                 * Campos obrigatórios
@@ -206,77 +237,19 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
             </div>
 
             {/* File Upload Box */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="invoice-file-input"
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 11,
-                  letterSpacing: "1px",
-                  color: "#3a342f",
-                }}
-              >
-                ARQUIVO DO COMPROVANTE {isEditing ? "(OPCIONAL SE MANTIVER O ATUAL)" : "*"}
-              </label>
-
-              <div
-                className="w-full flex flex-col items-center justify-center gap-3 rounded-[3px] py-6 px-4 cursor-pointer transition-colors"
-                style={{
-                  border: `2px dashed ${file ? "#1a7d3c" : "#d4c9b6"}`,
-                  background: file ? "rgba(26,125,60,0.04)" : "#faf7f2",
-                }}
-                onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === "Enter" && fileRef.current?.click()}
-                role="button"
-                tabIndex={0}
-              >
-                <input
-                  ref={fileRef}
-                  id="invoice-file-input"
-                  type="file"
-                  accept=".pdf,.png,.jpg,.jpeg,.xlsx,.doc,.docx"
-                  className="hidden"
-                  onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0])}
-                />
-
-                {file ? (
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">📄</span>
-                    <div className="flex flex-col text-left">
-                      <span className="font-bold text-base text-[#1a7d3c]">
-                        Novo arquivo: {file.name}
-                      </span>
-                      <span className="text-xs text-[#8c8077]">
-                        {(file.size / 1024).toFixed(0)} KB · Clique para trocar
-                      </span>
-                    </div>
-                  </div>
-                ) : isEditing && initialAttachment ? (
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">📄</span>
-                    <div className="flex flex-col text-left">
-                      <span className="font-bold text-base text-[#121212]">
-                        Arquivo anexado: {initialAttachment.name} ({initialAttachment.fileSize})
-                      </span>
-                      <span className="text-xs text-[#8c8077]">
-                        Clique para substituir o comprovante (opcional)
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <span className="text-3xl">📥</span>
-                    <span
-                      className="font-bold text-sm text-[#121212]"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
-                      Clique para selecionar a Nota Fiscal / Recibo (PDF, PNG, JPG, DOC) *
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
+            <FileUploadDropzone
+              id="invoice-file-input"
+              label="ARQUIVO DO COMPROVANTE"
+              sublabel={isEditing ? "(Opcional se mantiver o comprovante atual)" : "Comprovante fiscal, recibo ou extrato"}
+              accept=".pdf,.png,.jpg,.jpeg,.xlsx,.doc,.docx"
+              formatsHint="PDF, PNG, JPG, XLSX ou DOC"
+              maxSizeMB={20}
+              required={!isEditing}
+              file={file}
+              onFileChange={setFile}
+              currentFileName={isEditing && initialAttachment ? initialAttachment.name : undefined}
+              currentFileSize={isEditing && initialAttachment ? initialAttachment.fileSize : undefined}
+            />
 
             {/* Favorecido & Document Type */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -293,7 +266,10 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
                 >
                   TIPO DE FAVORECIDO *
                 </label>
-                <div id="favorecido-type-btn" className="flex rounded border border-[#d4c9b6] p-1 bg-[#faf7f2]">
+                <div
+                  id="favorecido-type-btn"
+                  className="flex rounded border border-[#d4c9b6] p-1 bg-[#faf7f2]"
+                >
                   <button
                     type="button"
                     onClick={() => {
@@ -345,7 +321,11 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
                   required
                   value={issuerName}
                   onChange={(e) => setIssuerName(e.target.value)}
-                  placeholder={docType === "PJ" ? "Ex: Oficina Som & Ritmo LTDA" : "Ex: Mestre João da Percussão"}
+                  placeholder={
+                    docType === "PJ"
+                      ? "Ex: Oficina Som & Ritmo LTDA"
+                      : "Ex: Mestre João da Percussão"
+                  }
                   className="w-full px-4 py-3 rounded-[3px] outline-none text-base"
                   style={inputStyle}
                   onFocus={onFocus}
@@ -367,14 +347,18 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
                     color: "#3a342f",
                   }}
                 >
-                  {docType === "PJ" ? "CNPJ DO FAVORECIDO *" : "CPF DO FAVORECIDO *"}
+                  {docType === "PJ"
+                    ? "CNPJ DO FAVORECIDO *"
+                    : "CPF DO FAVORECIDO *"}
                 </label>
                 <input
                   id="issuer-doc"
                   required
                   value={issuerDoc}
                   onChange={(e) => handleDocChange(e.target.value)}
-                  placeholder={docType === "PJ" ? "00.000.000/0001-00" : "000.000.000-00"}
+                  placeholder={
+                    docType === "PJ" ? "00.000.000/0001-00" : "000.000.000-00"
+                  }
                   className="w-full px-4 py-3 rounded-[3px] outline-none font-mono text-base"
                   style={inputStyle}
                   onFocus={onFocus}
@@ -480,7 +464,9 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
                   id="expense-type-select"
                   required
                   value={expenseType}
-                  onChange={(e) => setExpenseType(e.target.value as ExpenseCategory)}
+                  onChange={(e) =>
+                    setExpenseType(e.target.value as ExpenseCategory)
+                  }
                   className="w-full px-4 py-3 rounded-[3px] outline-none cursor-pointer text-base"
                   style={inputStyle}
                   onFocus={onFocus}
@@ -525,7 +511,7 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
             {/* Actions */}
             <div className="flex items-center gap-4 pt-4 border-t border-[#e8d5b4]">
               <Link
-                href={`/admin/documento/${doc.id}/editar`}
+                href={`/admin/relatorios/${doc.id}/editar`}
                 className="flex-1 py-3 text-center rounded text-xs font-bold text-[#6b5e55] border border-[#d4c9b6] bg-white hover:border-[#121212] hover:text-[#121212] transition-colors"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
@@ -534,7 +520,14 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
 
               <button
                 type="submit"
-                disabled={loading || (!isEditing && !file) || !issuerName || !issuerDoc || !invoiceNumber || !amountRaw}
+                disabled={
+                  loading ||
+                  (!isEditing && !file) ||
+                  !issuerName ||
+                  !issuerDoc ||
+                  !invoiceNumber ||
+                  !amountRaw
+                }
                 className="flex-1 py-3 rounded font-bold text-sm text-[#121212] bg-[#f8ba01] border border-[#121212] cursor-pointer hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
@@ -542,7 +535,7 @@ export function InvoiceForm({ document: doc, initialAttachment }: InvoiceFormPro
                   ? "SALVANDO..."
                   : isEditing
                     ? "SALVAR ALTERAÇÕES DA NOTA"
-                    : "SALVAR NOTA FISCAL"}
+                    : "SALVAR COMPROVANTE"}
               </button>
             </div>
           </form>

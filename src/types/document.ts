@@ -17,15 +17,19 @@ export type ExpenseCategory =
 
 export interface DocumentAttachment {
   id: string;
-  documentId: string;
+  documentId: string | null;
   name: string;
   description?: string | null;
   fileType: "PDF" | "XLSX" | "DOC";
   fileSize: string;
   createdAt: string;
+  attachmentType: "invoice" | "document";
   downloadUrl?: string;
+  publicObjectKey?: string | null;
+  hasPublicFile?: boolean;
   issuerName?: string | null;
-  issuerDoc?: string | null;
+  issuerDoc?: string | null; // Disponível apenas no ambiente administrativo autenticado
+  cnpj?: string | null; // Disponível publicamente quando for PJ válida
   invoiceNumber?: string | null;
   amount?: number | null;
   issueDate?: string | null;
@@ -43,6 +47,8 @@ export interface AdminDocument {
   fileName: string;
   publishedAt: string;
   status: "published" | "draft";
+  publicObjectKey?: string | null;
+  hasPublicFile?: boolean;
   attachments?: DocumentAttachment[];
 }
 
@@ -55,6 +61,7 @@ export interface TransparencyDocument {
   fileSize: string;
   date: string;
   downloadUrl?: string;
+  hasPublicFile?: boolean;
   attachments?: DocumentAttachment[];
 }
 
@@ -65,6 +72,10 @@ export interface YearGroup {
 
 export interface AttachmentUploadPayload {
   file: File;
+  publicFile?: File;
+  documentId?: string | null;
+  attachmentType?: "invoice" | "document";
+  isPublicSafe?: boolean;
   issuerName?: string;
   issuerDoc?: string;
   invoiceNumber?: string;
