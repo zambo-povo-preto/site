@@ -11,6 +11,7 @@ export function Footer() {
     { label: "INÍCIO", to: "/" },
     { label: "HISTÓRIA", to: "/historia" },
     { label: "TRANSPARÊNCIA", to: "/transparencia" },
+    { label: "COLABORADORES", to: "/colaboradores" },
     { label: "CONTATO", to: "/contato" },
   ];
 
