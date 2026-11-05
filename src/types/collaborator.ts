@@ -24,12 +24,6 @@ export interface Collaborator {
   role: string;
   photo: string;
   bio?: string;
-  category?:
-    | "Tecnologia"
-    | "Comunicação & Design"
-    | "Artes & Audiovisual"
-    | "Educação & Social"
-    | "Produção Cultural";
   accentColor?: string; // Cor de destaque Pan-Africana (#dd341f | #f8ba01 | #1a7d3c)
   /** Rede social que o colaborador escolheu para ser divulgada */
   social: CollaboratorSocial;

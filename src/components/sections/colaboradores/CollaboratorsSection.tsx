@@ -120,7 +120,7 @@ function SocialIcon({
 }
 
 function CollaboratorCard({ collaborator }: { collaborator: Collaborator }) {
-  const { name, role, photo, bio, accentColor = "#f8ba01", category, social } =
+  const { name, role, photo, bio, accentColor = "#f8ba01", social } =
     collaborator;
 
   return (
@@ -139,22 +139,6 @@ function CollaboratorCard({ collaborator }: { collaborator: Collaborator }) {
       />
 
       <div className="flex flex-col items-center p-6 text-center flex-grow">
-        {/* Categoria / Tag superior */}
-        {category && (
-          <div className="mb-4">
-            <span
-              className="inline-block px-2.5 py-0.5 rounded-[3px] text-[10.5px] font-extrabold uppercase tracking-wide border border-black/15"
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                background: "#f0e3cd",
-                color: "#4a4036",
-              }}
-            >
-              {category}
-            </span>
-          </div>
-        )}
-
         {/* ── FOTO DO COLABORADOR REDONDA ── */}
         <div className="relative my-2">
           {/* Círculo com borda brutalista e sombra */}
@@ -272,49 +256,34 @@ function CollaboratorCard({ collaborator }: { collaborator: Collaborator }) {
 }
 
 export function CollaboratorsSection() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const categories: string[] = useMemo(() => {
-    const unique = new Set<string>();
-    collaborators.forEach((c) => {
-      if (c.category) {
-        unique.add(c.category);
-      }
-    });
-    return ["all", ...Array.from(unique)];
-  }, []);
-
   const filteredCollaborators = useMemo(() => {
-    return collaborators.filter((collab) => {
-      const matchCat =
-        selectedCategory === "all" || collab.category === selectedCategory;
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return collaborators;
 
-      const q = searchQuery.toLowerCase().trim();
-      const matchQuery =
-        !q ||
+    return collaborators.filter((collab) => {
+      return (
         collab.name.toLowerCase().includes(q) ||
         collab.role.toLowerCase().includes(q) ||
-        (collab.bio && collab.bio.toLowerCase().includes(q)) ||
-        (collab.category && collab.category.toLowerCase().includes(q));
-
-      return matchCat && matchQuery;
+        (collab.bio && collab.bio.toLowerCase().includes(q))
+      );
     });
-  }, [selectedCategory, searchQuery]);
+  }, [searchQuery]);
 
   return (
     <main className="w-full bg-[#f0e3cd] text-[#121212] min-h-[calc(100vh-140px)]">
       {/* ── 1. Hero Header Institucional ── */}
-      <section className="relative w-full pt-16 pb-12 sm:pt-20 sm:pb-16 px-6 lg:px-[80px] border-b-2 border-[#121212]/15">
-        <div className="max-w-[1240px] mx-auto flex flex-col gap-6">
+      <section className="relative w-full pt-16 pb-12 sm:pt-20 sm:pb-16 px-6 lg:px-[80px] border-b-2 border-[#121212]/15 bg-[#1D1B18]">
+        <div className="max-w-[1240px] mx-auto flex flex-col gap-6 ">
           {/* Badge & Subtítulo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ">
             <div
               className="w-1.5 h-6 shrink-0"
               style={{ background: "#f8ba01" }}
             />
             <span
-              className="uppercase tracking-[2px] text-xs sm:text-sm font-extrabold text-[#121212]"
+              className="uppercase tracking-[2px] text-xs sm:text-sm font-extrabold text-[#ffffff]"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               QUEM FAZ ACONTECER
@@ -322,7 +291,7 @@ export function CollaboratorsSection() {
           </div>
 
           {/* Título Principal */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 bg-[#1D1B18]">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 ">
             <div>
               <h1
                 className="uppercase tracking-tight"
@@ -330,7 +299,7 @@ export function CollaboratorsSection() {
                   fontFamily: "'Anton', sans-serif",
                   fontSize: "clamp(38px, 6vw, 76px)",
                   lineHeight: 0.95,
-                  color: "#121212",
+                  color: "#da1212ff",
                   letterSpacing: "1px",
                 }}
               >
@@ -341,7 +310,7 @@ export function CollaboratorsSection() {
             </div>
 
             <p
-              className="text-[#3a342f] max-w-[560px]"
+              className="text-[#D4C9B6] max-w-[560px]"
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 500,
@@ -358,39 +327,16 @@ export function CollaboratorsSection() {
         </div>
       </section>
 
-      {/* ── 2. Barra de Filtros e Pesquisa ── */}
+      {/* ── Pesquisa ── */}
       <section className="sticky top-[60px] sm:top-[68px] z-30 w-full py-4 px-4 sm:px-6 lg:px-[80px] bg-[#ebdcc2] border-b-2 border-[#121212]/20 shadow-sm backdrop-blur-md">
-        <div className="max-w-[1240px] mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-          {/* Filtro por categorias */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-            {categories.map((cat) => {
-              const active = selectedCategory === cat;
-              const label = cat === "all" ? "Todos os Colaboradores" : cat;
-
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`shrink-0 px-3.5 py-1.5 rounded-[4px] text-xs font-extrabold uppercase tracking-wide transition-all duration-200 ${active
-                    ? "bg-[#121212] text-white shadow-[2px_2px_0px_#f8ba01]"
-                    : "bg-[#faf4e8] text-[#121212] border border-[#121212]/20 hover:bg-[#f8ba01]/25 hover:border-[#121212]"
-                    }`}
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Campo de busca */}
-          <div className="relative min-w-[240px] sm:min-w-[280px]">
+        <div className="max-w-[1240px] mx-auto flex items-center justify-end">
+          {/* Campo de busca no canto direito */}
+          <div className="relative w-full sm:w-[320px]">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por nome, função ou área..."
+              placeholder="Buscar por nome ou função..."
               className="w-full bg-[#faf4e8] border-2 border-[#121212] rounded-[4px] px-3.5 py-1.5 pr-8 text-xs sm:text-sm font-medium text-[#121212] placeholder:text-[#8c8077] focus:outline-none focus:ring-2 focus:ring-[#f8ba01] shadow-[2px_2px_0px_#121212]"
               style={{ fontFamily: "'Inter', sans-serif" }}
             />
@@ -432,16 +378,13 @@ export function CollaboratorsSection() {
               Mostrando {filteredCollaborators.length} de {collaborators.length}{" "}
               colaboradores
             </span>
-            {(selectedCategory !== "all" || searchQuery) && (
+            {searchQuery && (
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedCategory("all");
-                  setSearchQuery("");
-                }}
+                onClick={() => setSearchQuery("")}
                 className="text-[#dd341f] underline hover:opacity-80"
               >
-                Limpar filtros
+                Limpar busca
               </button>
             )}
           </div>
@@ -472,14 +415,11 @@ export function CollaboratorsSection() {
                 style={{ fontFamily: "'Inter', sans-serif", fontSize: 14 }}
               >
                 Não encontramos nenhum colaborador correspondente à sua busca.
-                Tente buscar com outros termos ou limpe os filtros.
+                Tente buscar com outros termos ou limpe a pesquisa.
               </p>
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedCategory("all");
-                  setSearchQuery("");
-                }}
+                onClick={() => setSearchQuery("")}
                 className="mt-2 bg-[#f8ba01] text-[#121212] px-5 py-2 rounded-[3px] border-2 border-[#121212] uppercase font-['Anton'] text-sm tracking-wider shadow-[2px_2px_0px_#121212]"
               >
                 Ver todos os colaboradores
