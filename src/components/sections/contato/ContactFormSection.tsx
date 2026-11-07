@@ -72,24 +72,6 @@ const InstagramIcon = () => (
   </svg>
 );
 
-const YoutubeIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="#dd341f"
-    strokeWidth="2"
-    strokeLinecap="square"
-    strokeLinejoin="miter"
-    role="img"
-    aria-label="YouTube"
-  >
-    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" />
-    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
-  </svg>
-);
-
 const FacebookIcon = () => (
   <svg
     width="20"
@@ -157,9 +139,7 @@ export function ContactFormSection() {
                   Telefone
                 </span>
                 <span className="font-['Inter'] text-[15px] font-medium text-[#4a4036] leading-snug">
-                  (71) 3333-4444
-                  <br />
-                  Seg – Sex, 9h às 18h
+                  (12) 99141-4188
                 </span>
               </div>
             </div>
@@ -173,7 +153,7 @@ export function ContactFormSection() {
                   E-mail
                 </span>
                 <span className="font-['Inter'] text-[15px] font-medium text-[#4a4036] leading-snug">
-                  contato@zambo.org.br
+                  zambomnc001@gmail.com
                 </span>
               </div>
             </div>
@@ -208,24 +188,7 @@ export function ContactFormSection() {
             </a>
 
             <a
-              href="https://www.youtube.com/@zambooficial"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 py-3 border-b border-[#c8b9a2] hover:bg-[#e6d8be] transition-colors rounded-[3px] px-2"
-            >
-              <YoutubeIcon />
-              <div className="flex flex-col">
-                <span className="font-['Inter'] text-[11px] font-bold text-[#6b5e55] uppercase leading-none">
-                  YouTube
-                </span>
-                <span className="font-['Inter'] text-[15px] font-bold text-[#121212]">
-                  Zambô Oficial
-                </span>
-              </div>
-            </a>
-
-            <a
-              href="https://www.facebook.com/zambooficial"
+              href="https://www.facebook.com/zambomnc"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-4 py-3 border-b border-[#c8b9a2] hover:bg-[#e6d8be] transition-colors rounded-[3px] px-2"
@@ -236,7 +199,7 @@ export function ContactFormSection() {
                   Facebook
                 </span>
                 <span className="font-['Inter'] text-[15px] font-bold text-[#121212]">
-                  /zambooficial
+                  /zambomnc
                 </span>
               </div>
             </a>

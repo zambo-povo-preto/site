@@ -10,6 +10,7 @@ export function Footer() {
   const links = [
     { label: "INÍCIO", to: "/" },
     { label: "HISTÓRIA", to: "/historia" },
+    { label: "GALERIA", to: "/galeria" },
     { label: "TRANSPARÊNCIA", to: "/transparencia" },
     { label: "CONTATO", to: "/contato" },
   ];

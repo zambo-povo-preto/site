@@ -46,6 +46,7 @@ export function Navbar({ overlaid = false }: NavbarProps) {
   const navLinks = [
     { label: "INÍCIO", to: "/" },
     { label: "HISTÓRIA", to: "/historia" },
+    { label: "GALERIA", to: "/galeria" },
     { label: "TRANSPARÊNCIA", to: "/transparencia" },
     { label: "CONTATO", to: "/contato" },
   ];
