@@ -299,13 +299,13 @@ export function CollaboratorsSection() {
                   fontFamily: "'Anton', sans-serif",
                   fontSize: "clamp(38px, 6vw, 76px)",
                   lineHeight: 0.95,
-                  color: "#da1212ff",
+                  color: "#f8ba01",
                   letterSpacing: "1px",
                 }}
               >
                 NOSSOS
                 <br />
-                <span style={{ color: "#dd341f" }}>COLABORADORES</span>
+                <span style={{ color: "#f8ba01" }}>COLABORADORES</span>
               </h1>
             </div>
 
