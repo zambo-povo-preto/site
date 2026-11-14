@@ -1,5 +1,6 @@
 "use client";
 
+import { useCollaborators } from "@/contexts/CollaboratorsContext";
 import { useDocuments } from "@/contexts/DocumentsContext";
 import {
   ArrowRight,
@@ -10,6 +11,7 @@ import {
   Plus,
   Receipt,
   Sparkles,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -17,6 +19,7 @@ import { useMemo } from "react";
 export function AdminHomeView() {
   const { documents, invoices, complementaryDocuments, loading } =
     useDocuments();
+  const { collaborators } = useCollaborators();
 
   // Estatísticas calculadas
   const stats = useMemo(() => {
@@ -253,7 +256,7 @@ export function AdminHomeView() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Link
               href="/admin/relatorios"
               className="p-4 rounded-md border border-[#E3DCCF] bg-white hover:border-[#D5CCBC] hover:shadow-xs transition-all flex items-start gap-3.5 group"
@@ -269,8 +272,7 @@ export function AdminHomeView() {
                   <ArrowRight className="w-3.5 h-3.5 text-[#756F67] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all shrink-0" />
                 </div>
                 <p className="text-xs text-[#756F67] mt-1 leading-snug">
-                  Listagem completa, relatórios anuais, publicações e gestão de
-                  rascunhos.
+                  Listagem completa, relatórios anuais e gestão de rascunhos.
                 </p>
               </div>
             </Link>
@@ -285,12 +287,12 @@ export function AdminHomeView() {
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center justify-between gap-1">
                   <h3 className="font-bold text-sm text-[#222222] group-hover:text-[#C02D1D] transition-colors">
-                    Comprovantes e Notas Fiscais
+                    Comprovantes e Notas
                   </h3>
                   <ArrowRight className="w-3.5 h-3.5 text-[#756F67] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all shrink-0" />
                 </div>
                 <p className="text-xs text-[#756F67] mt-1 leading-snug">
-                  Consulta de notas fiscais, favorecidos e valores cadastrados.
+                  Consulta de notas fiscais, favorecidos e comprovantes.
                 </p>
               </div>
             </Link>
@@ -310,8 +312,27 @@ export function AdminHomeView() {
                   <ArrowRight className="w-3.5 h-3.5 text-[#756F67] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all shrink-0" />
                 </div>
                 <p className="text-xs text-[#756F67] mt-1 leading-snug">
-                  Atas, certificações, contratos e arquivos institucionais
-                  arquivados.
+                  Atas, certificações e arquivos institucionais.
+                </p>
+              </div>
+            </Link>
+
+            <Link
+              href="/admin/colaboradores"
+              className="p-4 rounded-md border border-[#E3DCCF] bg-white hover:border-[#D5CCBC] hover:shadow-xs transition-all flex items-start gap-3.5 group"
+            >
+              <div className="w-9 h-9 rounded-md bg-[#FAF4E6] border border-[#F0DC99] flex items-center justify-center text-[#9E6D00] shrink-0 group-hover:scale-105 transition-transform">
+                <Users className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center justify-between gap-1">
+                  <h3 className="font-bold text-sm text-[#222222] group-hover:text-[#C02D1D] transition-colors">
+                    Colaboradores
+                  </h3>
+                  <ArrowRight className="w-3.5 h-3.5 text-[#756F67] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all shrink-0" />
+                </div>
+                <p className="text-xs text-[#756F67] mt-1 leading-snug">
+                  {collaborators.length} cadastrados. Gerenciar equipe e redes.
                 </p>
               </div>
             </Link>

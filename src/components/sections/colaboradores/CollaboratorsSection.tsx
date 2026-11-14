@@ -2,7 +2,7 @@
 
 import { ArrowIcon } from "@/components/icons/ArrowIcon";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
-import { collaborators } from "@/data/collaborators";
+import { useCollaborators } from "@/contexts/CollaboratorsContext";
 import type { Collaborator, SocialPlatform } from "@/types/collaborator";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -256,6 +256,7 @@ function CollaboratorCard({ collaborator }: { collaborator: Collaborator }) {
 }
 
 export function CollaboratorsSection() {
+  const { collaborators } = useCollaborators();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const filteredCollaborators = useMemo(() => {
@@ -269,7 +270,7 @@ export function CollaboratorsSection() {
         (collab.bio && collab.bio.toLowerCase().includes(q))
       );
     });
-  }, [searchQuery]);
+  }, [collaborators, searchQuery]);
 
   return (
     <main className="w-full bg-[#f0e3cd] text-[#121212] min-h-[calc(100vh-140px)]">

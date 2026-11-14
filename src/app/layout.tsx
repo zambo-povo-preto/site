@@ -1,4 +1,5 @@
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
+import { CollaboratorsProvider } from "@/contexts/CollaboratorsContext";
 import { DocumentsProvider } from "@/contexts/DocumentsContext";
 import type { Metadata } from "next";
 import { Anton, Inter } from "next/font/google";
@@ -35,7 +36,9 @@ export default function RootLayout({
         className={`background ${inter.variable} ${anton.variable} antialiased`}
       >
         <AdminAuthProvider>
-          <DocumentsProvider>{children}</DocumentsProvider>
+          <DocumentsProvider>
+            <CollaboratorsProvider>{children}</CollaboratorsProvider>
+          </DocumentsProvider>
         </AdminAuthProvider>
       </body>
     </html>

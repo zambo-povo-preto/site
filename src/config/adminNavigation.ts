@@ -124,6 +124,40 @@ export const adminNavigationConfig: SidebarConfig = [
       },
     ],
   },
+  {
+    id: "colaboradores-section",
+    title: "COLABORADORES",
+    items: [
+      {
+        id: "colaboradores-gerenciar",
+        label: "Colaboradores",
+        icon: UsersNavIcon,
+        isPlanned: false,
+        defaultExpanded: true,
+        isActive: (pathname: string) =>
+          pathname.startsWith("/admin/colaboradores"),
+        children: [
+          {
+            id: "colaboradores-todos",
+            label: "Todos os colaboradores",
+            route: "/admin/colaboradores",
+            icon: UserListNavIcon,
+            isPlanned: false,
+            isActive: (pathname: string) => pathname === "/admin/colaboradores",
+          },
+          {
+            id: "colaboradores-novo",
+            label: "Novo colaborador",
+            route: "/admin/colaboradores/novo",
+            icon: UserPlusNavIcon,
+            isPlanned: false,
+            isActive: (pathname: string) =>
+              pathname === "/admin/colaboradores/novo",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 /**
